@@ -1,30 +1,30 @@
 ### Gofp Owl-Functional Parser
 
 
-Gofp reads OWL files with Functional syntax into memory, for further processing.
+Gofp reads OWL files with functional syntax into memory, for further processing.
 
 The resulting structures strictly resemble the OWL-Functional structures. For example, any SubClassOf axiom
 ends up in a struct instance of type "axioms.SubClassOf". Everything is read into memory at once.
 
 The package structure, as well as package and type names in Gofp depict the OWL documentation from here: https://www.w3.org/2007/OWL/refcard
 
-The implementation idea comes fro https://blog.gopheracademy.com/advent-2014/parsers-lexers/. 
+The implementation idea comes from https://blog.gopheracademy.com/advent-2014/parsers-lexers/. 
 
 
 
 #### Example for parsing a file:
-```	
-    f, _ := os.Open("pizza-functional.owl")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
+```	go
+f, _ := os.Open("pizza-functional.owl")
+if err != nil {
+	panic(err)
+}
+defer f.Close()
 
-	ontology, err := gofp.OntologyFromReader(f, "source was pizza-functional.owl")
-	if err != nil {
-		log.Fatal(gofp.ErrorMsgWithPosition(err))
-	}
-	log.Println("That's what we parsed:", ontology.About())
+ontology, err := gofp.OntologyFromReader(f, "source was pizza-functional.owl")
+if err != nil {
+	log.Fatal(gofp.ErrorMsgWithPosition(err))
+}
+log.Println("That's what we parsed:", ontology.About())
 ```
 
 To run that example, cd into the gofp/example/pizza/ directory and type
