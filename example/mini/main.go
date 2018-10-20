@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -44,6 +45,8 @@ func main() {
 		log.Fatal(gofp.ErrorMsgWithPosition(err))
 	}
 
-	log.Println("This was parsed:", o.About())
-	log.Println("", o.GetClassDecl)
+	fmt.Println("All declared class names are:")
+	for name, _ := range o.AllClassDecls {
+		fmt.Println(name)
+	}
 }
