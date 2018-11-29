@@ -46,3 +46,39 @@ func TestParsePrefixedName(t *testing.T) {
 		t.Fatal(name)
 	}
 }
+
+func TestParseIRIWithFragment(t *testing.T) {
+	var p *parser.Parser
+	var prefix, fragment string
+	var err error
+
+	p = mock.NewTestParser(`<>`)
+	prefix, fragment, err = ParseIRIWithFragment(p)
+	if err == nil {
+		t.Fatal(err)
+	}
+
+	p = mock.NewTestParser(`<hallo#Welt>`)
+	prefix, fragment, err = ParseIRIWithFragment(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if prefix != "hallo" {
+		t.Fatal("Prefix=" + prefix + " Fragment=" + fragment)
+	}
+	if fragment != "Welt" {
+		t.Fatal("Prefix=" + prefix + " Fragment=" + fragment)
+	}
+
+	p = mock.NewTestParser(`<http://www.co-ode.org/ontologies/pizzax/pizza.owl#VegetarianPizzaEquivalent2>`)
+	prefix, fragment, err = ParseIRIWithFragment(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if prefix != "http://www.co-ode.org/ontologies/pizzax/pizza.owl" {
+		t.Fatal("Prefix=" + prefix + " Fragment=" + fragment)
+	}
+	if fragment != "VegetarianPizzaEquivalent2" {
+		t.Fatal("Prefix=" + prefix + " Fragment=" + fragment)
+	}
+}

@@ -2,7 +2,6 @@ package ontologies
 
 import (
 	"fmt"
-	"log"
 
 	"reifenberg.de/gofp/owlfunctional/annotations"
 	"reifenberg.de/gofp/owlfunctional/axioms"
@@ -103,16 +102,18 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.Ontology, parser.B1); err != nil {
 		return pos.EnrichErrorMsg(err, "Parsing Ontology element:%v")
 	}
-	// expect IRI
+
+	// IRI as name is possible
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
-	if tok != parser.IRI {
-		return pos.Errorf("IRI as name after Ontology declaration expected, found:%v", lit)
+	if tok == parser.IRI {
+		// there's an IRI as ontology name
+		s.IRI = lit
+	} else {
+		p.Unscan()
 	}
-	s.IRI = lit
 
 	for p.PBal() > initialPBal {
 		tok, lit, pos := p.ScanIgnoreWSAndComment()
-		log.Printf("Ontology:%v at line %v\n", parser.Tokenname(tok), pos.LineNo1())
 		switch tok {
 		case parser.B2:
 			// must be the end of the Ontology() expression

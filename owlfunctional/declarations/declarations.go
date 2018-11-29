@@ -14,7 +14,6 @@ func (s *Declaration) PrefixedName() string {
 	return parser.FmtPrefixedName(s.Prefix, s.Name)
 }
 
-// var _ Fex = (*Declaration)(nil)
 type AnnotationPropertyDecl struct {
 	Declaration
 }
