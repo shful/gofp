@@ -6,9 +6,32 @@ import (
 	"strings"
 
 	"reifenberg.de/gofp/owlfunctional/parser"
+	"reifenberg.de/gofp/tech"
 )
 
-func ParsePrefixedName(p *parser.Parser) (prefix, name string, err error) {
+//todo anstelle von ParsePrefixedName überall nutzen
+func ParseAndResolveIdentifier(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
+	var head, name string
+	pos := p.Pos()
+	head, name, err = ParseIRIWithFragment(p)
+	if err != nil {
+		var prefix string
+		prefix, name, err = ParsePrefixedName(p)
+		if err != nil {
+			err = pos.Errorf("IRI or prefixed name expected")
+			return
+		}
+		head, err = prefixes.ResolvePrefix(prefix)
+		if err != nil {
+			err = pos.Errorf("unknown prefix (%v)", prefix)
+			return
+		}
+	}
+	ident = tech.NewIRI(head, name)
+	return
+}
+
+func ParsePrefixedName(p *parser.Parser) (prefix, name, xxx string, err error) {
 
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	if tok == parser.IDENT {

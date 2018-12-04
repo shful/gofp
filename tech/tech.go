@@ -17,8 +17,27 @@ type Declarations interface {
 }
 
 type Prefixes interface {
-	IsPrefixKnown(prefix string) bool
-	IsOWL(prefix string) bool
+	// ResolvePrefix returns the IRI part which is associated with the prefix
+	// error is prefix was unknown.
+	ResolvePrefix(prefix string) (string, error)
+	IsPrefixKnown(prefix string) bool //todo remove because ResolvePrefix is enough
+	IsOWL(prefix string) bool         //todo eventually replace by an IRI check with already resolved prefix
+}
+
+// IRI resembles an IRI that OWL uses as identifier.
+// Here, it is stored in two pieces - the fragment resp."Name" of the ontology element,
+// and everything before, without the separating hash (#)
+type IRI struct {
+	Name string // e.g."Thing"
+	Head string // e.g."http://www.w3.org/2002/07/owl"
+}
+
+func NewIRI(head, name string) *IRI {
+	return &IRI{Head: head, Name: name}
+}
+
+func (s IRI) String() string {
+	return s.Head + "#" + s.Name
 }
 
 // ZeroBasedPosWord is "first" for 0, then "second" ... 4th ... and so on
