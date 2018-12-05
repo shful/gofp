@@ -28,16 +28,35 @@ type Prefixes interface {
 // Here, it is stored in two pieces - the fragment resp."Name" of the ontology element,
 // and everything before, without the separating hash (#)
 type IRI struct {
+	// Name cannot be empty for a valid IRI.
 	Name string // e.g."Thing"
+
+	// Head can be empty. That means, Prefix must be given, and that can be resolved to Head.
 	Head string // e.g."http://www.w3.org/2002/07/owl"
+
+	// Prefix, if not empty, can be resolved to Head.
+	Prefix string // e.g. "owl"
 }
 
 func NewIRI(head, name string) *IRI {
 	return &IRI{Head: head, Name: name}
 }
 
-func (s IRI) String() string {
+// NewIRIWithPrefix constructs an IRI where Head is unset but can later be resolved from Prefix.
+func NewIRIWithPrefix(prefix, name string) *IRI {
+	return &IRI{Prefix: prefix, Name: name}
+}
+
+func (s *IRI) String() string {
 	return s.Head + "#" + s.Name
+}
+
+func (s *IRI) NeedsResolution() bool {
+	return s.Prefix != "" && s.Head == ""
+}
+
+func (s *IRI) ResolveTo(name string) {
+	s.Name = name
 }
 
 // ZeroBasedPosWord is "first" for 0, then "second" ... 4th ... and so on

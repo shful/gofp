@@ -182,11 +182,14 @@ func Parset(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (
 	// read prefixed name at last, because unparsing prefixed names is not possible
 	// since the parser currently can unparse one token only.
 	pos := p.Pos()
-	var s1, s2 string
-	s1, s2, err = parsehelper.ParsePrefixedName(p)
+	var tech, IRI ident
+	ident, err = parsehelper.ParseAndResolveIdentifier(p, prefixes)
 	if err == nil {
-		expr = parser.FmtPrefixedName(s1, s2)
-		if s1 != "_" {
+		expr = IRI.String()
+		if s1 != "_" { hier weiter: was ist mit AnonymousIndividual, wenn wir jetzt ParseAndResolveIdentifier nehmen?
+			mache Übersicht, wo wird ParsePrefixedName genutzt, und wo sind welche Typen möglich:
+			IRI, :name, prefix:name, name, _  mache passende Funktionen in Parsehelper.
+			Notiere auch überall, welcher Typ im Aufrufer gebraucht wird: hier ist es expr string plus Typinfo.
 			argtype = ArgtypeAnonymousIndividual
 		} else {
 			argtype = ArgtypeIRI

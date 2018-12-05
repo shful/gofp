@@ -13,21 +13,43 @@ import (
 func ParseAndResolveIdentifier(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
 	var head, name string
 	pos := p.Pos()
-	head, name, err = ParseIRIWithFragment(p)
-	if err != nil {
+
+	tok, lit, pos := p.ScanIgnoreWSAndComment()
+	p.Unscan()
+	switch tok {
+	case parser.IRI:
+		head, name, err = ParseIRIWithFragment(p)
+		ident = tech.NewIRI(head, name)
+	case parser.IDENT:
+		fallthrough
+	case parser.COLON:
 		var prefix string
 		prefix, name, err = ParsePrefixedName(p)
 		if err != nil {
-			err = pos.Errorf("IRI or prefixed name expected")
 			return
 		}
+		ident = tech.NewIRIWithPrefix(prefix, name)
 		head, err = prefixes.ResolvePrefix(prefix)
-		if err != nil {
-			err = pos.Errorf("unknown prefix (%v)", prefix)
-			return
-		}
+		ident.ResolveTo(head)
+	default:
+		err = pos.Errorf("unexpected %v, need IRI, or prefixed name, or _ for anonymous individual.", lit)
 	}
-	ident = tech.NewIRI(head, name)
+
+	// head, name, err = ParseIRIWithFragment(p)
+	// if err != nil {
+	// 	var prefix string
+	// 	prefix, name, err = ParsePrefixedName(p)
+	// 	if err != nil {
+	// 		err = pos.Errorf("IRI or prefixed name expected")
+	// 		return
+	// 	}
+	// 	head, err = prefixes.ResolvePrefix(prefix)
+	// 	if err != nil {
+	// 		err = pos.Errorf("unknown prefix (%v)", prefix)
+	// 		return
+	// 	}
+	// }
+	// ident = tech.NewIRI(head, name)
 	return
 }
 
