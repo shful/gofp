@@ -66,32 +66,32 @@ func NewOntology(prefixes map[string]string) (res *Ontology) {
 	return
 }
 
-func (s *Ontology) GetAnnotationPropertyDecl(prefix, name string) (decl *declarations.AnnotationPropertyDecl, ok bool) {
-	decl, ok = s.AllAnnotationPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) GetAnnotationPropertyDecl(ident tech.IRI) (decl *declarations.AnnotationPropertyDecl, ok bool) {
+	decl, ok = s.AllAnnotationPropertyDecls[ident.String()]
 	return
 }
-func (s *Ontology) GetClassDecl(prefix, name string) (decl *declarations.ClassDecl, ok bool) {
-	decl, ok = s.AllClassDecls[parser.FmtPrefixedName(prefix, name)]
-	return
-}
-
-func (s *Ontology) GetDataPropertyDecl(prefix, name string) (decl *declarations.DataPropertyDecl, ok bool) {
-	decl, ok = s.AllDataPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) GetClassDecl(ident tech.IRI) (decl *declarations.ClassDecl, ok bool) {
+	decl, ok = s.AllClassDecls[ident.String()]
 	return
 }
 
-func (s *Ontology) GetDatatypeDecl(prefix, name string) (decl *declarations.DatatypeDecl, ok bool) {
-	decl, ok = s.AllDatatypeDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) GetDataPropertyDecl(ident tech.IRI) (decl *declarations.DataPropertyDecl, ok bool) {
+	decl, ok = s.AllDataPropertyDecls[ident.String()]
 	return
 }
 
-func (s *Ontology) GetNamedIndividualDecl(prefix, name string) (decl *declarations.NamedIndividualDecl, ok bool) {
-	decl, ok = s.AllNamedIndividualDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) GetDatatypeDecl(ident tech.IRI) (decl *declarations.DatatypeDecl, ok bool) {
+	decl, ok = s.AllDatatypeDecls[ident.String()]
 	return
 }
 
-func (s *Ontology) GetObjectPropertyDecl(prefix, name string) (decl *declarations.ObjectPropertyDecl, ok bool) {
-	decl, ok = s.AllObjectPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) GetNamedIndividualDecl(ident tech.IRI) (decl *declarations.NamedIndividualDecl, ok bool) {
+	decl, ok = s.AllNamedIndividualDecls[ident.String()]
+	return
+}
+
+func (s *Ontology) GetObjectPropertyDecl(ident tech.IRI) (decl *declarations.ObjectPropertyDecl, ok bool) {
+	decl, ok = s.AllObjectPropertyDecls[ident.String()]
 	return
 }
 
@@ -192,9 +192,9 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	pos := p.Pos()
-	var prefix, name string
+	var ident *tech.IRI
 
-	prefix, name, err = parsehelper.ParsePrefixedName(p)
+	ident, err = parsehelper.ParseAndResolveIRI(p, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 1st param in AnnotationAssertion")
 		return
@@ -218,7 +218,7 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	s.AllAnnotationAssertions = append(s.AllAnnotationAssertions, annotations.AnnotationAssertion{
-		A: parser.FmtPrefixedName(prefix, name),
+		A: ident.String(),
 		S: s_,
 		T: t,
 	})
@@ -292,7 +292,7 @@ func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseDeclaration(p *parser.Parser) (err error) {
-	var prefix, name string
+	var ident *tech.IRI
 
 	if err = p.ConsumeTokens(parser.Declaration, parser.B1); err != nil {
 		return
@@ -300,35 +300,35 @@ func (s *Ontology) parseDeclaration(p *parser.Parser) (err error) {
 	tok, _, _ := p.ScanIgnoreWSAndComment()
 	switch tok {
 	case parser.AnnotationProperty:
-		if prefix, name, err = s.parseBracedPrefixedName(p); err != nil {
+		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.AllAnnotationPropertyDecls[parser.FmtPrefixedName(prefix, name)] = &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}}
+		s.AllAnnotationPropertyDecls[ident.String()] = &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}}
 	case parser.Class:
-		if prefix, name, err = s.parseBracedPrefixedName(p); err != nil {
+		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.AllClassDecls[parser.FmtPrefixedName(prefix, name)] = &declarations.ClassDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}}
+		s.AllClassDecls[ident.String()] = &declarations.ClassDecl{Declaration: declarations.Declaration{IRI: ident.String()}}
 	case parser.DataProperty:
-		if prefix, name, err = s.parseBracedPrefixedName(p); err != nil {
+		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.AllDataPropertyDecls[parser.FmtPrefixedName(prefix, name)] = &declarations.DataPropertyDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}}
+		s.AllDataPropertyDecls[ident.String()] = &declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}}
 	case parser.Datatype:
-		if prefix, name, err = s.parseBracedPrefixedName(p); err != nil {
+		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.AllDatatypeDecls[parser.FmtPrefixedName(prefix, name)] = &declarations.DatatypeDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}}
+		s.AllDatatypeDecls[ident.String()] = &declarations.DatatypeDecl{Declaration: declarations.Declaration{IRI: ident.String()}}
 	case parser.NamedIndividual:
-		if prefix, name, err = s.parseBracedPrefixedName(p); err != nil {
+		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.AllNamedIndividualDecls[parser.FmtPrefixedName(prefix, name)] = &declarations.NamedIndividualDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}}
+		s.AllNamedIndividualDecls[ident.String()] = &declarations.NamedIndividualDecl{Declaration: declarations.Declaration{IRI: ident.String()}}
 	case parser.ObjectProperty:
-		if prefix, name, err = s.parseBracedPrefixedName(p); err != nil {
+		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.AllObjectPropertyDecls[parser.FmtPrefixedName(prefix, name)] = &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}}
+		s.AllObjectPropertyDecls[ident.String()] = &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}}
 	}
 
 	if err = p.ConsumeTokens(parser.B2); err != nil {
@@ -357,17 +357,12 @@ func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
 	return
 }
 
-func (s *Ontology) parseBracedPrefixedName(p *parser.Parser) (prefix, name string, err error) {
+func (s *Ontology) parseBracedIRI(p *parser.Parser) (ident *tech.IRI, err error) {
 	if err = p.ConsumeTokens(parser.B1); err != nil {
 		return
 	}
 
-	if prefix, name, err = parsehelper.ParsePrefixedName(p); err != nil {
-		return
-	}
-
-	if !s.IsPrefixKnown(prefix) {
-		err = fmt.Errorf(`unknown prefix "%v"`, prefix)
+	if ident, err = parsehelper.ParseAndResolveIRI(p, s); err != nil {
 		return
 	}
 
@@ -666,29 +661,34 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 	return
 }
 
-func (s *Ontology) ClassDeclExists(prefix, name string) bool {
-	_, ok := s.AllClassDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) ClassDeclExists(ident tech.IRI) bool {
+	_, ok := s.AllClassDecls[ident.String()]
 	return ok
 }
 
-func (s *Ontology) DataPropertyDeclExists(prefix, name string) bool {
-	_, ok := s.AllDataPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) DataPropertyDeclExists(ident tech.IRI) bool {
+	_, ok := s.AllDataPropertyDecls[ident.String()]
 	return ok
 }
 
-func (s *Ontology) NamedIndividualDeclExists(prefix, name string) bool {
-	_, ok := s.AllNamedIndividualDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) NamedIndividualDeclExists(ident tech.IRI) bool {
+	_, ok := s.AllNamedIndividualDecls[ident.String()]
 	return ok
 }
 
-func (s *Ontology) ObjectPropertyDeclExists(prefix, name string) bool {
-	_, ok := s.AllObjectPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *Ontology) ObjectPropertyDeclExists(ident tech.IRI) bool {
+	_, ok := s.AllObjectPropertyDecls[ident.String()]
 	return ok
 }
 
 func (s *Ontology) IsPrefixKnown(prefix string) bool {
 	_, ok := s.Prefixes[prefix]
 	return ok
+}
+
+func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
+	res, ok = s.Prefixes[prefix]
+	return
 }
 
 func (s *Ontology) IsOWL(prefix string) bool {

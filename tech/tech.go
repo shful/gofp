@@ -8,18 +8,18 @@ import (
 )
 
 type Declarations interface {
-	GetAnnotationPropertyDecl(prefix, name string) (*declarations.AnnotationPropertyDecl, bool)
-	GetClassDecl(prefix, name string) (*declarations.ClassDecl, bool)
-	GetDataPropertyDecl(prefix, name string) (*declarations.DataPropertyDecl, bool)
-	GetDatatypeDecl(prefix, name string) (*declarations.DatatypeDecl, bool)
-	GetNamedIndividualDecl(prefix, name string) (*declarations.NamedIndividualDecl, bool)
-	GetObjectPropertyDecl(prefix, name string) (*declarations.ObjectPropertyDecl, bool)
+	GetAnnotationPropertyDecl(ident IRI) (*declarations.AnnotationPropertyDecl, bool)
+	GetClassDecl(ident IRI) (*declarations.ClassDecl, bool)
+	GetDataPropertyDecl(ident IRI) (*declarations.DataPropertyDecl, bool)
+	GetDatatypeDecl(ident IRI) (*declarations.DatatypeDecl, bool)
+	GetNamedIndividualDecl(ident IRI) (*declarations.NamedIndividualDecl, bool)
+	GetObjectPropertyDecl(ident IRI) (*declarations.ObjectPropertyDecl, bool)
 }
 
 type Prefixes interface {
 	// ResolvePrefix returns the IRI part which is associated with the prefix
-	// error is prefix was unknown.
-	ResolvePrefix(prefix string) (string, error)
+	// false if prefix was unknown.
+	ResolvePrefix(prefix string) (resolved string, ok bool)
 	IsPrefixKnown(prefix string) bool //todo remove because ResolvePrefix is enough
 	IsOWL(prefix string) bool         //todo eventually replace by an IRI check with already resolved prefix
 }
@@ -57,6 +57,15 @@ func (s *IRI) NeedsResolution() bool {
 
 func (s *IRI) ResolveTo(name string) {
 	s.Name = name
+}
+
+//todo IsOWL - functions belong somewhere else
+func (s *IRI) IsOWL() bool {
+	return s.Head == "http://www.w3.org/2002/07/owl"
+}
+
+func (s *IRI) IsOWLThing() bool {
+	return s.IsOWL() && s.Name == "Thing"
 }
 
 // ZeroBasedPosWord is "first" for 0, then "second" ... 4th ... and so on

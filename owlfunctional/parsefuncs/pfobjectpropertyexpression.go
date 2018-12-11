@@ -17,34 +17,30 @@ func ParseObjectPropertyExpression(p *parser.Parser, decls tech.Declarations, pr
 	default:
 		p.Unscan()
 		// must be PN
-		var prefix, name string
-		prefix, name, err = parsehelper.ParsePrefixedName(p)
+		var ident *tech.IRI
+		ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 		if err != nil {
 			err = pos.ErrorfUnexpectedToken(tok, lit, "Object Property Name")
 			return
 		}
 
-		if prefixes.IsOWL(prefix) {
+		if ident.IsOWL() {
 			// must be one of the predefined OWL property names
-			switch name {
+			switch ident.Name {
 			case "topObjectProperty":
 				expr = &properties.OWLTopObjectProperty{}
 			case "bottomObjectProperty":
 				expr = &properties.OWLBottomObjectProperty{}
 			default:
-				err = pos.Errorf(`unexpected OWL property "%v"`, name)
+				err = pos.Errorf(`unexpected OWL property "%v"`, ident.Name)
 			}
 			return
 		}
 
-		if !prefixes.IsPrefixKnown(prefix) {
-			err = pos.Errorf("Unknown prefix (%v)", prefix)
-		}
-
 		var ok bool
-		expr, ok = decls.GetObjectPropertyDecl(prefix, name)
+		expr, ok = decls.GetObjectPropertyDecl(*ident)
 		if !ok {
-			err = pos.Errorf("Unknown ref to %v:%v. Expected object property name.", prefix, name)
+			err = pos.Errorf("Unknown ref to %v. Expected object property name.", ident)
 		}
 	}
 	return

@@ -10,7 +10,7 @@ import (
 )
 
 //todo anstelle von ParsePrefixedName überall nutzen
-func ParseAndResolveIdentifier(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
+func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
 	var head, name string
 	pos := p.Pos()
 
@@ -29,7 +29,12 @@ func ParseAndResolveIdentifier(p *parser.Parser, prefixes tech.Prefixes) (ident 
 			return
 		}
 		ident = tech.NewIRIWithPrefix(prefix, name)
-		head, err = prefixes.ResolvePrefix(prefix)
+		var ok bool
+		head, ok = prefixes.ResolvePrefix(prefix)
+		if !ok {
+			err = pos.Errorf("unknown prefix %v", prefix)
+			return
+		}
 		ident.ResolveTo(head)
 	default:
 		err = pos.Errorf("unexpected %v, need IRI, or prefixed name, or _ for anonymous individual.", lit)
@@ -53,7 +58,7 @@ func ParseAndResolveIdentifier(p *parser.Parser, prefixes tech.Prefixes) (ident 
 	return
 }
 
-func ParsePrefixedName(p *parser.Parser) (prefix, name, xxx string, err error) {
+func ParsePrefixedName(p *parser.Parser) (prefix, name string, err error) {
 
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	if tok == parser.IDENT {

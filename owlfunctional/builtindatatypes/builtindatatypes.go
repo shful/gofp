@@ -5,7 +5,7 @@ import "reifenberg.de/gofp/owlfunctional/parser"
 // BuiltinDatatypes are the IRIs predefined in OWL.
 // The mapped value is the parsed token for the IRI.
 // For example, owl:rational and owl:read result in the same token because they are equally parsed into Golangs floating type.
-var BuiltinDatatypes map[string]parser.Token = map[string]parser.Token{
+var BuiltinDatatypes map[string]parser.Token = map[string]parser.Token{ //todo: replace prefixes by IRI
 	"owl:rational":           parser.FLOATLIT,
 	"owl:real":               parser.FLOATLIT,
 	"rdf:PlainLiteral":       parser.STRINGLIT,

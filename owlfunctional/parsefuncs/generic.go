@@ -159,7 +159,13 @@ const (
 // Parset reads IRI or literal or anonymous individual, which is shortened as "t" in the OWL spec
 func Parset(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
 	var tok parser.Token
-	tok, _, _ = p.ScanIgnoreWSAndComment()
+	tok, expr, _ = p.ScanIgnoreWSAndComment()
+
+	if expr == "_" { //todo Is this right?
+		argtype = ArgtypeAnonymousIndividual
+		return
+	}
+
 	p.Unscan()
 
 	if literal.MaybeOWLLiteral(tok) {
@@ -172,28 +178,19 @@ func Parset(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (
 		return
 	}
 
-	expr, err = parsehelper.ParseUnprefixedIRI(p)
-	if err == nil {
-		argtype = ArgtypeIRI
-		return
-	}
-	p.Unscan()
+	// expr, err = parsehelper.ParseUnprefixedIRI(p)
+	// if err == nil {
+	// 	argtype = ArgtypeIRI
+	// 	return
+	// }
+	// p.Unscan()
 
-	// read prefixed name at last, because unparsing prefixed names is not possible
-	// since the parser currently can unparse one token only.
 	pos := p.Pos()
-	var tech, IRI ident
-	ident, err = parsehelper.ParseAndResolveIdentifier(p, prefixes)
+	var ident *tech.IRI
+	ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 	if err == nil {
-		expr = IRI.String()
-		if s1 != "_" { hier weiter: was ist mit AnonymousIndividual, wenn wir jetzt ParseAndResolveIdentifier nehmen?
-			mache Übersicht, wo wird ParsePrefixedName genutzt, und wo sind welche Typen möglich:
-			IRI, :name, prefix:name, name, _  mache passende Funktionen in Parsehelper.
-			Notiere auch überall, welcher Typ im Aufrufer gebraucht wird: hier ist es expr string plus Typinfo.
-			argtype = ArgtypeAnonymousIndividual
-		} else {
-			argtype = ArgtypeIRI
-		}
+		expr = ident.String()
+		argtype = ArgtypeIRI
 		return
 	}
 

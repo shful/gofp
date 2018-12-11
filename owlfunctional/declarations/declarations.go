@@ -2,17 +2,15 @@ package declarations
 
 import (
 	"reifenberg.de/gofp/owlfunctional/meta"
-	"reifenberg.de/gofp/owlfunctional/parser"
 )
 
 type Declaration struct {
-	Prefix string
-	Name   string
+	IRI string
 }
 
-func (s *Declaration) PrefixedName() string {
-	return parser.FmtPrefixedName(s.Prefix, s.Name)
-}
+// func (s *Declaration) PrefixedName() string {
+// 	return parser.FmtPrefixedName(s.Prefix, s.Name)
+// }
 
 type AnnotationPropertyDecl struct {
 	Declaration

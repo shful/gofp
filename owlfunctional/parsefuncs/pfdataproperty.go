@@ -12,34 +12,30 @@ func ParseDataProperty(p *parser.Parser, decls tech.Declarations, prefixes tech.
 
 	pos := p.Pos()
 	// must be R
-	var prefix, name string
-	prefix, name, err = parsehelper.ParsePrefixedName(p)
+	var ident *tech.IRI
+	ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 
 	if err != nil {
 		return
 	}
 
-	if prefixes.IsOWL(prefix) {
+	if ident.IsOWL() {
 		// must be one of the predefined OWL property names
-		switch name {
+		switch ident.Name {
 		case "topDataProperty":
 			expr = &properties.OWLTopDataProperty{}
 		case "bottomDataProperty":
 			expr = &properties.OWLBottomDataProperty{}
 		default:
-			err = pos.Errorf(`unexpected OWL property "%v"`, name)
+			err = pos.Errorf(`unexpected OWL property "%v"`, ident.Name)
 		}
 		return
 	}
 
-	if !prefixes.IsPrefixKnown(prefix) {
-		err = pos.Errorf("Unknown prefix when parsing DataProperty (%v)", prefix)
-	}
-
 	var ok bool
-	expr, ok = decls.GetDataPropertyDecl(prefix, name)
+	expr, ok = decls.GetDataPropertyDecl(*ident)
 	if !ok {
-		err = pos.Errorf("Unknown ref to %v:%v", prefix, name)
+		err = pos.Errorf("Unknown ref to %v", ident)
 	}
 	return
 }

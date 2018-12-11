@@ -53,37 +53,33 @@ func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes te
 		expr, err = parseDataMinCardinality(p, decls, prefixes)
 	default:
 		// must be CN
-		var prefix, name string
-		prefix, name, err = parsehelper.ParsePrefixedName(p)
+		var ident *tech.IRI
+		ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 
 		if err != nil {
 			err = pos.ErrorfUnexpectedToken(tok, lit, "Classname inside Class Expression")
 			return
 		}
 
-		if prefixes.IsOWL(prefix) {
+		if ident.IsOWL() {
 			//must be one of the predefined OWL classes
-			switch name {
+			switch ident.Name {
 			case "Thing":
 				expr = &classexpression.OWLThing{}
 			case "Nothing":
 				expr = &classexpression.OWLNothing{}
 			default:
-				err = pos.Errorf(`unexpected OWL name "%v"`, name)
+				err = pos.Errorf(`unexpected OWL name "%v"`, ident.Name)
 			}
 			return
 		} else {
 
 		}
 
-		if !prefixes.IsPrefixKnown(prefix) {
-			err = pos.Errorf("Unknown prefix for class (%v)", prefix)
-			return
-		}
 		var ok bool
-		expr, ok = decls.GetClassDecl(prefix, name)
+		expr, ok = decls.GetClassDecl(*ident)
 		if !ok {
-			err = pos.Errorf("Unknown ref to %v:%v", prefix, name)
+			err = pos.Errorf("Unknown ref to %v", ident)
 		}
 	}
 

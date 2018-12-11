@@ -30,7 +30,7 @@ func ParseDataRange(p *parser.Parser, decls tech.Declarations, prefixes tech.Pre
 		parseDatatypeRestriction(p, decls, prefixes)
 	default:
 		// must be literal, i.e. named datatype (DN)
-		expr, err = parseNamedDatatype(p, decls)
+		expr, err = parseNamedDatatype(p, decls, prefixes)
 	}
 	return
 }
@@ -42,7 +42,7 @@ func parseDatatypeRestriction(p *parser.Parser, decls tech.Declarations, prefixe
 
 	// The DN
 	var DN meta.NamedDatatype
-	DN, err = parseNamedDatatype(p, decls)
+	DN, err = parseNamedDatatype(p, decls, prefixes)
 	if err != nil {
 		return
 	}
@@ -132,30 +132,28 @@ func parseFVPairUntilB2(p *parser.Parser, prefixes tech.Prefixes) (fvPair *facet
 // Datatypes are a kind of data range, which allows them to be used in restrictions.
 // As explained in Section 7, each data range is associated with an arity; for datatypes, the arity is always one.
 // The built-in datatype rdfs:Literal denotes any set of data values that contains the union of the value spaces of all datatypes.
-func parseNamedDatatype(p *parser.Parser, decls tech.Declarations) (expr meta.NamedDatatype, err error) {
-	var prefix, name string
-	var iri string
+func parseNamedDatatype(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.NamedDatatype, err error) {
+	var ident *tech.IRI
 
 	pos := p.Pos()
-	prefix, name, err = parsehelper.ParsePrefixedName(p)
+	ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "parsing named datatype")
 		return
 	}
 
 	// Builtin Datatype IRI is allowed:
-	iri = parser.FmtPrefixedName(prefix, name)
-	if builtindatatypes.BuiltinDatatypeExists(iri) {
-		expr = &facets.BuiltinDatatype{facets.NamedDatatypeImpl{DatatypeIRI: parser.FmtPrefixedName(prefix, name)}}
+	if builtindatatypes.BuiltinDatatypeExists(ident.String()) {
+		expr = &facets.BuiltinDatatype{facets.NamedDatatypeImpl{DatatypeIRI: ident.String()}}
 		return
 	}
 
 	// Declared Datatype IRI is allowed:
-	if _, ok := decls.GetDatatypeDecl(prefix, name); ok {
-		expr = &facets.CustomNamedDatatype{facets.NamedDatatypeImpl{DatatypeIRI: parser.FmtPrefixedName(prefix, name)}}
+	if _, ok := decls.GetDatatypeDecl(*ident); ok {
+		expr = &facets.CustomNamedDatatype{facets.NamedDatatypeImpl{DatatypeIRI: ident.String()}}
 		return
 	}
 
-	err = pos.Errorf("unknown datatype literal (%v)", parser.FmtPrefixedName(prefix, name))
+	err = pos.Errorf("unknown datatype literal (%v)", ident)
 	return
 }
