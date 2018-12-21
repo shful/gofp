@@ -10,7 +10,6 @@ import (
 	"reifenberg.de/gofp/tech"
 )
 
-//todo anstelle von ParsePrefixedName überall nutzen
 func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
 	var head, name string
 	pos := p.Pos()

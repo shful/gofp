@@ -16,7 +16,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	p = mock.NewTestParser(ontologyTestString)
-	o := NewOntology(map[string]string{"": "localprefix", "hello": "<urn:test.de>", "xsd": builtindatatypes.PRE_XSD})
+	o := NewOntology(map[string]string{"": "localprefix", "hello": "hello.de", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS})
 
 	parser.TokenLog = true
 	err = o.Parse(p)
@@ -31,10 +31,10 @@ func TestParsePizzaOntology(t *testing.T) {
 	if len(o.AllClassDecls) != 50 {
 		t.Fatal(o.AllClassDecls)
 	}
-	if !o.ClassDeclExists("AmericanHotPizza") {
+	if !o.ClassDeclExists("localprefix#AmericanHotPizza") {
 		t.Fatal()
 	}
-	if !o.ClassDeclExists("test.de#FishbonePizza") {
+	if !o.ClassDeclExists("hello.de#FishbonePizza") {
 		t.Fatal()
 	}
 	if o.ClassDeclExists("notexisting") {
@@ -44,26 +44,26 @@ func TestParsePizzaOntology(t *testing.T) {
 	if len(o.AllDataPropertyDecls) != 1 {
 		t.Fatal(o.AllDataPropertyDecls)
 	}
-	if !o.DataPropertyDeclExists("hasCaloricContentValue") {
+	if !o.DataPropertyDeclExists("localprefix#hasCaloricContentValue") {
 		t.Fatal()
 	}
-	if o.DataPropertyDeclExists("hasTopping") {
+	if o.DataPropertyDeclExists("localprefix#hasTopping") {
 		t.Fatal()
 	}
-	if o.DataPropertyDeclExists("HasTopping") { // case differs
+	if o.DataPropertyDeclExists("localprefix#HasTopping") { // case differs
 		t.Fatal()
 	}
 	if len(o.AllObjectPropertyDecls) != 7 {
 		t.Fatal(o.AllObjectPropertyDecls)
 	}
-	if !o.ObjectPropertyDeclExists("hasTopping") {
+	if !o.ObjectPropertyDeclExists("localprefix#hasTopping") {
 		t.Fatal()
 	}
 
 	if len(o.AllNamedIndividualDecls) != 4 {
 		t.Fatal(o.AllNamedIndividualDecls)
 	}
-	if !o.NamedIndividualDeclExists("MyQuattroFormaggio") {
+	if !o.NamedIndividualDeclExists("localprefix#MyQuattroFormaggio") {
 		t.Fatal()
 	}
 
@@ -75,7 +75,7 @@ func TestParsePizzaOntology(t *testing.T) {
 		s := o.AllSubObjectPropertyOfs[0]
 		switch x := s.P1.(type) {
 		case *declarations.ObjectPropertyDecl:
-			if x.IRI != "hasBase" {
+			if x.IRI != "localprefix#hasBase" {
 				t.Fatal(x)
 			}
 		default:
@@ -90,7 +90,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	{
 		s := o.AllInverseObjectProperties[0] // the slice preserves the statement order
 		x := s.P1.(*declarations.ObjectPropertyDecl)
-		if x.IRI != "hasBase" {
+		if x.IRI != "localprefix#hasBase" {
 			t.Fatal(x)
 		}
 	}
@@ -102,11 +102,11 @@ func TestParsePizzaOntology(t *testing.T) {
 	{
 		s := o.AllObjectPropertyDomains[0]
 		x := s.C.(*declarations.ClassDecl)
-		if x.IRI != "Pizza" {
+		if x.IRI != "localprefix#Pizza" {
 			t.Fatal(x)
 		}
 		y := s.P.(*declarations.ObjectPropertyDecl)
-		if y.IRI != "hasBase" {
+		if y.IRI != "localprefix#hasBase" {
 			t.Fatal(y)
 		}
 	}
@@ -118,11 +118,11 @@ func TestParsePizzaOntology(t *testing.T) {
 	{
 		s := o.AllObjectPropertyRanges[0]
 		x := s.C.(*declarations.ClassDecl)
-		if x.IRI != "PizzaBase" {
+		if x.IRI != "localprefix#PizzaBase" {
 			t.Fatal(x)
 		}
 		y := s.P.(*declarations.ObjectPropertyDecl)
-		if y.IRI != "hasBase" {
+		if y.IRI != "localprefix#hasBase" {
 			t.Fatal(y)
 		}
 	}
@@ -134,11 +134,11 @@ func TestParsePizzaOntology(t *testing.T) {
 	{
 		s := o.AllDataPropertyRanges[0]
 		x := s.R.(*declarations.DataPropertyDecl)
-		if x.IRI != "hasCaloricContentValue" {
+		if x.IRI != "localprefix#hasCaloricContentValue" {
 			t.Fatal(x)
 		}
 		y := s.D.(*facets.BuiltinDatatype)
-		if y.DatatypeIRI != "xsd:integer" {
+		if y.DatatypeIRI != builtindatatypes.PRE_XSD+"#integer" {
 			t.Fatal(y)
 		}
 	}
@@ -150,7 +150,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	{
 		s := o.AllSubClassOfs[0]
 		x := s.C1.(*declarations.ClassDecl)
-		if x.IRI != "hello#FishbonePizza" {
+		if x.IRI != "hello.de#FishbonePizza" {
 			t.Fatal(x)
 		}
 	}
@@ -161,9 +161,9 @@ func TestParseEquivalentClasses(t *testing.T) {
 	var err error
 	var o *Ontology = NewOntology(map[string]string{})
 	o.Prefixes[""] = "localprefix"
-	o.AllClassDecls[`:Pizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "Pizza"}}
-	o.AllClassDecls[`:InterestingPizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "InterestingPizza"}}
-	o.AllObjectPropertyDecls[`:hasTopping`] = &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: "hasTopping"}}
+	o.AllClassDecls[`localprefix#Pizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#Pizza"}}
+	o.AllClassDecls[`localprefix#InterestingPizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#InterestingPizza"}}
+	o.AllObjectPropertyDecls[`localprefix#hasTopping`] = &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: "localprefix#hasTopping"}}
 
 	p = mock.NewTestParser(`EquivalentClasses(:InterestingPizza ObjectIntersectionOf(:Pizza ObjectMinCardinality(3 :hasTopping)))	`)
 	// parser.TokenLog = true
@@ -198,7 +198,7 @@ func TestParseAnnotationAssertion(t *testing.T) {
 	o.Prefixes["xsd"] = "The xsd-ns"
 	o.Prefixes["rdfs"] = "The rdfs-ns"
 	o.Prefixes["pizza"] = "The-Pizza-Namespace"
-	o.AllClassDecls[`:MargheritaPizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "MargheritaPizza"}}
+	o.AllClassDecls[`The local ns:MargheritaPizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "The local ns#MargheritaPizza"}}
 
 	// 3rd param in AnnotationAssertion can be IRI, literal, or anonymous individual
 
@@ -217,7 +217,7 @@ func TestParseAnnotationAssertion(t *testing.T) {
 		t.Fatal(o.AllAnnotationAssertions)
 	}
 	expr = o.AllAnnotationAssertions[0]
-	if expr.T != `"Pizza from Tomato and Mozzarella"^^xsd:string` {
+	if expr.T != `"Pizza from Tomato and Mozzarella"^^The xsd-ns#string` {
 		t.Fatal(expr.T)
 	}
 
