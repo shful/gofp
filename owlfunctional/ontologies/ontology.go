@@ -126,9 +126,9 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 
 		switch tok {
 		case parser.AnnotationAssertion:
-			s.parseAnnotationAssertion(p)
+			err = s.parseAnnotationAssertion(p)
 		case parser.AsymmetricObjectProperty:
-			s.parseAsymmetricObjectProperty(p)
+			err = s.parseAsymmetricObjectProperty(p)
 		case parser.ClassAssertion:
 			err = s.parseClassAssertion(p)
 		case parser.DataPropertyAssertion:
@@ -200,8 +200,7 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	var s_ string
-
-	s_, _, err = parsefuncs.Parset(p, s, s) // a misuse, should disallow literals for the 2nd param
+	s_, _, err = parsefuncs.Parset(p, s, s) //todo a misuse, should disallow literals for the 2nd param
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 2nd param in AnnotationAssertion")
 		return
