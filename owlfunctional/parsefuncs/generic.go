@@ -156,11 +156,43 @@ const (
 	ArgtypeLiteral
 )
 
+// Parset reads IRI or anonymous individual, which is shortened as "s" in the OWL spec
+func Parses(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
+	pos := p.Pos()
+
+	_, expr, _ = p.ScanIgnoreWSAndComment()
+	if expr == "_" { //todo Is this right?
+		argtype = ArgtypeAnonymousIndividual
+		return
+	}
+
+	p.Unscan()
+
+	expr, err = parsehelper.ParseUnprefixedIRI(p)
+	if err == nil {
+		argtype = ArgtypeIRI
+		return
+	}
+	p.Unscan()
+
+	var ident *tech.IRI
+	ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
+	if err == nil {
+		expr = ident.String()
+		argtype = ArgtypeIRI
+		return
+	}
+
+	pos.EnrichErrorMsg(err, "expected IRI or anonymous individual")
+	return
+}
+
 // Parset reads IRI or literal or anonymous individual, which is shortened as "t" in the OWL spec
 func Parset(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
 	var tok parser.Token
-	tok, expr, _ = p.ScanIgnoreWSAndComment()
+	pos := p.Pos()
 
+	tok, expr, _ = p.ScanIgnoreWSAndComment()
 	if expr == "_" { //todo Is this right?
 		argtype = ArgtypeAnonymousIndividual
 		return
@@ -178,14 +210,13 @@ func Parset(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (
 		return
 	}
 
-	// expr, err = parsehelper.ParseUnprefixedIRI(p)
-	// if err == nil {
-	// 	argtype = ArgtypeIRI
-	// 	return
-	// }
-	// p.Unscan()
+	expr, err = parsehelper.ParseUnprefixedIRI(p)
+	if err == nil {
+		argtype = ArgtypeIRI
+		return
+	}
+	p.Unscan()
 
-	pos := p.Pos()
 	var ident *tech.IRI
 	ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 	if err == nil {

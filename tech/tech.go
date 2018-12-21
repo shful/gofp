@@ -55,8 +55,8 @@ func (s *IRI) NeedsResolution() bool {
 	return s.Prefix != "" && s.Head == ""
 }
 
-func (s *IRI) ResolveTo(name string) {
-	s.Name = name
+func (s *IRI) ResolveTo(head string) {
+	s.Head = head
 }
 
 //todo IsOWL - functions belong somewhere else

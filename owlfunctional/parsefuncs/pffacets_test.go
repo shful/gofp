@@ -6,6 +6,7 @@ import (
 	"reifenberg.de/gofp/mock"
 	"reifenberg.de/gofp/owlfunctional/facets"
 	"reifenberg.de/gofp/owlfunctional/parser"
+	"reifenberg.de/gofp/tech"
 )
 
 func TestParseDatatypeRestriction(t *testing.T) {
@@ -14,7 +15,7 @@ func TestParseDatatypeRestriction(t *testing.T) {
 	var err error
 	var expr facets.DatatypeRestriction
 
-	decls, prefixes := mock.NewBuilder().AddPrefixes("xsd").AddClassDecl("", "CheeseTopping").Get()
+	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().AddClassDecl(*tech.NewIRI("", "CheeseTopping")).Get()
 
 	p = mock.NewTestParser(`DatatypeRestriction(xsd:integer xsd:minInclusive "400"^^xsd:integer)`)
 
@@ -24,7 +25,7 @@ func TestParseDatatypeRestriction(t *testing.T) {
 	}
 
 	dn := expr.DN
-	if dn.(*facets.BuiltinDatatype).DatatypeIRI != "xsd:integer" {
+	if dn.(*facets.BuiltinDatatype).DatatypeIRI != "http://www.w3.org/2001/XMLSchema#integer" {
 		t.Fatal()
 	}
 	fvPairs := expr.FVPairs

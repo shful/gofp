@@ -1,6 +1,7 @@
 package parsehelper
 
 import (
+	"log"
 	"net/url"
 	"strconv"
 	"strings"
@@ -35,7 +36,10 @@ func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.I
 			err = pos.Errorf("unknown prefix %v", prefix)
 			return
 		}
+		log.Printf("Resolving prefixed %v -> %v\n", ident, head)
 		ident.ResolveTo(head)
+		log.Printf("Resolved to %v\n", ident)
+
 	default:
 		err = pos.Errorf("unexpected %v, need IRI, or prefixed name, or _ for anonymous individual.", lit)
 	}

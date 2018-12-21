@@ -79,7 +79,7 @@ func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes te
 		var ok bool
 		expr, ok = decls.GetClassDecl(*ident)
 		if !ok {
-			err = pos.Errorf("Unknown ref to %v", ident)
+			err = pos.Errorf("Unknown ref to %v. Expected class expression.", ident)
 		}
 	}
 

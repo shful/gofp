@@ -2,41 +2,49 @@ package builtindatatypes
 
 import "reifenberg.de/gofp/owlfunctional/parser"
 
+const (
+	PRE_OWL  = "http://www.w3.org/2002/07/owl"
+	PRE_RDF  = "http://www.w3.org/1999/02/22-rdf-syntax-ns"
+	PRE_XML  = "http://www.w3.org/XML/1998/namespace"
+	PRE_XSD  = "http://www.w3.org/2001/XMLSchema"
+	PRE_RDFS = "http://www.w3.org/2000/01/rdf-schema"
+)
+
 // BuiltinDatatypes are the IRIs predefined in OWL.
 // The mapped value is the parsed token for the IRI.
 // For example, owl:rational and owl:read result in the same token because they are equally parsed into Golangs floating type.
-var BuiltinDatatypes map[string]parser.Token = map[string]parser.Token{ //todo: replace prefixes by IRI
-	"http://www.w3.org/2002/07/owl#rational":                  parser.FLOATLIT,
-	"http://www.w3.org/2002/07/owl#real":                      parser.FLOATLIT,
-	"http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral": parser.STRINGLIT,
-	"http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral":   parser.STRINGLIT,
-	"http://www.w3.org/2000/01/rdf-schema#Literal":            parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#anyURI":                 parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#base64Binary":           parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#boolean":                parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#byte":                   parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#dateTime":               parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#dateTimeStamp":          parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#decimal":                parser.FLOATLIT,
-	"http://www.w3.org/2001/XMLSchema#double":                 parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#hexBinary":              parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#int":                    parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#integer":                parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#long":                   parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#Name":                   parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#negativeInteger":        parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#NMTOKEN":                parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#nonNegativeInteger":     parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#nonPositiveInteger":     parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#normalizedString":       parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#positiveInteger":        parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#short":                  parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#string":                 parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#token":                  parser.STRINGLIT,
-	"http://www.w3.org/2001/XMLSchema#unsignedByte":           parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#unsignedInt":            parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#unsignedLong":           parser.INTLIT,
-	"http://www.w3.org/2001/XMLSchema#unsignedShort":          parser.INTLIT,
+var BuiltinDatatypes map[string]parser.Token = map[string]parser.Token{
+	PRE_OWL + "#rational":           parser.FLOATLIT,
+	PRE_OWL + "#real":               parser.FLOATLIT,
+	PRE_RDF + "#PlainLiteral":       parser.STRINGLIT,
+	PRE_RDF + "#XMLLiteral":         parser.STRINGLIT,
+	PRE_RDFS + "#Literal":           parser.STRINGLIT,
+	PRE_XSD + "#anyURI":             parser.STRINGLIT,
+	PRE_XSD + "#base64Binary":       parser.STRINGLIT,
+	PRE_XSD + "#boolean":            parser.STRINGLIT,
+	PRE_XSD + "#byte":               parser.INTLIT,
+	PRE_XSD + "#dateTime":           parser.STRINGLIT,
+	PRE_XSD + "#dateTimeStamp":      parser.STRINGLIT,
+	PRE_XSD + "#decimal":            parser.FLOATLIT,
+	PRE_XSD + "#double":             parser.STRINGLIT,
+	PRE_XSD + "#hexBinary":          parser.STRINGLIT,
+	PRE_XSD + "#int":                parser.INTLIT,
+	PRE_XSD + "#integer":            parser.INTLIT,
+	PRE_XSD + "#long":               parser.INTLIT,
+	PRE_XSD + "#Name":               parser.STRINGLIT,
+	PRE_XSD + "#negativeInteger":    parser.INTLIT,
+	PRE_XSD + "#NMTOKEN":            parser.STRINGLIT,
+	PRE_XSD + "#nonNegativeInteger": parser.INTLIT,
+	PRE_XSD + "#nonPositiveInteger": parser.INTLIT,
+	PRE_XSD + "#normalizedString":   parser.STRINGLIT,
+	PRE_XSD + "#positiveInteger":    parser.INTLIT,
+	PRE_XSD + "#short":              parser.INTLIT,
+	PRE_XSD + "#string":             parser.STRINGLIT,
+	PRE_XSD + "#token":              parser.STRINGLIT,
+	PRE_XSD + "#unsignedByte":       parser.INTLIT,
+	PRE_XSD + "#unsignedInt":        parser.INTLIT,
+	PRE_XSD + "#unsignedLong":       parser.INTLIT,
+	PRE_XSD + "#unsignedShort":      parser.INTLIT,
 }
 
 func BuiltinDatatypeExists(iri string) bool {

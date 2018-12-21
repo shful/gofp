@@ -27,6 +27,8 @@ package gofp
 import (
 	"io"
 
+	"reifenberg.de/gofp/parsehelper"
+
 	"reifenberg.de/gofp/owlfunctional/ontologies"
 	"reifenberg.de/gofp/owlfunctional/parser"
 )
@@ -38,7 +40,7 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 	var prefixes map[string]string
 
 	p := parser.NewParser(r, sourceName)
-	// parser.TokenLog = true
+	parser.TokenLog = true
 	prefixes = map[string]string{}
 	for {
 		tok, lit, pos := p.ScanIgnoreWSAndComment()
@@ -67,7 +69,7 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 
 // parsePrefixTo parses the next Prefix expression and
 // fills the given prefixes map.
-func parsePrefixTo(prefixes map[string]string, lit string, p *parser.Parser) (err error) {
+func parsePrefixTo(prefixes map[string]string, p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.Prefix, parser.B1); err != nil {
 		return err
 	}
@@ -86,8 +88,8 @@ func parsePrefixTo(prefixes map[string]string, lit string, p *parser.Parser) (er
 	if err = p.ConsumeTokens(parser.COLON, parser.EQUALS); err != nil {
 		return err
 	}
-	tok, prefixVal, pos := p.ScanIgnoreWSAndComment()
-	if tok != parser.IRI {
+	prefixVal, err := parsehelper.ParseUnprefixedIRI(p) //.ScanIgnoreWSAndComment()
+	if err != nil {
 		return pos.Errorf("unexpected %v when parsing prefix, need IRI", prefixVal)
 	}
 	if err = p.ConsumeTokens(parser.B2); err != nil {

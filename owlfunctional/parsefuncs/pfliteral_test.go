@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"reifenberg.de/gofp/mock"
+	"reifenberg.de/gofp/owlfunctional/builtindatatypes"
 	"reifenberg.de/gofp/owlfunctional/literal"
 	"reifenberg.de/gofp/owlfunctional/parser"
 )
@@ -12,7 +13,7 @@ func TestParseInt(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	var l literal.OWLLiteral
-	_, prefixes := mock.NewBuilder().AddPrefixes("xsd").Get()
+	_, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().Get()
 
 	p = mock.NewTestParser(`1`)
 	l, err = ParseOWLLiteral(p, prefixes)
@@ -22,7 +23,7 @@ func TestParseInt(t *testing.T) {
 	if l.Value != "1" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != "xsd:integer" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#integer" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -37,7 +38,7 @@ func TestParseInt(t *testing.T) {
 	if l.Value != "099" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != "xsd:positiveInteger" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#positiveInteger" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -48,7 +49,7 @@ func TestParseFloat(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	var l literal.OWLLiteral
-	_, prefixes := mock.NewBuilder().AddPrefixes("xsd").Get()
+	_, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().Get()
 
 	p = mock.NewTestParser(`3.0`)
 	l, err = ParseOWLLiteral(p, prefixes)
@@ -58,7 +59,7 @@ func TestParseFloat(t *testing.T) {
 	if l.Value != "3.0" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != "xsd:decimal" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#decimal" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -70,7 +71,7 @@ func TestParseString(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	var l literal.OWLLiteral
-	_, prefixes := mock.NewBuilder().AddPrefixes("xsd").Get()
+	_, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().Get()
 
 	p = mock.NewTestParser(`"Hello World"`)
 	l, err = ParseOWLLiteral(p, prefixes)
@@ -80,7 +81,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "Hello World" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != "xsd:string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -95,7 +96,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "Hello Wörld" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != "xsd:string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "en" {
@@ -110,7 +111,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "123" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != "xsd:string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -125,7 +126,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "0.0" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != "xsd:string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "LongLangTäg" {
@@ -137,7 +138,7 @@ func TestParseBool(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	var l literal.OWLLiteral
-	_, prefixes := mock.NewBuilder().AddPrefixes("xsd").Get()
+	_, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().Get()
 
 	p = mock.NewTestParser(`true`)
 	l, err = ParseOWLLiteral(p, prefixes)
@@ -147,7 +148,7 @@ func TestParseBool(t *testing.T) {
 	if l.Value != "true" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != "xsd:boolean" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"#boolean" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -158,7 +159,7 @@ func TestParseBool(t *testing.T) {
 func TestParseMismatches(t *testing.T) {
 	var p *parser.Parser
 	var err error
-	_, prefixes := mock.NewBuilder().AddPrefixes("xsd").Get()
+	_, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().Get()
 
 	p = mock.NewTestParser(`1^^xsd:string`)
 	_, err = ParseOWLLiteral(p, prefixes)
@@ -176,7 +177,7 @@ func TestParseCustomDatatypeName(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	var l literal.OWLLiteral
-	_, prefixes := mock.NewBuilder().AddPrefixes("", "xsd").Get()
+	_, prefixes := mock.NewBuilder().AddPrefixes("").AddOWLStandardPrefixes().Get()
 
 	p = mock.NewTestParser(`"Da5id"^^:blacksun`)
 	l, err = ParseOWLLiteral(p, prefixes)
@@ -186,7 +187,7 @@ func TestParseCustomDatatypeName(t *testing.T) {
 	if l.Value != "Da5id" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != ":blacksun" {
+	if l.Literaltype != "longname-for-#blacksun" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {

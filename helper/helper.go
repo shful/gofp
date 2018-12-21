@@ -2,7 +2,7 @@ package helper
 
 import (
 	"reifenberg.de/gofp/owlfunctional/declarations"
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"reifenberg.de/gofp/tech"
 )
 
 type DeclarationsImpl struct {
@@ -25,32 +25,32 @@ func NewDeclarationsImpl() *DeclarationsImpl {
 	}
 }
 
-func (s *DeclarationsImpl) GetAnnotationPropertyDecl(prefix, name string) (decl *declarations.AnnotationPropertyDecl, ok bool) {
-	decl, ok = s.annotationPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *DeclarationsImpl) GetAnnotationPropertyDecl(ident tech.IRI) (decl *declarations.AnnotationPropertyDecl, ok bool) {
+	decl, ok = s.annotationPropertyDecls[ident.String()]
 	return
 }
-func (s *DeclarationsImpl) GetClassDecl(prefix, name string) (decl *declarations.ClassDecl, ok bool) {
-	decl, ok = s.classDecls[parser.FmtPrefixedName(prefix, name)]
-	return
-}
-
-func (s *DeclarationsImpl) GetDataPropertyDecl(prefix, name string) (decl *declarations.DataPropertyDecl, ok bool) {
-	decl, ok = s.dataPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *DeclarationsImpl) GetClassDecl(ident tech.IRI) (decl *declarations.ClassDecl, ok bool) {
+	decl, ok = s.classDecls[ident.String()]
 	return
 }
 
-func (s *DeclarationsImpl) GetDatatypeDecl(prefix, name string) (decl *declarations.DatatypeDecl, ok bool) {
-	decl, ok = s.datatypeDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *DeclarationsImpl) GetDataPropertyDecl(ident tech.IRI) (decl *declarations.DataPropertyDecl, ok bool) {
+	decl, ok = s.dataPropertyDecls[ident.String()]
 	return
 }
 
-func (s *DeclarationsImpl) GetNamedIndividualDecl(prefix, name string) (decl *declarations.NamedIndividualDecl, ok bool) {
-	decl, ok = s.namedIndividualDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *DeclarationsImpl) GetDatatypeDecl(ident tech.IRI) (decl *declarations.DatatypeDecl, ok bool) {
+	decl, ok = s.datatypeDecls[ident.String()]
 	return
 }
 
-func (s *DeclarationsImpl) GetObjectPropertyDecl(prefix, name string) (decl *declarations.ObjectPropertyDecl, ok bool) {
-	decl, ok = s.objectPropertyDecls[parser.FmtPrefixedName(prefix, name)]
+func (s *DeclarationsImpl) GetNamedIndividualDecl(ident tech.IRI) (decl *declarations.NamedIndividualDecl, ok bool) {
+	decl, ok = s.namedIndividualDecls[ident.String()]
+	return
+}
+
+func (s *DeclarationsImpl) GetObjectPropertyDecl(ident tech.IRI) (decl *declarations.ObjectPropertyDecl, ok bool) {
+	decl, ok = s.objectPropertyDecls[ident.String()]
 	return
 }
 

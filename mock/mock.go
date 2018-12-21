@@ -32,6 +32,11 @@ func (s *MockPrefixes) IsOWL(prefix string) bool {
 	return val == `<http://www.w3.org/2002/07/owl#>`
 }
 
+func (s *MockPrefixes) ResolvePrefix(prefix string) (res string, ok bool) {
+	res, ok = s.data[prefix]
+	return
+}
+
 // Builder builds new mock data.
 type Builder struct {
 	decls    *MockDeclarations
@@ -49,6 +54,8 @@ func (s *Builder) Get() (tech.Declarations, tech.Prefixes) {
 	return s.decls, s.prefixes
 }
 
+// AddPrefixes adds one automatic long value for each prefix P into the prefixes map.
+// Each has the form "longname-for-P"
 func (s *Builder) AddPrefixes(prefixes ...string) *Builder {
 	for _, prefix := range prefixes {
 		s.prefixes.data[prefix] = "longname-for-" + prefix
@@ -56,32 +63,36 @@ func (s *Builder) AddPrefixes(prefixes ...string) *Builder {
 	return s
 }
 
-// AddPrefixOWL adds this often used prefix into the mock data.
-func (s *Builder) AddPrefixOWL() *Builder {
-	s.prefixes.data["owl"] = `<http://www.w3.org/2002/07/owl#>`
+// AddOWLStandardPrefixes adds these often used prefixes into the mock data.
+func (s *Builder) AddOWLStandardPrefixes() *Builder {
+	s.prefixes.data["owl"] = `http://www.w3.org/2002/07/owl`
+	s.prefixes.data["rdf"] = `http://www.w3.org/1999/02/22-rdf-syntax-ns`
+	s.prefixes.data["rdfs"] = `http://www.w3.org/2000/01/rdf-schema`
+	s.prefixes.data["xml"] = `http://www.w3.org/XML/1998/namespace`
+	s.prefixes.data["xsd"] = `http://www.w3.org/2001/XMLSchema`
 	return s
 }
 
-func (s *Builder) AddClassDecl(prefix string, name string) *Builder {
+func (s *Builder) AddClassDecl(ident tech.IRI) *Builder {
 	s.decls.AddClassDeclForTest(
-		parser.FmtPrefixedName(prefix, name),
-		&declarations.ClassDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}},
+		ident.String(),
+		&declarations.ClassDecl{Declaration: declarations.Declaration{IRI: ident.String()}},
 	)
 	return s
 }
 
-func (s *Builder) AddDataPropertyDecl(prefix string, name string) *Builder {
+func (s *Builder) AddDataPropertyDecl(ident tech.IRI) *Builder {
 	s.decls.AddDataPropertyDeclForTest(
-		parser.FmtPrefixedName(prefix, name),
-		&declarations.DataPropertyDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}},
+		ident.String(),
+		&declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}},
 	)
 	return s
 }
 
-func (s *Builder) AddObjectPropertyDecl(prefix string, name string) *Builder {
+func (s *Builder) AddObjectPropertyDecl(ident tech.IRI) *Builder {
 	s.decls.AddObjectPropertyDeclForTest(
-		parser.FmtPrefixedName(prefix, name),
-		&declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{Prefix: prefix, Name: name}},
+		ident.String(),
+		&declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}},
 	)
 	return s
 }

@@ -5,9 +5,27 @@ import (
 	"strings"
 	"testing"
 
+	"reifenberg.de/gofp/mock"
 	"reifenberg.de/gofp/owlfunctional/ontologies"
 	"reifenberg.de/gofp/owlfunctional/parser"
 )
+
+func TestParsePrefixTo(t *testing.T) {
+	var err error
+	// var o *ontologies.Ontology
+	// parser.TokenLog = true
+	var p *parser.Parser
+
+	// o, err = OntologyFromReader(strings.NewReader(`Prefix(terms:=<http://purl.org/dc/terms/>)`), "Testsource")
+	var prefixes map[string]string = map[string]string{}
+
+	p = mock.NewTestParser(`Prefix(terms:=<http://purl.org/dc/terms/>)`)
+hier weiter
+	err = parsePrefixTo(prefixes, p)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
 
 func TestParsePosition1(t *testing.T) {
 	var err error

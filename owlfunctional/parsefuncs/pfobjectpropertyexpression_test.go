@@ -12,7 +12,7 @@ import (
 func TestParseObjectPropertyExpression(t *testing.T) {
 	var p *parser.Parser
 	var err error
-	decls, prefixes := mock.NewBuilder().AddPrefixes("").AddPrefixOWL().Get()
+	decls, prefixes := mock.NewBuilder().AddPrefixes("").AddOWLStandardPrefixes().Get()
 
 	p = mock.NewTestParser(`owl:topObjectProperty`)
 	var expr meta.ObjectPropertyExpression

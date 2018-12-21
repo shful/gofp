@@ -15,35 +15,48 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 	var tok parser.Token
 	var lit string
 	var pos parser.ParserPosition
-	var langtag, literaltype string
+	var langtag string
+	var literaltype string
+	var datatypeIRI *tech.IRI
 
 	tok, lit, pos = p.ScanIgnoreWSAndComment()
 
 	switch tok {
 	case parser.OWLTrue, parser.OWLFalse:
-		l = literal.OWLLiteral{Value: lit, LangTag: "", Literaltype: "xsd:boolean"}
-		return
+		langtag = ""
+		literaltype = builtindatatypes.PRE_XSD + "#boolean"
 	case parser.STRINGLIT:
+		fmt.Println("STRINGLIT")
 		langtag, err = parseSuffixLangtag(p)
 		if err != nil {
 			return
 		}
 		fallthrough
 	case parser.INTLIT, parser.FLOATLIT:
-		literaltype, err = parseSuffixLiteraltype(p, prefixes)
+		datatypeIRI, err = parseSuffixLiteraltype(p, prefixes)
 		if err != nil {
 			return
 		}
-		if literaltype == "" {
+		if datatypeIRI == nil { // literal had no ^^
 			switch tok {
 			case parser.INTLIT:
-				literaltype = "xsd:integer"
+				literaltype = builtindatatypes.PRE_XSD + "#integer"
 			case parser.FLOATLIT:
-				literaltype = "xsd:decimal"
+				literaltype = builtindatatypes.PRE_XSD + "#decimal"
 			case parser.STRINGLIT:
-				literaltype = "xsd:string"
+				literaltype = builtindatatypes.PRE_XSD + "#string"
 			}
-		} else {
+		} else { // explicit literal type given with ^^
+			var ok bool
+			var head string
+			head, ok = prefixes.ResolvePrefix(datatypeIRI.Prefix)
+			if !ok {
+				err = pos.Errorf("unknown prefix in explicit literal datatype:%v", datatypeIRI.Prefix)
+				return
+			}
+			datatypeIRI.ResolveTo(head)
+			literaltype = datatypeIRI.String() //todo simplify use datatypeIRI only, not var literaltype
+
 			// numbers can be quoted like "123" or "0.01".
 			// The lexer syntactically decides for string token.
 			// Correct token type if explicit number type is given, and value fits:
@@ -67,11 +80,12 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 			err = pos.EnrichErrorMsg(err, "parsing literal")
 			return
 		}
-		l = literal.OWLLiteral{Value: lit, LangTag: langtag, Literaltype: literaltype}
-		return
 	default:
 		err = pos.Errorf("unexpected %v when parsing literal", parser.DescribeToklit(tok, lit))
+		return
 	}
+
+	l = literal.OWLLiteral{Value: lit, LangTag: langtag, Literaltype: literaltype}
 	return
 }
 
@@ -94,9 +108,9 @@ func parseSuffixLangtag(p *parser.Parser) (langtag string, err error) {
 	return
 }
 
-// parseSuffixLiteraltype returns "xsd:integer", if "^^xsd:integer" is found.
-// Empty string if not ^^... is found. Error if ^^<syntactically-invalid-literaltype> is found.
-func parseSuffixLiteraltype(p *parser.Parser, prefixes tech.Prefixes) (literaltype string, err error) {
+// parseSuffixLiteraltype returns unresolved (!) IRI, e.g. xsd:integer, if "^^xsd:integer" is found.
+// nil if not ^^... is found. Error if ^^<syntactically-invalid-literaltype> is found.
+func parseSuffixLiteraltype(p *parser.Parser, prefixes tech.Prefixes) (literaltype *tech.IRI, err error) {
 	var tok parser.Token
 	var pos parser.ParserPosition
 
@@ -116,7 +130,7 @@ func parseSuffixLiteraltype(p *parser.Parser, prefixes tech.Prefixes) (literalty
 		err = pos.Errorf("unknown prefix %v in literal type", prefix)
 		return
 	}
-	literaltype = parser.FmtPrefixedName(prefix, name)
+	literaltype = tech.NewIRIWithPrefix(prefix, name)
 	return
 }
 

@@ -79,7 +79,7 @@ func (p *Parser) scan() (tok Token, lit string, pos ParserPosition) {
 
 	if TokenLog {
 		pos := p.Pos()
-		log.Printf("scan reached %v %v.\n", pos.String(), pos.ShortenedLineheadMsg())
+		log.Printf("scan reached %v %v {%d}.\n", pos.String(), pos.ShortenedLineheadMsg(), p.pBal)
 	}
 
 	return

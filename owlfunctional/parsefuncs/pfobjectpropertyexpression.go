@@ -1,6 +1,8 @@
 package parsefuncs
 
 import (
+	"fmt"
+
 	"reifenberg.de/gofp/owlfunctional/meta"
 	"reifenberg.de/gofp/owlfunctional/parser"
 	"reifenberg.de/gofp/owlfunctional/properties"
@@ -36,7 +38,7 @@ func ParseObjectPropertyExpression(p *parser.Parser, decls tech.Declarations, pr
 			}
 			return
 		}
-
+		fmt.Println("xxxident=", ident)
 		var ok bool
 		expr, ok = decls.GetObjectPropertyDecl(*ident)
 		if !ok {

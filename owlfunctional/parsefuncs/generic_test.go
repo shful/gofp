@@ -3,6 +3,8 @@ package parsefuncs
 import (
 	"testing"
 
+	"reifenberg.de/gofp/tech"
+
 	"reifenberg.de/gofp/mock"
 	"reifenberg.de/gofp/owlfunctional/declarations"
 	"reifenberg.de/gofp/owlfunctional/meta"
@@ -17,7 +19,7 @@ func TestParseNRD(t *testing.T) {
 	var D meta.DataRange
 	var isQualified bool
 
-	decls, prefixes := mock.NewBuilder().AddPrefixes("", "xsd").AddDataPropertyDecl("", "hasPercent").Get()
+	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().AddPrefixes("").AddDataPropertyDecl(*tech.NewIRI("longname-for-", "hasPercent")).Get()
 
 	// qualified - with D
 	p = mock.NewTestParser(`(13 :hasPercent xsd:integer)`)
@@ -29,8 +31,8 @@ func TestParseNRD(t *testing.T) {
 		t.Fatal(n)
 	}
 	x := R.(*declarations.DataPropertyDecl)
-	if x.PrefixedName() != ":hasPercent" {
-		t.Fatal(x.PrefixedName())
+	if x.IRI != "longname-for-#hasPercent" {
+		t.Fatal(x.IRI)
 	}
 	if !D.IsNamedDatatype() {
 		t.Fatal(R)

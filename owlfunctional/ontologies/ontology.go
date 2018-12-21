@@ -185,7 +185,7 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 
 // parseAnnotationAssertion
 // - does allow too much for the 2nd param (should allow IRI or anonymous individual, not literal)
-// - should not parse individuals into strings but maintain thse individuals and reference them
+// - should not parse individuals into strings but maintain these individuals and reference them
 func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 
 	if err = p.ConsumeTokens(parser.AnnotationAssertion, parser.B1); err != nil {
@@ -661,23 +661,23 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 	return
 }
 
-func (s *Ontology) ClassDeclExists(ident tech.IRI) bool {
-	_, ok := s.AllClassDecls[ident.String()]
+func (s *Ontology) ClassDeclExists(ident string) bool {
+	_, ok := s.AllClassDecls[ident]
 	return ok
 }
 
-func (s *Ontology) DataPropertyDeclExists(ident tech.IRI) bool {
-	_, ok := s.AllDataPropertyDecls[ident.String()]
+func (s *Ontology) DataPropertyDeclExists(ident string) bool {
+	_, ok := s.AllDataPropertyDecls[ident]
 	return ok
 }
 
-func (s *Ontology) NamedIndividualDeclExists(ident tech.IRI) bool {
-	_, ok := s.AllNamedIndividualDecls[ident.String()]
+func (s *Ontology) NamedIndividualDeclExists(ident string) bool {
+	_, ok := s.AllNamedIndividualDecls[ident]
 	return ok
 }
 
-func (s *Ontology) ObjectPropertyDeclExists(ident tech.IRI) bool {
-	_, ok := s.AllObjectPropertyDecls[ident.String()]
+func (s *Ontology) ObjectPropertyDeclExists(ident string) bool {
+	_, ok := s.AllObjectPropertyDecls[ident]
 	return ok
 }
 
