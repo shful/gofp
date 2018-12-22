@@ -88,13 +88,15 @@ func ParsePrefixedName(p *parser.Parser) (prefix, name string, err error) {
 // ParseUnprefixedIRI parses an IRI which is not shortened with a prefix. Instead, it must look like "<.*>"
 func ParseUnprefixedIRI(p *parser.Parser) (iri string, err error) {
 	pos := p.Pos()
-	tok, iri, pos := p.ScanIgnoreWSAndComment()
+	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	if tok == parser.IRI {
-		if !(strings.HasPrefix(iri, "<") && strings.HasSuffix(iri, ">")) {
-			err = pos.Errorf("expected IRI, but missing < and > on the ends (found:%v)", iri)
+		if !(strings.HasPrefix(lit, "<") && strings.HasSuffix(lit, ">")) {
+			err = pos.Errorf("expected IRI, but missing < and > on the ends (found:%v)", lit)
+		} else {
+			iri = lit[1 : len(lit)-1]
 		}
 	} else {
-		err = pos.Errorf("expected IRI, but found:%v", parser.DescribeToklit(tok, iri))
+		err = pos.Errorf("expected IRI, but found:%v", parser.DescribeToklit(tok, lit))
 	}
 	return
 }

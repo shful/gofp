@@ -233,7 +233,7 @@ func TestParseAnnotationAssertion(t *testing.T) {
 	if expr.S != `The-Pizza-Namespace#Pizza` {
 		t.Fatal(expr.S)
 	}
-	if expr.T != `<https://en.wikipedia.org/wiki/Pizza>` {
+	if expr.T != `https://en.wikipedia.org/wiki/Pizza` {
 		t.Fatal(expr.T)
 	}
 }

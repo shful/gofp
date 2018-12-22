@@ -40,14 +40,14 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 	var prefixes map[string]string
 
 	p := parser.NewParser(r, sourceName)
-	parser.TokenLog = true
+	parser.TokenLog = false
 	prefixes = map[string]string{}
 	for {
 		tok, lit, pos := p.ScanIgnoreWSAndComment()
 		switch tok {
 		case parser.Prefix:
 			p.Unscan()
-			if err = parsePrefixTo(prefixes, lit, p); err != nil {
+			if err = parsePrefixTo(prefixes, p); err != nil {
 				err = pos.Errorf("Parsing prefix raised:%v", err)
 				return
 			}

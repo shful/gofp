@@ -82,3 +82,18 @@ func TestParseIRIWithFragment(t *testing.T) {
 		t.Fatal("Prefix=" + prefix + " Fragment=" + fragment)
 	}
 }
+
+func TestParseUnprefixedIRI(t *testing.T) {
+	var p *parser.Parser
+	var iri string
+	var err error
+
+	p = mock.NewTestParser(`<http://test.de#Hello>`)
+	iri, err = ParseUnprefixedIRI(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if iri != "http://test.de#Hello" {
+		t.Fatal(iri)
+	}
+}
