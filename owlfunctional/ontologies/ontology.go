@@ -680,11 +680,6 @@ func (s *Ontology) ObjectPropertyDeclExists(ident string) bool {
 	return ok
 }
 
-func (s *Ontology) IsPrefixKnown(prefix string) bool {
-	_, ok := s.Prefixes[prefix]
-	return ok
-}
-
 func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
 	res, ok = s.Prefixes[prefix]
 	return

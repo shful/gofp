@@ -22,8 +22,7 @@ type Prefixes interface {
 	// ResolvePrefix returns the IRI part which is associated with the prefix
 	// false if prefix was unknown.
 	ResolvePrefix(prefix string) (resolved string, ok bool)
-	IsPrefixKnown(prefix string) bool //todo remove because ResolvePrefix is enough
-	IsOWL(prefix string) bool         //todo eventually replace by an IRI check with already resolved prefix
+	IsOWL(prefix string) bool //todo eventually replace by an IRI check with already resolved prefix
 }
 
 // IRI resembles an IRI that OWL uses as identifier.
