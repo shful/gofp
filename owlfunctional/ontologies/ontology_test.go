@@ -16,7 +16,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	p = mock.NewTestParser(ontologyTestString)
-	o := NewOntology(map[string]string{"": "localprefix", "hello": "hello.de", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS})
+	o := NewOntology(map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS})
 
 	parser.TokenLog = true
 	err = o.Parse(p)
@@ -138,7 +138,7 @@ func TestParsePizzaOntology(t *testing.T) {
 			t.Fatal(x)
 		}
 		y := s.D.(*facets.BuiltinDatatype)
-		if y.DatatypeIRI != builtindatatypes.PRE_XSD+"#integer" {
+		if y.DatatypeIRI != builtindatatypes.PRE_XSD+"integer" {
 			t.Fatal(y)
 		}
 	}
@@ -160,7 +160,7 @@ func TestParseEquivalentClasses(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	var o *Ontology = NewOntology(map[string]string{})
-	o.Prefixes[""] = "localprefix"
+	o.Prefixes[""] = "localprefix#"
 	o.AllClassDecls[`localprefix#Pizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#Pizza"}}
 	o.AllClassDecls[`localprefix#InterestingPizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#InterestingPizza"}}
 	o.AllObjectPropertyDecls[`localprefix#hasTopping`] = &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: "localprefix#hasTopping"}}
@@ -194,9 +194,9 @@ func TestParseAnnotationAssertion(t *testing.T) {
 	var err error
 	var expr annotations.AnnotationAssertion
 	var o *Ontology = NewOntology(map[string]string{})
-	o.Prefixes[""] = "The local ns"
-	o.Prefixes["xsd"] = "The xsd-ns"
-	o.Prefixes["rdfs"] = "The rdfs-ns"
+	o.Prefixes[""] = "The local ns/"
+	o.Prefixes["xsd"] = "The xsd-ns#"
+	o.Prefixes["rdfs"] = "The rdfs-ns#"
 	o.Prefixes["pizza"] = "The-Pizza-Namespace"
 	o.AllClassDecls[`The local ns:MargheritaPizza`] = &declarations.ClassDecl{declarations.Declaration{IRI: "The local ns#MargheritaPizza"}}
 
@@ -230,7 +230,7 @@ func TestParseAnnotationAssertion(t *testing.T) {
 	}
 
 	expr = o.AllAnnotationAssertions[1]
-	if expr.S != `The-Pizza-Namespace#Pizza` {
+	if expr.S != `The-Pizza-NamespacePizza` {
 		t.Fatal(expr.S)
 	}
 	if expr.T != `https://en.wikipedia.org/wiki/Pizza` {

@@ -23,7 +23,7 @@ func TestParseInt(t *testing.T) {
 	if l.Value != "1" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#integer" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"integer" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -38,7 +38,7 @@ func TestParseInt(t *testing.T) {
 	if l.Value != "099" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#positiveInteger" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"positiveInteger" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -59,7 +59,7 @@ func TestParseFloat(t *testing.T) {
 	if l.Value != "3.0" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#decimal" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"decimal" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -81,7 +81,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "Hello World" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -96,7 +96,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "Hello Wörld" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "en" {
@@ -111,7 +111,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "123" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -126,7 +126,7 @@ func TestParseString(t *testing.T) {
 	if l.Value != "0.0" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#string" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"string" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "LongLangTäg" {
@@ -148,7 +148,7 @@ func TestParseBool(t *testing.T) {
 	if l.Value != "true" {
 		t.Fatal(l.Value)
 	}
-	if l.Literaltype != builtindatatypes.PRE_XSD+"#boolean" {
+	if l.Literaltype != builtindatatypes.PRE_XSD+"boolean" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {
@@ -187,7 +187,7 @@ func TestParseCustomDatatypeName(t *testing.T) {
 	if l.Value != "Da5id" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != "longname-for-#blacksun" {
+	if l.Literaltype != "longname-for-blacksun" {
 		t.Fatal(l)
 	}
 	if l.LangTag != "" {

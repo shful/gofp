@@ -3,7 +3,9 @@ package tech
 
 import (
 	"fmt"
+	"strings"
 
+	"reifenberg.de/gofp/owlfunctional/builtindatatypes"
 	"reifenberg.de/gofp/owlfunctional/declarations"
 )
 
@@ -25,47 +27,49 @@ type Prefixes interface {
 }
 
 // IRI resembles an IRI that OWL uses as identifier.
-// Here, it is stored in two pieces - the fragment resp."Name" of the ontology element,
-// and everything before, without the separating hash (#)
+// In case the IRI has a fragment, it is stored in two pieces - the fragment (without hash sign), and everything before.
+// The intention is that the part before the fragment, in some cases, has a meaning for itself,
+// e.g. to answer the question "is this an element of the OWL namespace". While not beeing of great value, storing these two pices sometimes saves some Strings.startsWith - operations.
 type IRI struct {
-	// Name cannot be empty for a valid IRI.
-	Name string // e.g."Thing"
+	// Fragment is empty for an IRI without fragment.
+	// Example: for http://www.w3.org/2002/07/owl#Thing, the Fragment ist "Thing" - without the separating Hash.
+	Fragment string // e.g."Thing"
 
-	// Head can be empty. That means, Prefix must be given, and that can be resolved to Head.
-	Head string // e.g."http://www.w3.org/2002/07/owl"
-
-	// Prefix, if not empty, can be resolved to Head.
-	Prefix string // e.g. "owl"
+	// Head + Fragment forms the whole IRI String.
+	// In case there's no Fragment, Head is the whole IRI.
+	// Head always ends with Hash (#) in case there's a Fragment.
+	Head string // e.g."http://www.w3.org/2002/07/owl#"
 }
 
-func NewIRI(head, name string) *IRI {
-	return &IRI{Head: head, Name: name}
+func NewIRI(head, fragment string) *IRI {
+	return &IRI{Head: head, Fragment: fragment}
 }
 
-// NewIRIWithPrefix constructs an IRI where Head is unset but can later be resolved from Prefix.
-func NewIRIWithPrefix(prefix, name string) *IRI {
-	return &IRI{Prefix: prefix, Name: name}
+// NewIRIFromString separates the fragment from the first part (Head), if the given value has a fragment.
+// Otherweise, Fragment remains empty.
+func NewIRIFromString(val string) (*IRI, error) {
+	parts := strings.Split(val, "#")
+	switch len(parts) {
+	case 1: // no "#"
+		return &IRI{Head: parts[0]}, nil
+	case 2: // had "#" : keep the # at the end of Head
+		return &IRI{Head: parts[0] + "#", Fragment: parts[1]}, nil
+	default:
+		return nil, fmt.Errorf("invalid IRI string with multiple # (%v)", val)
+	}
 }
 
 func (s *IRI) String() string {
-	return s.Head + "#" + s.Name
-}
-
-func (s *IRI) NeedsResolution() bool {
-	return s.Prefix != "" && s.Head == ""
-}
-
-func (s *IRI) ResolveTo(head string) {
-	s.Head = head
+	return s.Head + s.Fragment
 }
 
 //todo IsOWL - functions belong somewhere else
 func (s *IRI) IsOWL() bool {
-	return s.Head == "http://www.w3.org/2002/07/owl"
+	return s.Head == builtindatatypes.PRE_OWL
 }
 
 func (s *IRI) IsOWLThing() bool {
-	return s.IsOWL() && s.Name == "Thing"
+	return s.IsOWL() && s.Fragment == "Thing"
 }
 
 // ZeroBasedPosWord is "first" for 0, then "second" ... 4th ... and so on

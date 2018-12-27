@@ -31,7 +31,7 @@ func TestParseNRD(t *testing.T) {
 		t.Fatal(n)
 	}
 	x := R.(*declarations.DataPropertyDecl)
-	if x.IRI != "longname-for-#hasPercent" {
+	if x.IRI != "longname-for-hasPercent" {
 		t.Fatal(x.IRI)
 	}
 	if !D.IsNamedDatatype() {

@@ -21,13 +21,13 @@ func ParseDataProperty(p *parser.Parser, decls tech.Declarations, prefixes tech.
 
 	if ident.IsOWL() {
 		// must be one of the predefined OWL property names
-		switch ident.Name {
+		switch ident.Fragment {
 		case "topDataProperty":
 			expr = &properties.OWLTopDataProperty{}
 		case "bottomDataProperty":
 			expr = &properties.OWLBottomDataProperty{}
 		default:
-			err = pos.Errorf(`unexpected OWL property "%v"`, ident.Name)
+			err = pos.Errorf(`unexpected OWL property "%v"`, ident.Fragment)
 		}
 		return
 	}

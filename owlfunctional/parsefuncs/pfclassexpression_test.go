@@ -62,7 +62,7 @@ func TestParseClassDeclWithNonemptyPrefix(t *testing.T) {
 	if x, ok = expr.(*declarations.ClassDecl); !ok {
 		t.Fatal(x)
 	}
-	if x.IRI != `longname-for-abc#CheeseTopping` {
+	if x.IRI != `longname-for-abcCheeseTopping` {
 		t.Fatal(x.IRI)
 	}
 }
@@ -89,7 +89,7 @@ func TestParseClassDeclWithFullIRI(t *testing.T) {
 	if x, ok = expr.(*declarations.ClassDecl); !ok {
 		t.Fatal(x)
 	}
-	if x.IRI != `longname-for-abc#CheeseTopping` {
+	if x.IRI != `longname-for-abcCheeseTopping` {
 		t.Fatal(x.IRI)
 	}
 }
@@ -109,7 +109,7 @@ func TestParseClassDeclWithEmptyPrefix(t *testing.T) {
 		t.Fatal(err)
 	}
 	x := expr.(*declarations.ClassDecl)
-	if x.IRI != "longname-for-#CheeseTopping" {
+	if x.IRI != "longname-for-CheeseTopping" {
 		t.Fatal(x.IRI)
 	}
 	err = p.ConsumeTokens(parser.EOF)

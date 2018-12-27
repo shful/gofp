@@ -1,8 +1,6 @@
 package parsefuncs
 
 import (
-	"fmt"
-
 	"reifenberg.de/gofp/owlfunctional/meta"
 	"reifenberg.de/gofp/owlfunctional/parser"
 	"reifenberg.de/gofp/owlfunctional/properties"
@@ -28,17 +26,16 @@ func ParseObjectPropertyExpression(p *parser.Parser, decls tech.Declarations, pr
 
 		if ident.IsOWL() {
 			// must be one of the predefined OWL property names
-			switch ident.Name {
+			switch ident.Fragment {
 			case "topObjectProperty":
 				expr = &properties.OWLTopObjectProperty{}
 			case "bottomObjectProperty":
 				expr = &properties.OWLBottomObjectProperty{}
 			default:
-				err = pos.Errorf(`unexpected OWL property "%v"`, ident.Name)
+				err = pos.Errorf(`unexpected OWL property "%v"`, ident.Fragment)
 			}
 			return
 		}
-		fmt.Println("xxxident=", ident)
 		var ok bool
 		expr, ok = decls.GetObjectPropertyDecl(*ident)
 		if !ok {
@@ -53,18 +50,15 @@ func parseObjectInverseOf(p *parser.Parser, prefixes tech.Prefixes) (expr meta.O
 		return
 	}
 	pos := p.Pos()
-	var prefix, name string
-	prefix, name, err = parsehelper.ParsePrefixedName(p)
+	var ident *tech.IRI
+	ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 	if err != nil {
-		return
-	}
-	if !prefixes.IsPrefixKnown(prefix) {
-		err = pos.Errorf("unknown prefix in ObjectInverseOf (%v)", prefix)
+		err = pos.Errorf("parsing IRI in ObjectInverseOf: %v", err)
 		return
 	}
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	expr = &properties.ObjectInverseOf{PN: parser.FmtPrefixedName(prefix, name)}
+	expr = &properties.ObjectInverseOf{PN: ident.String()}
 	return
 }

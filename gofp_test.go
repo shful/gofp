@@ -20,7 +20,6 @@ func TestParsePrefixTo(t *testing.T) {
 	var prefixes map[string]string = map[string]string{}
 
 	p = mock.NewTestParser(`Prefix(terms:=<http://purl.org/dc/terms/>)`)
-hier weiter
 	err = parsePrefixTo(prefixes, p)
 	if err != nil {
 		t.Fatal(err)
@@ -83,7 +82,7 @@ func TestParsePosition3(t *testing.T) {
 	o, err = OntologyFromReader(strings.NewReader(`
 Prefix(:=<urn:absolute:similix.de/similixadmin#>)
 Prefix(hello:=<urn:absolute:similix.de/similixadmin#>)
-
+Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
 Ontology(<urn:absolute:test.de>
 
 	Declaration(Class(hello:FishbonePizza))
@@ -233,7 +232,7 @@ Ontology(<urn:absolute:test.de>
 	}
 	pos := err.(*parser.PErr).AfterPos
 	if pos.LineNo1() != 145 {
-		t.Fatal(pos)
+		t.Fatal(pos, err)
 	}
 	if pos.GetCurrentLineHead() != `	SubClassOf(:AmericanaPizza ObjectAllValuesFrom(:hasTopping ObjectUnionOf(:ParmesanTopping :PepperoniTopping ` {
 		t.Fatal("linehead=" + pos.GetCurrentLineHead() + "<<")

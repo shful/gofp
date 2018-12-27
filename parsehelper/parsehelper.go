@@ -11,15 +11,15 @@ import (
 )
 
 func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
-	var head, name string
+	var resolved, name string
 	pos := p.Pos()
 
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	p.Unscan()
 	switch tok {
 	case parser.IRI:
-		head, name, err = ParseIRIWithFragment(p)
-		ident = tech.NewIRI(head, name)
+		resolved, name, err = ParseIRIWithFragment(p)
+		ident = tech.NewIRI(resolved, name)
 	case parser.IDENT:
 		fallthrough
 	case parser.COLON:
@@ -28,15 +28,18 @@ func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.I
 		if err != nil {
 			return
 		}
-		ident = tech.NewIRIWithPrefix(prefix, name)
 		var ok bool
-		head, ok = prefixes.ResolvePrefix(prefix)
+		resolved, ok = prefixes.ResolvePrefix(prefix)
 		if !ok {
 			err = pos.Errorf("unknown prefix %v", prefix)
 			return
 		}
-		log.Printf("Resolving prefixed %v -> %v\n", ident, head)
-		ident.ResolveTo(head)
+
+		ident, err = tech.NewIRIFromString(resolved + name)
+		if err != nil {
+			err = pos.Errorf("prefixed name (%v:%v) resolved to invalid IRI (%v)", prefix, name, resolved+name)
+			return
+		}
 		log.Printf("Resolved to %v\n", ident)
 
 	default:
@@ -101,7 +104,7 @@ func ParseUnprefixedIRI(p *parser.Parser) (iri string, err error) {
 	return
 }
 
-// ParseUnprefixedIRI parses an IRI which must be surrounded with "<" ">" and must have a fragment, separated with #.
+// ParseIRIWithFragment parses an IRI which must be surrounded with "<" ">" and must have a fragment, separated with #.
 func ParseIRIWithFragment(p *parser.Parser) (prefix, fragment string, err error) {
 	pos := p.Pos()
 	tok, iri, pos := p.ScanIgnoreWSAndComment()

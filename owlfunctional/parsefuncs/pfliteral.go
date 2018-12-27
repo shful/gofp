@@ -24,7 +24,7 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 	switch tok {
 	case parser.OWLTrue, parser.OWLFalse:
 		langtag = ""
-		literaltype = builtindatatypes.PRE_XSD + "#boolean"
+		literaltype = builtindatatypes.PRE_XSD + "boolean"
 	case parser.STRINGLIT:
 		fmt.Println("STRINGLIT")
 		langtag, err = parseSuffixLangtag(p)
@@ -40,21 +40,13 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 		if datatypeIRI == nil { // literal had no ^^
 			switch tok {
 			case parser.INTLIT:
-				literaltype = builtindatatypes.PRE_XSD + "#integer"
+				literaltype = builtindatatypes.PRE_XSD + "integer"
 			case parser.FLOATLIT:
-				literaltype = builtindatatypes.PRE_XSD + "#decimal"
+				literaltype = builtindatatypes.PRE_XSD + "decimal"
 			case parser.STRINGLIT:
-				literaltype = builtindatatypes.PRE_XSD + "#string"
+				literaltype = builtindatatypes.PRE_XSD + "string"
 			}
 		} else { // explicit literal type given with ^^
-			var ok bool
-			var head string
-			head, ok = prefixes.ResolvePrefix(datatypeIRI.Prefix)
-			if !ok {
-				err = pos.Errorf("unknown prefix in explicit literal datatype:%v", datatypeIRI.Prefix)
-				return
-			}
-			datatypeIRI.ResolveTo(head)
 			literaltype = datatypeIRI.String() //todo simplify use datatypeIRI only, not var literaltype
 
 			// numbers can be quoted like "123" or "0.01".
@@ -108,9 +100,9 @@ func parseSuffixLangtag(p *parser.Parser) (langtag string, err error) {
 	return
 }
 
-// parseSuffixLiteraltype returns unresolved (!) IRI, e.g. xsd:integer, if "^^xsd:integer" is found.
+// parseSuffixLiteraltype expects a prefixed name starting with ^^, e.g. "^^xsd:integer"
 // nil if not ^^... is found. Error if ^^<syntactically-invalid-literaltype> is found.
-func parseSuffixLiteraltype(p *parser.Parser, prefixes tech.Prefixes) (literaltype *tech.IRI, err error) {
+func parseSuffixLiteraltype(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
 	var tok parser.Token
 	var pos parser.ParserPosition
 
@@ -119,18 +111,28 @@ func parseSuffixLiteraltype(p *parser.Parser, prefixes tech.Prefixes) (literalty
 		p.Unscan()
 		return
 	}
+
 	var prefix, name string
 	prefix, name, err = parsehelper.ParsePrefixedName(p)
 	if err != nil {
 		p.Unscan()
 		return
 	}
-	if !prefixes.IsPrefixKnown(prefix) {
-		p.Unscan()
-		err = pos.Errorf("unknown prefix %v in literal type", prefix)
+
+	var ok bool
+	var resolved string
+	resolved, ok = prefixes.ResolvePrefix(prefix)
+	if !ok {
+		err = pos.Errorf("unknown prefix (%v) in literal type", prefix)
 		return
 	}
-	literaltype = tech.NewIRIWithPrefix(prefix, name)
+
+	ident, err = tech.NewIRIFromString(resolved + name)
+
+	if err != nil {
+		err = pos.Errorf("prefixed name (%v:%v) resolved to invalid IRI (%v)", prefix, name, resolved+name)
+		return
+	}
 	return
 }
 

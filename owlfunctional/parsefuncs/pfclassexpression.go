@@ -63,13 +63,13 @@ func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes te
 
 		if ident.IsOWL() {
 			//must be one of the predefined OWL classes
-			switch ident.Name {
+			switch ident.Fragment {
 			case "Thing":
 				expr = &classexpression.OWLThing{}
 			case "Nothing":
 				expr = &classexpression.OWLNothing{}
 			default:
-				err = pos.Errorf(`unexpected OWL name "%v"`, ident.Name)
+				err = pos.Errorf(`unexpected OWL name "%v"`, ident.Fragment)
 			}
 			return
 		} else {

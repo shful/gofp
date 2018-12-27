@@ -65,11 +65,11 @@ func (s *Builder) AddPrefixes(prefixes ...string) *Builder {
 
 // AddOWLStandardPrefixes adds these often used prefixes into the mock data.
 func (s *Builder) AddOWLStandardPrefixes() *Builder {
-	s.prefixes.data["owl"] = `http://www.w3.org/2002/07/owl`
-	s.prefixes.data["rdf"] = `http://www.w3.org/1999/02/22-rdf-syntax-ns`
-	s.prefixes.data["rdfs"] = `http://www.w3.org/2000/01/rdf-schema`
+	s.prefixes.data["owl"] = `http://www.w3.org/2002/07/owl#`
+	s.prefixes.data["rdf"] = `http://www.w3.org/1999/02/22-rdf-syntax-ns#`
+	s.prefixes.data["rdfs"] = `http://www.w3.org/2000/01/rdf-schema#`
 	s.prefixes.data["xml"] = `http://www.w3.org/XML/1998/namespace`
-	s.prefixes.data["xsd"] = `http://www.w3.org/2001/XMLSchema`
+	s.prefixes.data["xsd"] = `http://www.w3.org/2001/XMLSchema#`
 	return s
 }
 
