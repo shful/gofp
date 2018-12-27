@@ -16,7 +16,6 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 	var lit string
 	var pos parser.ParserPosition
 	var langtag string
-	var literaltype string
 	var datatypeIRI *tech.IRI
 
 	tok, lit, pos = p.ScanIgnoreWSAndComment()
@@ -24,7 +23,7 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 	switch tok {
 	case parser.OWLTrue, parser.OWLFalse:
 		langtag = ""
-		literaltype = builtindatatypes.PRE_XSD + "boolean"
+		datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "boolean")
 	case parser.STRINGLIT:
 		fmt.Println("STRINGLIT")
 		langtag, err = parseSuffixLangtag(p)
@@ -40,20 +39,18 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 		if datatypeIRI == nil { // literal had no ^^
 			switch tok {
 			case parser.INTLIT:
-				literaltype = builtindatatypes.PRE_XSD + "integer"
+				datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "integer")
 			case parser.FLOATLIT:
-				literaltype = builtindatatypes.PRE_XSD + "decimal"
+				datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "decimal")
 			case parser.STRINGLIT:
-				literaltype = builtindatatypes.PRE_XSD + "string"
+				datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "string")
 			}
 		} else { // explicit literal type given with ^^
-			literaltype = datatypeIRI.String() //todo simplify use datatypeIRI only, not var literaltype
-
 			// numbers can be quoted like "123" or "0.01".
 			// The lexer syntactically decides for string token.
 			// Correct token type if explicit number type is given, and value fits:
 			if tok == parser.STRINGLIT {
-				if mustTok, ok := builtindatatypes.BuiltinDatatypes[literaltype]; ok {
+				if mustTok, ok := builtindatatypes.BuiltinDatatypes[datatypeIRI.String()]; ok {
 					switch mustTok {
 					case parser.INTLIT:
 						if _, err = strconv.Atoi(lit); err == nil {
@@ -66,7 +63,7 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 					}
 				}
 			}
-			err = literaltypeMismatch(tok, literaltype)
+			err = literaltypeMismatch(tok, datatypeIRI.String())
 		}
 		if err != nil {
 			err = pos.EnrichErrorMsg(err, "parsing literal")
@@ -77,7 +74,7 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 		return
 	}
 
-	l = literal.OWLLiteral{Value: lit, LangTag: langtag, Literaltype: literaltype}
+	l = literal.OWLLiteral{Value: lit, LangTag: langtag, Literaltype: datatypeIRI.String()}
 	return
 }
 
