@@ -200,7 +200,7 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	var s_ string
-	s_, _, err = parsefuncs.Parset(p, s, s) //todo a misuse, should disallow literals for the 2nd param
+	s_, _, err = parsefuncs.Parses(p, s, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 2nd param in AnnotationAssertion")
 		return
