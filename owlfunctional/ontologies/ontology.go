@@ -19,7 +19,7 @@ type Ontology struct {
 	IRI      string
 	Prefixes map[string]string
 
-	// Declarations result each in a set[prefixed-name]:
+	// Declarations result each in a set[IRI string]:
 	// Currently, we require explicit declaration before usage. However, OWL does not require that:
 	// Although declarations are not always required, they can be used to catch obvious errors in ontologies.(https://www.w3.org/2007/OWL/wiki/Syntax#Declaration_Consistency)
 	AllAnnotationPropertyDecls map[string]*declarations.AnnotationPropertyDecl
@@ -172,9 +172,7 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 		default:
 			err = pos.Errorf(`unexpected ontology token %v ("%v")`, parser.Tokenname(tok), lit)
 		}
-		// bestimmte Tokens werden hier erwartet, z.B.class expression axioms
-		// andere Tokens wie Class Expressions können auf dem Level nicht vorkommen
-		// melde Fehler bei unerwartetem Token, sonst erzeuge jeweilige Fex. Übergib ihr den parser.
+
 		if err != nil {
 			return
 		}
@@ -184,7 +182,6 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 }
 
 // parseAnnotationAssertion
-// - does allow too much for the 2nd param (should allow IRI or anonymous individual, not literal)
 // - should not parse individuals into strings but maintain these individuals and reference them
 func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 
