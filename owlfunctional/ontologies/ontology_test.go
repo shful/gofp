@@ -26,6 +26,9 @@ func TestParsePizzaOntology(t *testing.T) {
 	if o.IRI != "<urn:absolute:test.de>" {
 		t.Fatal(o.IRI)
 	}
+	if o.VERSIONIRI != "<http://test.de/1.0.777>" {
+		t.Fatal(o.VERSIONIRI)
+	}
 
 	// === Decls
 	if len(o.AllClassDecls) != 50 {
@@ -239,7 +242,7 @@ func TestParseAnnotationAssertion(t *testing.T) {
 }
 
 const ontologyTestString = `
-Ontology(<urn:absolute:test.de>
+Ontology(<urn:absolute:test.de><http://test.de/1.0.777>
 
 	Declaration(Class(hello:FishbonePizza))
 	Declaration(Class(:AmericanHotPizza))

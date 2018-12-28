@@ -16,8 +16,9 @@ import (
 )
 
 type Ontology struct {
-	IRI      string
-	Prefixes map[string]string
+	IRI        string
+	VERSIONIRI string
+	Prefixes   map[string]string
 
 	// Declarations result each in a set[IRI string]:
 	// Currently, we require explicit declaration before usage. However, OWL does not require that:
@@ -108,6 +109,13 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 	if tok == parser.IRI {
 		// there's an IRI as ontology name
 		s.IRI = lit
+		tok, lit, _ := p.ScanIgnoreWSAndComment()
+		if tok == parser.IRI {
+			// there's another IRI as ontology version
+			s.VERSIONIRI = lit
+		} else {
+			p.Unscan()
+		}
 	} else {
 		p.Unscan()
 	}
