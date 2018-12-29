@@ -25,7 +25,6 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 		langtag = ""
 		datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "boolean")
 	case parser.STRINGLIT:
-		fmt.Println("STRINGLIT")
 		langtag, err = parseSuffixLangtag(p)
 		if err != nil {
 			return
