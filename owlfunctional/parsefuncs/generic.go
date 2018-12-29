@@ -1,12 +1,12 @@
 package parsefuncs
 
 import (
-	"reifenberg.de/gofp/owlfunctional/individual"
-	"reifenberg.de/gofp/owlfunctional/literal"
-	"reifenberg.de/gofp/owlfunctional/meta"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/parsehelper"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/individual"
+	"github.com/shful/gofp/owlfunctional/literal"
+	"github.com/shful/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/tech"
 )
 
 // parseNPC parses the triple (n,P,[C]) and consumes both braces.

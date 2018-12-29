@@ -1,9 +1,9 @@
 package axioms
 
 import (
-	"reifenberg.de/gofp/owlfunctional/individual"
-	"reifenberg.de/gofp/owlfunctional/literal"
-	"reifenberg.de/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/individual"
+	"github.com/shful/gofp/owlfunctional/literal"
+	"github.com/shful/gofp/owlfunctional/meta"
 )
 
 type DataPropertyDomain struct {

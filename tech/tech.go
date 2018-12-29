@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"reifenberg.de/gofp/owlfunctional/builtindatatypes"
-	"reifenberg.de/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/builtindatatypes"
+	"github.com/shful/gofp/owlfunctional/declarations"
 )
 
 type Declarations interface {

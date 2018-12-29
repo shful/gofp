@@ -3,8 +3,8 @@ package parsehelper
 import (
 	"testing"
 
-	"reifenberg.de/gofp/mock"
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/mock"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 func TestParsePrefixedName(t *testing.T) {

@@ -3,10 +3,10 @@ package parsefuncs
 import (
 	"testing"
 
-	"reifenberg.de/gofp/mock"
-	"reifenberg.de/gofp/owlfunctional/meta"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/owlfunctional/properties"
+	"github.com/shful/gofp/mock"
+	"github.com/shful/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/owlfunctional/properties"
 )
 
 func TestParseObjectPropertyExpression(t *testing.T) {

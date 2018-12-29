@@ -3,7 +3,7 @@ package gofp
 import (
 	"fmt"
 
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 // ErrorMsgWithPosition produces a user message like "untempting topping on margherita pizza in: pizza.owl 18:32 after '...Pizza ObjectSomeValuesFrom(:hasTopping'"

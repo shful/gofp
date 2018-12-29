@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"reifenberg.de/gofp"
+	"github.com/shful/gofp"
 )
 
 // main parses a pizza ontology.

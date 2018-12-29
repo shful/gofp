@@ -1,7 +1,7 @@
 package facets
 
 import (
-	"reifenberg.de/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/meta"
 )
 
 type NamedDatatypeImpl struct {

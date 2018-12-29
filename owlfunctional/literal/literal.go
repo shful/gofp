@@ -3,7 +3,7 @@ package literal
 import (
 	"fmt"
 
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 type OWLLiteral struct {

@@ -3,16 +3,16 @@ package ontologies
 import (
 	"fmt"
 
-	"reifenberg.de/gofp/owlfunctional/annotations"
-	"reifenberg.de/gofp/owlfunctional/axioms"
-	"reifenberg.de/gofp/owlfunctional/declarations"
-	"reifenberg.de/gofp/owlfunctional/individual"
-	"reifenberg.de/gofp/owlfunctional/literal"
-	"reifenberg.de/gofp/owlfunctional/meta"
-	"reifenberg.de/gofp/owlfunctional/parsefuncs"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/parsehelper"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/annotations"
+	"github.com/shful/gofp/owlfunctional/axioms"
+	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/individual"
+	"github.com/shful/gofp/owlfunctional/literal"
+	"github.com/shful/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/parsefuncs"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/tech"
 )
 
 type Ontology struct {

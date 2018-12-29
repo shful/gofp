@@ -3,13 +3,13 @@ package parsefuncs
 import (
 	"fmt"
 
-	"reifenberg.de/gofp/owlfunctional/builtindatatypes"
-	"reifenberg.de/gofp/owlfunctional/facets"
-	"reifenberg.de/gofp/owlfunctional/literal"
-	"reifenberg.de/gofp/owlfunctional/meta"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/parsehelper"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/builtindatatypes"
+	"github.com/shful/gofp/owlfunctional/facets"
+	"github.com/shful/gofp/owlfunctional/literal"
+	"github.com/shful/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/tech"
 )
 
 func ParseDataRange(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.DataRange, err error) {

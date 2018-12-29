@@ -3,10 +3,10 @@ package parsefuncs
 import (
 	"testing"
 
-	"reifenberg.de/gofp/mock"
-	"reifenberg.de/gofp/owlfunctional/builtindatatypes"
-	"reifenberg.de/gofp/owlfunctional/literal"
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/mock"
+	"github.com/shful/gofp/owlfunctional/builtindatatypes"
+	"github.com/shful/gofp/owlfunctional/literal"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 func TestParseInt(t *testing.T) {

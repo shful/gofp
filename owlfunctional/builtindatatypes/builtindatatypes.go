@@ -1,6 +1,6 @@
 package builtindatatypes
 
-import "reifenberg.de/gofp/owlfunctional/parser"
+import "github.com/shful/gofp/owlfunctional/parser"
 
 const (
 	PRE_OWL  = "http://www.w3.org/2002/07/owl#"

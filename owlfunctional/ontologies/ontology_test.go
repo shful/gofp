@@ -3,13 +3,13 @@ package ontologies
 import (
 	"testing"
 
-	"reifenberg.de/gofp/mock"
-	"reifenberg.de/gofp/owlfunctional/annotations"
-	"reifenberg.de/gofp/owlfunctional/axioms"
-	"reifenberg.de/gofp/owlfunctional/builtindatatypes"
-	"reifenberg.de/gofp/owlfunctional/declarations"
-	"reifenberg.de/gofp/owlfunctional/facets"
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/mock"
+	"github.com/shful/gofp/owlfunctional/annotations"
+	"github.com/shful/gofp/owlfunctional/axioms"
+	"github.com/shful/gofp/owlfunctional/builtindatatypes"
+	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/facets"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 func TestParsePizzaOntology(t *testing.T) {

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"reifenberg.de/gofp/mock"
-	"reifenberg.de/gofp/owlfunctional/ontologies"
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/mock"
+	"github.com/shful/gofp/owlfunctional/ontologies"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 func TestParsePrefixTo(t *testing.T) {

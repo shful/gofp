@@ -4,10 +4,10 @@ package mock
 import (
 	"strings"
 
-	"reifenberg.de/gofp/helper"
-	"reifenberg.de/gofp/owlfunctional/declarations"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/helper"
+	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/tech"
 )
 
 type MockDeclarations struct {

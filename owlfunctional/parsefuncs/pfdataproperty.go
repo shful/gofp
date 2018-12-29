@@ -1,11 +1,11 @@
 package parsefuncs
 
 import (
-	"reifenberg.de/gofp/owlfunctional/meta"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/owlfunctional/properties"
-	"reifenberg.de/gofp/parsehelper"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/owlfunctional/properties"
+	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/tech"
 )
 
 func ParseDataProperty(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.DataProperty, err error) {

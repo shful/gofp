@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"reifenberg.de/gofp"
-	"reifenberg.de/gofp/owlfunctional/ontologies"
+	"github.com/shful/gofp"
+	"github.com/shful/gofp/owlfunctional/ontologies"
 )
 
 // main parses an example string and prints what classes and properties were parsed.

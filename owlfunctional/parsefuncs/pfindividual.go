@@ -1,10 +1,10 @@
 package parsefuncs
 
 import (
-	"reifenberg.de/gofp/owlfunctional/individual"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/parsehelper"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/individual"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/tech"
 )
 
 func ParseIndividual(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (a individual.Individual, err error) {

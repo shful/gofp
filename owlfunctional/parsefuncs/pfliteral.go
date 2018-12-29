@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strconv"
 
-	"reifenberg.de/gofp/owlfunctional/builtindatatypes"
-	"reifenberg.de/gofp/owlfunctional/literal"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/parsehelper"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/builtindatatypes"
+	"github.com/shful/gofp/owlfunctional/literal"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/tech"
 )
 
 func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLiteral, err error) {

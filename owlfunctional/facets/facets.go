@@ -1,6 +1,6 @@
 package facets
 
-import "reifenberg.de/gofp/owlfunctional/literal"
+import "github.com/shful/gofp/owlfunctional/literal"
 
 type Facet int
 

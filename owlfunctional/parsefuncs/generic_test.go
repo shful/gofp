@@ -3,12 +3,12 @@ package parsefuncs
 import (
 	"testing"
 
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/tech"
 
-	"reifenberg.de/gofp/mock"
-	"reifenberg.de/gofp/owlfunctional/declarations"
-	"reifenberg.de/gofp/owlfunctional/meta"
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/mock"
+	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 func TestParseNRD(t *testing.T) {

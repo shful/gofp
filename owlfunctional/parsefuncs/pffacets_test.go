@@ -3,10 +3,10 @@ package parsefuncs
 import (
 	"testing"
 
-	"reifenberg.de/gofp/mock"
-	"reifenberg.de/gofp/owlfunctional/facets"
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/mock"
+	"github.com/shful/gofp/owlfunctional/facets"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/tech"
 )
 
 func TestParseDatatypeRestriction(t *testing.T) {

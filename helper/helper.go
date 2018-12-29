@@ -1,8 +1,8 @@
 package helper
 
 import (
-	"reifenberg.de/gofp/owlfunctional/declarations"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/tech"
 )
 
 type DeclarationsImpl struct {

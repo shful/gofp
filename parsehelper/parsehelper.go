@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"reifenberg.de/gofp/owlfunctional/parser"
-	"reifenberg.de/gofp/tech"
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/tech"
 )
 
 func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {

@@ -1,7 +1,7 @@
 package declarations
 
 import (
-	"reifenberg.de/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/meta"
 )
 
 type Declaration struct {

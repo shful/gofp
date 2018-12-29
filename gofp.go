@@ -27,10 +27,10 @@ package gofp
 import (
 	"io"
 
-	"reifenberg.de/gofp/parsehelper"
+	"github.com/shful/gofp/parsehelper"
 
-	"reifenberg.de/gofp/owlfunctional/ontologies"
-	"reifenberg.de/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/owlfunctional/ontologies"
+	"github.com/shful/gofp/owlfunctional/parser"
 )
 
 // OntologyFromReader parses an owl-functional file contents into an Ontology struct.
