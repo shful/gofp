@@ -17,7 +17,7 @@ func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.I
 	p.Unscan()
 	switch tok {
 	case parser.IRI:
-		resolved, name, err = ParseIRIWithFragment(p)
+		resolved, name, err = ParseIRIWithFragment(p) //todo fix accept any IRI
 		ident = tech.NewIRI(resolved, name)
 	case parser.IDENT:
 		fallthrough

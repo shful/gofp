@@ -102,6 +102,7 @@ const (
 	Prefix
 	ReflexiveObjectProperty
 	SubClassOf
+	SubDataPropertyOf
 	SubObjectPropertyOf
 	SymmetricObjectProperty
 	TransitiveObjectProperty
@@ -159,6 +160,7 @@ var keywords map[string]Token = map[string]Token{
 	"Prefix":                          Prefix,
 	"ReflexiveObjectProperty":         ReflexiveObjectProperty,
 	"SubClassOf":                      SubClassOf,
+	"SubDataPropertyOf":               SubDataPropertyOf,
 	"SubObjectPropertyOf":             SubObjectPropertyOf,
 	"SymmetricObjectProperty":         SymmetricObjectProperty,
 	"TransitiveObjectProperty":        TransitiveObjectProperty,

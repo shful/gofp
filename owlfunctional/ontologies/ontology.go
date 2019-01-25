@@ -49,6 +49,7 @@ type Ontology struct {
 	AllObjectPropertyRanges              []axioms.ObjectPropertyRange
 	AllReflexiveObjectProperties         []meta.ObjectPropertyExpression
 	AllSubClassOfs                       []axioms.SubClassOf
+	AllSubDataPropertyOfs                []axioms.SubDataPropertyOf
 	AllSubObjectPropertyOfs              []axioms.SubObjectPropertyOf
 	AllSymmetricObjectProperties         []meta.ObjectPropertyExpression
 	AllTransitiveObjectProperties        []meta.ObjectPropertyExpression
@@ -171,6 +172,8 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 			err = s.parseReflexiveObjectProperty(p)
 		case parser.SubClassOf:
 			err = s.parseSubClassOf(p)
+		case parser.SubDataPropertyOf:
+			err = s.parseSubDataPropertyOf(p)
 		case parser.SubObjectPropertyOf:
 			err = s.parseSubObjectPropertyOf(p)
 		case parser.SymmetricObjectProperty:
@@ -600,6 +603,27 @@ func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 		return
 	}
 	s.AllSubClassOfs = append(s.AllSubClassOfs, axioms.SubClassOf{C1: Cs[0], C2: Cs[1]})
+	return
+}
+
+func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
+	if err = p.ConsumeTokens(parser.SubDataPropertyOf, parser.B1); err != nil {
+		return
+	}
+
+	var P1, P2 meta.DataProperty
+	if P1, err = parsefuncs.ParseDataProperty(p, s, s); err != nil {
+		return
+	}
+	if P2, err = parsefuncs.ParseDataProperty(p, s, s); err != nil {
+		return
+	}
+
+	if err = p.ConsumeTokens(parser.B2); err != nil {
+		return
+	}
+	s.AllSubDataPropertyOfs = append(s.AllSubDataPropertyOfs, axioms.SubDataPropertyOf{P1, P2})
+
 	return
 }
 

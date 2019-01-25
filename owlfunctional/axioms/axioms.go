@@ -33,7 +33,13 @@ type DisjointClasses struct {
 	DisjointClasses []meta.ClassExpression //todo is there a min len in OWL ?
 }
 
-// SubObjectProperty defines P1 subPropertyOf P2
+// SubDataPropertyOf defines P1 subPropertyOf P2
+type SubDataPropertyOf struct {
+	P1 meta.DataProperty
+	P2 meta.DataProperty
+}
+
+// SubObjectPropertyOf defines P1 subPropertyOf P2
 type SubObjectPropertyOf struct {
 	P1 meta.ObjectPropertyExpression
 	P2 meta.ObjectPropertyExpression

@@ -1,6 +1,7 @@
 package ontologies
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/shful/gofp/mock"
@@ -10,13 +11,14 @@ import (
 	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/owlfunctional/facets"
 	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/owlfunctional/properties"
 )
 
 func TestParsePizzaOntology(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	p = mock.NewTestParser(ontologyTestString)
-	o := NewOntology(map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS})
+	o := NewOntology(map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL})
 
 	parser.TokenLog = true
 	err = o.Parse(p)
@@ -44,7 +46,7 @@ func TestParsePizzaOntology(t *testing.T) {
 		t.Fatal()
 	}
 
-	if len(o.AllDataPropertyDecls) != 1 {
+	if len(o.AllDataPropertyDecls) != 2 {
 		t.Fatal(o.AllDataPropertyDecls)
 	}
 	if !o.DataPropertyDeclExists("localprefix#hasCaloricContentValue") {
@@ -68,6 +70,31 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 	if !o.NamedIndividualDeclExists("localprefix#MyQuattroFormaggio") {
 		t.Fatal()
+	}
+
+	// === SubDataPropertyOfs
+	if len(o.AllSubDataPropertyOfs) != 2 {
+		for i, x := range o.AllSubDataPropertyOfs {
+			fmt.Println("  ", i, x.P1, x.P2)
+		}
+		t.Fatal(o.AllSubDataPropertyOfs)
+	}
+	{
+		s := o.AllSubDataPropertyOfs[0]
+		// we assume an order of the list here - which we know is given, but not guaranteed
+		if s.P1.(*declarations.DataPropertyDecl).IRI != "localprefix#hasCaloricContentValue" {
+			t.Fatal(s.P1)
+		}
+		switch s.P2.(type) {
+		case *properties.OWLTopDataProperty:
+		default:
+			t.Fatal(s.P2)
+		}
+		s = o.AllSubDataPropertyOfs[1]
+		// we assume an order of the list here - which we know is given, but not guaranteed
+		if s.P1.(*declarations.DataPropertyDecl).IRI != "localprefix#hasSuperhighCaloricContentValue" {
+			t.Fatal(s.P1)
+		}
 	}
 
 	// === SubObjectPropertyOfs
@@ -301,6 +328,7 @@ Ontology(<urn:absolute:test.de><http://test.de/1.0.777>
 	Declaration(ObjectProperty(:isBaseOf))
 	Declaration(ObjectProperty(:isIngredientOf))
 	Declaration(ObjectProperty(:isToppingOf))
+	Declaration(DataProperty(:hasSuperhighCaloricContentValue))
 	Declaration(DataProperty(:hasCaloricContentValue))
 	Declaration(NamedIndividual(:MyKäseEiPizza))
 	Declaration(NamedIndividual(:MyMargherita))
@@ -354,7 +382,9 @@ Ontology(<urn:absolute:test.de><http://test.de/1.0.777>
 	FunctionalDataProperty(:hasCaloricContentValue)
 	DataPropertyDomain(:hasCaloricContentValue :Food)
 	DataPropertyRange(:hasCaloricContentValue xsd:integer)
-	
+	SubDataPropertyOf(:hasCaloricContentValue owl:topDataProperty)
+	SubDataPropertyOf(:hasSuperhighCaloricContentValue :hasCaloricContentValue)
+
 	
 	
 	############################
