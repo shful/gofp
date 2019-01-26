@@ -63,7 +63,7 @@ func TestParseIRIWithFragment(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if prefix != "hallo" {
+	if prefix != "hallo#" {
 		t.Fatal("Prefix=" + prefix + " Fragment=" + fragment)
 	}
 	if fragment != "Welt" {
@@ -75,7 +75,7 @@ func TestParseIRIWithFragment(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if prefix != "http://www.co-ode.org/ontologies/pizzax/pizza.owl" {
+	if prefix != "http://www.co-ode.org/ontologies/pizzax/pizza.owl#" {
 		t.Fatal("Prefix=" + prefix + " Fragment=" + fragment)
 	}
 	if fragment != "VegetarianPizzaEquivalent2" {

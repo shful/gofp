@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"fmt"
+
 	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/tech"
 )
@@ -36,6 +38,11 @@ func (s *DeclarationsImpl) GetClassDecl(ident tech.IRI) (decl *declarations.Clas
 
 func (s *DeclarationsImpl) GetDataPropertyDecl(ident tech.IRI) (decl *declarations.DataPropertyDecl, ok bool) {
 	decl, ok = s.dataPropertyDecls[ident.String()]
+	if !ok {
+		for k, val := range s.dataPropertyDecls {
+			fmt.Println("  have only:", k, "->", val)
+		}
+	}
 	return
 }
 

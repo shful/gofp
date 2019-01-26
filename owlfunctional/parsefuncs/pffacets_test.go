@@ -15,7 +15,9 @@ func TestParseDatatypeRestriction(t *testing.T) {
 	var err error
 	var expr facets.DatatypeRestriction
 
-	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().AddClassDecl(*tech.NewIRI("", "CheeseTopping")).Get()
+	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().
+		AddClassDecl(*tech.MustNewFragmentedIRI("xxx#", "CheeseTopping")).
+		Get()
 
 	p = mock.NewTestParser(`DatatypeRestriction(xsd:integer xsd:minInclusive "400"^^xsd:integer)`)
 

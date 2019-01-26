@@ -19,7 +19,7 @@ func TestParseNRD(t *testing.T) {
 	var D meta.DataRange
 	var isQualified bool
 
-	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().AddPrefixes("").AddDataPropertyDecl(*tech.NewIRI("longname-for-", "hasPercent")).Get()
+	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().AddPrefixes("").AddDataPropertyDecl(*tech.MustNewFragmentedIRI("longname-for-#", "hasPercent")).Get()
 
 	// qualified - with D
 	p = mock.NewTestParser(`(13 :hasPercent xsd:integer)`)
@@ -31,7 +31,7 @@ func TestParseNRD(t *testing.T) {
 		t.Fatal(n)
 	}
 	x := R.(*declarations.DataPropertyDecl)
-	if x.IRI != "longname-for-hasPercent" {
+	if x.IRI != "longname-for-#hasPercent" {
 		t.Fatal(x.IRI)
 	}
 	if !D.IsNamedDatatype() {

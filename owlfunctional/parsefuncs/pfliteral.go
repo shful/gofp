@@ -23,7 +23,7 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 	switch tok {
 	case parser.OWLTrue, parser.OWLFalse:
 		langtag = ""
-		datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "boolean")
+		datatypeIRI = tech.MustNewFragmentedIRI(builtindatatypes.PRE_XSD, "boolean")
 	case parser.STRINGLIT:
 		langtag, err = parseSuffixLangtag(p)
 		if err != nil {
@@ -38,11 +38,11 @@ func ParseOWLLiteral(p *parser.Parser, prefixes tech.Prefixes) (l literal.OWLLit
 		if datatypeIRI == nil { // literal had no ^^
 			switch tok {
 			case parser.INTLIT:
-				datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "integer")
+				datatypeIRI = tech.MustNewFragmentedIRI(builtindatatypes.PRE_XSD, "integer")
 			case parser.FLOATLIT:
-				datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "decimal")
+				datatypeIRI = tech.MustNewFragmentedIRI(builtindatatypes.PRE_XSD, "decimal")
 			case parser.STRINGLIT:
-				datatypeIRI = tech.NewIRI(builtindatatypes.PRE_XSD, "string")
+				datatypeIRI = tech.MustNewFragmentedIRI(builtindatatypes.PRE_XSD, "string")
 			}
 		} else { // explicit literal type given with ^^
 			// numbers can be quoted like "123" or "0.01".

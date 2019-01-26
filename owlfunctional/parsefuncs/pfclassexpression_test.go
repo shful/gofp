@@ -48,7 +48,7 @@ func TestParseClassDeclWithNonemptyPrefix(t *testing.T) {
 	var expr meta.ClassExpression
 
 	decls, prefixes := mock.NewBuilder().AddPrefixes("abc").
-		AddClassDecl(*tech.NewIRI("longname-for-abc", "CheeseTopping")).
+		AddClassDecl(*tech.MustNewFragmentedIRI("longname-for-abc#", "CheeseTopping")).
 		Get()
 
 	p = mock.NewTestParser(`abc:CheeseTopping`)
@@ -62,11 +62,12 @@ func TestParseClassDeclWithNonemptyPrefix(t *testing.T) {
 	if x, ok = expr.(*declarations.ClassDecl); !ok {
 		t.Fatal(x)
 	}
-	if x.IRI != `longname-for-abcCheeseTopping` {
+	if x.IRI != `longname-for-abc#CheeseTopping` {
 		t.Fatal(x.IRI)
 	}
 }
 
+// TestParseClassDeclWithFullIRI tests IRIs with full notation. Not prefixes.
 func TestParseClassDeclWithFullIRI(t *testing.T) {
 	// parse a predeclared named class
 
@@ -75,7 +76,7 @@ func TestParseClassDeclWithFullIRI(t *testing.T) {
 	var expr meta.ClassExpression
 
 	decls, prefixes := mock.NewBuilder().AddPrefixes("abc").
-		AddClassDecl(*tech.NewIRI("longname-for-abc", "CheeseTopping")).
+		AddClassDecl(*tech.MustNewFragmentedIRI("longname-for-abc#", "CheeseTopping")).
 		Get()
 
 	p = mock.NewTestParser(`<longname-for-abc#CheeseTopping>`)
@@ -83,22 +84,41 @@ func TestParseClassDeclWithFullIRI(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	var x *declarations.ClassDecl
 	var ok bool
 	if x, ok = expr.(*declarations.ClassDecl); !ok {
 		t.Fatal(x)
 	}
-	if x.IRI != `longname-for-abcCheeseTopping` {
+	if x.IRI != `longname-for-abc#CheeseTopping` {
 		t.Fatal(x.IRI)
 	}
+
+	p = mock.NewTestParser(`<http://www.w3.org/2002/07/owl#Nothing>`)
+	expr, err = ParseClassExpression(p, decls, prefixes)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := expr.(*classexpression.OWLNothing); !ok {
+		t.Fatal(expr)
+	}
+
+	// p = mock.NewTestParser(`<http://www.abc.org/ßomeWildÜRI/>`)
+	// expr, err = ParseClassExpression(p, decls, prefixes)
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
+	// if _, ok := expr.(*classexpression.OWLNothing); !ok {
+	// 	t.Fatal(expr)
+	// }
 }
 
 func TestParseClassDeclWithEmptyPrefix(t *testing.T) {
 	var p *parser.Parser
 	var err error
 
-	decls, prefixes := mock.NewBuilder().AddPrefixes("").AddClassDecl(*tech.NewIRI("longname-for-", "CheeseTopping")).Get()
+	decls, prefixes := mock.NewBuilder().AddPrefixes("").
+		AddClassDecl(*tech.MustNewFragmentedIRI("longname-for-#", "CheeseTopping")).
+		Get()
 
 	p = mock.NewTestParser(`:CheeseTopping`)
 	parser.TokenLog = true
@@ -109,7 +129,7 @@ func TestParseClassDeclWithEmptyPrefix(t *testing.T) {
 		t.Fatal(err)
 	}
 	x := expr.(*declarations.ClassDecl)
-	if x.IRI != "longname-for-CheeseTopping" {
+	if x.IRI != "longname-for-#CheeseTopping" {
 		t.Fatal(x.IRI)
 	}
 	err = p.ConsumeTokens(parser.EOF)
@@ -122,7 +142,9 @@ func TestParseObjectMinCardinality(t *testing.T) {
 	var p *parser.Parser
 	var err error
 
-	decls, prefixes := mock.NewBuilder().AddPrefixes("").AddObjectPropertyDecl(*tech.NewIRI("longname-for-", "hasTopping")).Get()
+	decls, prefixes := mock.NewBuilder().AddPrefixes("").
+		AddObjectPropertyDecl(*tech.MustNewFragmentedIRI("longname-for-#", "hasTopping")).
+		Get()
 
 	// var o tech.Declarations = mock.MockDecls{}
 	// o.Prefixes[""] = "localprefix"
@@ -149,7 +171,9 @@ func TestParseObjectMinCardinality(t *testing.T) {
 func TestParseClassExpression_ObjectMinCardinality(t *testing.T) {
 	var p *parser.Parser
 	var err error
-	decls, prefixes := mock.NewBuilder().AddPrefixes("").AddObjectPropertyDecl(*tech.NewIRI("longname-for-", "hasTopping")).Get()
+	decls, prefixes := mock.NewBuilder().AddPrefixes("").
+		AddObjectPropertyDecl(*tech.MustNewFragmentedIRI("longname-for-#", "hasTopping")).
+		Get()
 
 	p = mock.NewTestParser(`ObjectMinCardinality(3 :hasTopping)`)
 	parser.TokenLog = true
@@ -172,7 +196,11 @@ func TestParseClassExpression_ObjectMinCardinality(t *testing.T) {
 func TestParseObjectIntersectionOf(t *testing.T) {
 	var p *parser.Parser
 	var err error
-	decls, prefixes := mock.NewBuilder().AddPrefixes("").AddClassDecl(*tech.NewIRI("longname-for-", "Pizza")).AddClassDecl(*tech.NewIRI("", "InterestingPizza")).AddObjectPropertyDecl(*tech.NewIRI("longname-for-", "hasTopping")).Get()
+	decls, prefixes := mock.NewBuilder().AddPrefixes("").
+		AddClassDecl(*tech.MustNewFragmentedIRI("longname-for-#", "Pizza")).
+		AddClassDecl(*tech.MustNewFragmentedIRI("xxx#", "InterestingPizza")).
+		AddObjectPropertyDecl(*tech.MustNewFragmentedIRI("longname-for-#", "hasTopping")).
+		Get()
 
 	p = mock.NewTestParser(`ObjectIntersectionOf(:Pizza ObjectMinCardinality(3 :hasTopping))`)
 	parser.TokenLog = true
@@ -196,7 +224,12 @@ func TestParseObjectIntersectionOf(t *testing.T) {
 func TestParseObjectIntersectionOf2(t *testing.T) {
 	var p *parser.Parser
 	var err error
-	decls, prefixes := mock.NewBuilder().AddPrefixes("", "xsd").AddClassDecl(*tech.NewIRI("longname-for-", "Pizza")).AddClassDecl(*tech.NewIRI("", "InterestingPizza")).AddDataPropertyDecl(*tech.NewIRI("longname-for-", "hasCaloricContentValue")).Get()
+	decls, prefixes := mock.NewBuilder().
+		AddPrefixes("", "xsd").
+		AddClassDecl(*tech.MustNewFragmentedIRI("longname-for-#", "Pizza")).
+		AddClassDecl(*tech.MustNewFragmentedIRI("xxx#", "InterestingPizza")).
+		AddDataPropertyDecl(*tech.MustNewFragmentedIRI("longname-for-#", "hasCaloricContentValue")).
+		Get()
 
 	p = mock.NewTestParser(`ObjectIntersectionOf(:Pizza DataHasValue(:hasCaloricContentValue "150"^^xsd:int))`)
 	parser.TokenLog = true

@@ -36,11 +36,16 @@ type IRI struct {
 
 	// Head + Fragment forms the whole IRI String.
 	// In case there's no Fragment, Head is the whole IRI.
-	// Head always ends with Hash (#) in case there's a Fragment.
+	// In case there is a fragment, Head MUST end with Hash (#).
 	Head string // e.g."http://www.w3.org/2002/07/owl#"
 }
 
-func NewIRI(head, fragment string) *IRI {
+// MustNewFragmentedIRI expects a head ending with "#".
+// Panics otherwise.
+func MustNewFragmentedIRI(head, fragment string) *IRI {
+	if !strings.HasSuffix(head, "#") {
+		panic(fmt.Sprintf("fragmented IRI needs head with Suffix '#'. (Got head=%v and fragment=%v)", head, fragment))
+	}
 	return &IRI{Head: head, Fragment: fragment}
 }
 

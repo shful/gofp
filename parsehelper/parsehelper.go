@@ -17,8 +17,8 @@ func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.I
 	p.Unscan()
 	switch tok {
 	case parser.IRI:
-		resolved, name, err = ParseIRIWithFragment(p) //todo fix accept any IRI
-		ident = tech.NewIRI(resolved, name)
+		resolved, name, err = ParseIRIWithFragment(p)
+		ident = tech.MustNewFragmentedIRI(resolved, name)
 	case parser.IDENT:
 		fallthrough
 	case parser.COLON:
@@ -27,6 +27,7 @@ func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.I
 		if err != nil {
 			return
 		}
+
 		var ok bool
 		resolved, ok = prefixes.ResolvePrefix(prefix)
 		if !ok {
@@ -86,7 +87,10 @@ func ParseUnprefixedIRI(p *parser.Parser) (iri string, err error) {
 	return
 }
 
-// ParseIRIWithFragment parses an IRI which must be surrounded with "<" ">" and must have a fragment, separated with #.
+// ParseIRIWithFragment parses an IRI which must be surrounded with "<" ">". The surrounding <> are not returned.
+// If there's a fragment, head is everything until and including the #, and fragment is the remaining.
+// With no fragment, the head is the full IRI content and fragment is empty.
+// The IRI must not be empty. "<>" results in an error.
 func ParseIRIWithFragment(p *parser.Parser) (prefix, fragment string, err error) {
 	pos := p.Pos()
 	tok, iri, pos := p.ScanIgnoreWSAndComment()
@@ -95,14 +99,14 @@ func ParseIRIWithFragment(p *parser.Parser) (prefix, fragment string, err error)
 			err = pos.Errorf("expected IRI, but missing < and > on the ends (found:%v)", iri)
 			return
 		}
+		if len(iri) == 2 {
+			err = pos.Errorf("empty IRI between <>")
+			return
+		}
 		var u *url.URL
 		u, err = url.Parse(iri[1 : len(iri)-1])
 		fragment = u.Fragment
-		if len(fragment) == 0 {
-			err = pos.Errorf("expected IRI with fragment, but missing (found:%v)", iri)
-			return
-		}
-		prefix = iri[1 : len(iri)-1-len(fragment)-1] // everything before, and excluding, the fragments "#"
+		prefix = iri[1 : len(iri)-1-len(fragment)] // everything until, and including, the fragments "#"
 	} else {
 		err = pos.Errorf("expected IRI, but found:%v", parser.DescribeToklit(tok, iri))
 	}

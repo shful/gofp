@@ -187,8 +187,8 @@ func TestParseCustomDatatypeName(t *testing.T) {
 	if l.Value != "Da5id" {
 		t.Fatal(l)
 	}
-	if l.Literaltype != "longname-for-blacksun" {
-		t.Fatal(l)
+	if l.Literaltype != "longname-for-#blacksun" {
+		t.Fatal(l.Literaltype)
 	}
 	if l.LangTag != "" {
 		t.Fatal(l)

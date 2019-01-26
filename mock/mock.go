@@ -50,10 +50,10 @@ func (s *Builder) Get() (tech.Declarations, tech.Prefixes) {
 }
 
 // AddPrefixes adds one automatic long value for each prefix P into the prefixes map.
-// Each has the form "longname-for-P"
+// Each has the form "longname-for-P#"
 func (s *Builder) AddPrefixes(prefixes ...string) *Builder {
 	for _, prefix := range prefixes {
-		s.prefixes.data[prefix] = "longname-for-" + prefix
+		s.prefixes.data[prefix] = "longname-for-" + prefix + "#"
 	}
 	return s
 }
