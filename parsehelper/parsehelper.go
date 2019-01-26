@@ -10,18 +10,23 @@ import (
 )
 
 func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.IRI, err error) {
-	var resolved, name string
+	var head, name string
 	pos := p.Pos()
 
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	p.Unscan()
 	switch tok {
 	case parser.IRI:
-		resolved, name, err = ParseIRIWithFragment(p)
-		ident = tech.MustNewFragmentedIRI(resolved, name)
+		// IRI means, no prefix to resolve:
+		head, name, err = ParseIRIWithFragment(p)
+		if err != nil {
+			return
+		}
+		ident, err = tech.NewIRIFromString(head + name)
 	case parser.IDENT:
 		fallthrough
 	case parser.COLON:
+		// IDENT and COLON both require resolving a prefix:
 		var prefix string
 		prefix, name, err = ParsePrefixedName(p)
 		if err != nil {
@@ -29,15 +34,15 @@ func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.I
 		}
 
 		var ok bool
-		resolved, ok = prefixes.ResolvePrefix(prefix)
+		head, ok = prefixes.ResolvePrefix(prefix)
 		if !ok {
 			err = pos.Errorf("unknown prefix %v", prefix)
 			return
 		}
 
-		ident, err = tech.NewIRIFromString(resolved + name)
+		ident, err = tech.NewIRIFromString(head + name)
 		if err != nil {
-			err = pos.Errorf("prefixed name (%v:%v) resolved to invalid IRI (%v)", prefix, name, resolved+name)
+			err = pos.Errorf("prefixed name (%v:%v) resolved to invalid IRI (%v)", prefix, name, head+name)
 			return
 		}
 	default:
@@ -91,7 +96,7 @@ func ParseUnprefixedIRI(p *parser.Parser) (iri string, err error) {
 // If there's a fragment, head is everything until and including the #, and fragment is the remaining.
 // With no fragment, the head is the full IRI content and fragment is empty.
 // The IRI must not be empty. "<>" results in an error.
-func ParseIRIWithFragment(p *parser.Parser) (prefix, fragment string, err error) {
+func ParseIRIWithFragment(p *parser.Parser) (head, fragment string, err error) {
 	pos := p.Pos()
 	tok, iri, pos := p.ScanIgnoreWSAndComment()
 	if tok == parser.IRI {
@@ -105,8 +110,11 @@ func ParseIRIWithFragment(p *parser.Parser) (prefix, fragment string, err error)
 		}
 		var u *url.URL
 		u, err = url.Parse(iri[1 : len(iri)-1])
+		if err != nil {
+			return
+		}
 		fragment = u.Fragment
-		prefix = iri[1 : len(iri)-1-len(fragment)] // everything until, and including, the fragments "#"
+		head = iri[1 : len(iri)-1-len(fragment)] // everything until, and including, the fragments "#"
 	} else {
 		err = pos.Errorf("expected IRI, but found:%v", parser.DescribeToklit(tok, iri))
 	}

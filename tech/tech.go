@@ -50,7 +50,8 @@ func MustNewFragmentedIRI(head, fragment string) *IRI {
 }
 
 // NewIRIFromString separates the fragment from the first part (Head), if the given value has a fragment.
-// Otherweise, Fragment remains empty.
+// Otherwise, Fragment remains empty.
+// error if val is no valid IRI. Note that most error conditions are not checked.
 func NewIRIFromString(val string) (*IRI, error) {
 	parts := strings.Split(val, "#")
 	switch len(parts) {

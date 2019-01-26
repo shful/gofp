@@ -77,6 +77,7 @@ func TestParseClassDeclWithFullIRI(t *testing.T) {
 
 	decls, prefixes := mock.NewBuilder().AddPrefixes("abc").
 		AddClassDecl(*tech.MustNewFragmentedIRI("longname-for-abc#", "CheeseTopping")).
+		AddClassDecl(tech.IRI{Fragment: "", Head: `http://www.example.org/(*§!_)someWildÜRI/`}).
 		Get()
 
 	p = mock.NewTestParser(`<longname-for-abc#CheeseTopping>`)
@@ -102,14 +103,14 @@ func TestParseClassDeclWithFullIRI(t *testing.T) {
 		t.Fatal(expr)
 	}
 
-	// p = mock.NewTestParser(`<http://www.abc.org/ßomeWildÜRI/>`)
-	// expr, err = ParseClassExpression(p, decls, prefixes)
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-	// if _, ok := expr.(*classexpression.OWLNothing); !ok {
-	// 	t.Fatal(expr)
-	// }
+	p = mock.NewTestParser(`<http://www.example.org/(*§!_)someWildÜRI/>`)
+	expr, err = ParseClassExpression(p, decls, prefixes)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := expr.(*declarations.ClassDecl); !ok {
+		t.Fatal(expr)
+	}
 }
 
 func TestParseClassDeclWithEmptyPrefix(t *testing.T) {

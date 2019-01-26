@@ -33,7 +33,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 
 	// === Decls
-	if len(o.AllClassDecls) != 50 {
+	if len(o.AllClassDecls) != 51 {
 		t.Fatal(o.AllClassDecls)
 	}
 	if !o.ClassDeclExists("localprefix#AmericanHotPizza") {
@@ -272,6 +272,7 @@ const ontologyTestString = `
 Ontology(<urn:absolute:test.de><http://test.de/1.0.777>
 
 	Declaration(Class(hello:FishbonePizza))
+	Declaration(Class(<http://hello.com#SomePizzaWithFull-IRIAnd*SpeciälCharß>))
 	Declaration(Class(:AmericanHotPizza))
 	Declaration(Class(:AmericanaPizza))
 	Declaration(Class(:AnchovyTopping))

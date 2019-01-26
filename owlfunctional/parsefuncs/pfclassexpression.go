@@ -51,13 +51,13 @@ func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes te
 		expr, err = parseDataMaxCardinality(p, decls, prefixes)
 	case parser.DataMinCardinality:
 		expr, err = parseDataMinCardinality(p, decls, prefixes)
-	default:
-		// must be CN
+	case parser.IRI, parser.COLON, parser.IDENT:
+		// must be simply CN
 		var ident *tech.IRI
 		ident, err = parsehelper.ParseAndResolveIRI(p, prefixes)
 
 		if err != nil {
-			err = pos.ErrorfUnexpectedToken(tok, lit, "Classname inside Class Expression")
+			err = pos.ErrorfUnexpectedToken(tok, lit, "IRI as Class Expression found but parse failed:"+err.Error())
 			return
 		}
 
@@ -81,6 +81,8 @@ func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes te
 		if !ok {
 			err = pos.Errorf("Unknown ref to %v. Expected class expression.", ident)
 		}
+	default:
+		err = pos.Errorf("Expected class expression (found:%v which seems something different)", lit)
 	}
 
 	return
