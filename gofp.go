@@ -88,7 +88,7 @@ func parsePrefixTo(prefixes map[string]string, p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.COLON, parser.EQUALS); err != nil {
 		return err
 	}
-	prefixVal, err := parsehelper.ParseUnprefixedIRI(p) //.ScanIgnoreWSAndComment()
+	prefixVal, err := parsehelper.ParseUnprefixedIRI(p)
 	if err != nil {
 		return pos.Errorf("unexpected %v when parsing prefix, need IRI", prefixVal)
 	}

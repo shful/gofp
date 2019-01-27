@@ -147,10 +147,6 @@ func TestParseObjectMinCardinality(t *testing.T) {
 		AddObjectPropertyDecl(*tech.MustNewFragmentedIRI("longname-for-#", "hasTopping")).
 		Get()
 
-	// var o tech.Declarations = mock.MockDecls{}
-	// o.Prefixes[""] = "localprefix"
-	// o.objectPropertyDecls[`:hasTopping`] = &ObjectPropertyDecl{Declaration: Declaration{Prefix: "", Name: "hasTopping"}}
-
 	p = mock.NewTestParser(`ObjectMinCardinality(3 :hasTopping)`)
 	parser.TokenLog = true
 

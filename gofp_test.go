@@ -12,11 +12,8 @@ import (
 
 func TestParsePrefixTo(t *testing.T) {
 	var err error
-	// var o *ontologies.Ontology
 	// parser.TokenLog = true
 	var p *parser.Parser
-
-	// o, err = OntologyFromReader(strings.NewReader(`Prefix(terms:=<http://purl.org/dc/terms/>)`), "Testsource")
 	var prefixes map[string]string = map[string]string{}
 
 	p = mock.NewTestParser(`Prefix(terms:=<http://purl.org/dc/terms/>)`)
