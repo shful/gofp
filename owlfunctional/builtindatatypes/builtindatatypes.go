@@ -1,6 +1,9 @@
 package builtindatatypes
 
-import "github.com/shful/gofp/owlfunctional/parser"
+import (
+	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/tech"
+)
 
 const (
 	PRE_OWL  = "http://www.w3.org/2002/07/owl#"
@@ -50,4 +53,12 @@ var BuiltinDatatypes map[string]parser.Token = map[string]parser.Token{
 func BuiltinDatatypeExists(iri string) bool {
 	_, ok := BuiltinDatatypes[iri]
 	return ok
+}
+
+func IsOWL(s tech.IRI) bool {
+	return s.Head == PRE_OWL
+}
+
+func IsOWLThing(s tech.IRI) bool {
+	return IsOWL(s) && s.Fragment == "Thing"
 }

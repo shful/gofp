@@ -22,11 +22,6 @@ type MockPrefixes struct {
 
 var _ tech.Prefixes = (*MockPrefixes)(nil)
 
-func (s *MockPrefixes) IsOWL(prefix string) bool {
-	val, _ := s.data[prefix]
-	return val == `<http://www.w3.org/2002/07/owl#>`
-}
-
 func (s *MockPrefixes) ResolvePrefix(prefix string) (res string, ok bool) {
 	res, ok = s.data[prefix]
 	return

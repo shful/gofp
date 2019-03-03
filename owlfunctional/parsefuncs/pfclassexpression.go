@@ -1,6 +1,7 @@
 package parsefuncs
 
 import (
+	"github.com/shful/gofp/owlfunctional/builtindatatypes"
 	"github.com/shful/gofp/owlfunctional/classexpression"
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
@@ -61,7 +62,7 @@ func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes te
 			return
 		}
 
-		if ident.IsOWL() {
+		if builtindatatypes.IsOWL(*ident) {
 			//must be one of the predefined OWL classes
 			switch ident.Fragment {
 			case "Thing":

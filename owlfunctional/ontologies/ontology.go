@@ -714,11 +714,6 @@ func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
 	return
 }
 
-func (s *Ontology) IsOWL(prefix string) bool {
-	val, _ := s.Prefixes[prefix]
-	return val == `<http://www.w3.org/2002/07/owl#>`
-}
-
 func (s *Ontology) About() string {
 	return fmt.Sprintf("%v with %d annotations, %d classes, %d object properties, %d data properties, %d named individuals, %d datatypes.",
 		s.IRI,

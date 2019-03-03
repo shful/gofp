@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/shful/gofp/owlfunctional/builtindatatypes"
 	"github.com/shful/gofp/owlfunctional/declarations"
 )
 
@@ -22,7 +21,6 @@ type Prefixes interface {
 	// ResolvePrefix returns the IRI part which is associated with the prefix
 	// false if prefix was unknown.
 	ResolvePrefix(prefix string) (resolved string, ok bool)
-	IsOWL(prefix string) bool //todo eventually replace by an IRI check with already resolved prefix
 }
 
 // IRI resembles an IRI that OWL uses as identifier.
@@ -66,15 +64,6 @@ func NewIRIFromString(val string) (*IRI, error) {
 
 func (s *IRI) String() string {
 	return s.Head + s.Fragment
-}
-
-//todo IsOWL - functions belong somewhere else
-func (s *IRI) IsOWL() bool {
-	return s.Head == builtindatatypes.PRE_OWL
-}
-
-func (s *IRI) IsOWLThing() bool {
-	return s.IsOWL() && s.Fragment == "Thing"
 }
 
 // ZeroBasedPosWord is "first" for 0, then "second" ... 4th ... and so on

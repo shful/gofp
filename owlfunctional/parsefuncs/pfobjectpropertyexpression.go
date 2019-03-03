@@ -1,6 +1,7 @@
 package parsefuncs
 
 import (
+	"github.com/shful/gofp/owlfunctional/builtindatatypes"
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/owlfunctional/properties"
@@ -24,7 +25,7 @@ func ParseObjectPropertyExpression(p *parser.Parser, decls tech.Declarations, pr
 			return
 		}
 
-		if ident.IsOWL() {
+		if builtindatatypes.IsOWL(*ident) {
 			// must be one of the predefined OWL property names
 			switch ident.Fragment {
 			case "topObjectProperty":
