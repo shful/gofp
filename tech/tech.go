@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/shful/gofp/owlfunctional/annotations"
+	"github.com/shful/gofp/owlfunctional/axioms"
 	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/meta"
 )
 
 type Declarations interface {
@@ -15,6 +18,41 @@ type Declarations interface {
 	GetDatatypeDecl(ident IRI) (*declarations.DatatypeDecl, bool)
 	GetNamedIndividualDecl(ident IRI) (*declarations.NamedIndividualDecl, bool)
 	GetObjectPropertyDecl(ident IRI) (*declarations.ObjectPropertyDecl, bool)
+}
+
+type DeclStore interface {
+	StoreAnnotationPropertyDecl(ident IRI, decl *declarations.AnnotationPropertyDecl)
+	StoreClassDecl(ident IRI, decl *declarations.ClassDecl)
+	StoreDataPropertyDecl(ident IRI, decl *declarations.DataPropertyDecl)
+	StoreDatatypeDecl(ident IRI, decl *declarations.DatatypeDecl)
+	StoreNamedIndividualDecl(ident IRI, decl *declarations.NamedIndividualDecl)
+	StoreObjectPropertyDecl(ident IRI, decl *declarations.ObjectPropertyDecl)
+}
+
+// AxiomStore takes all possible axioms and encapsulates the data structures to store them.
+type AxiomStore interface {
+	StoreAnnotationAssertion(annotations.AnnotationAssertion)
+	StoreAsymmetricObjectProperty(meta.ObjectPropertyExpression)
+	StoreClassAssertion(axioms.ClassAssertion)
+	StoreDataPropertyAssertion(axioms.DataPropertyAssertion)
+	StoreFunctionalDataProperty(meta.DataProperty)
+	StoreFunctionalObjectProperty(meta.ObjectPropertyExpression)
+	StoreInverseFunctionalObjectProperty(meta.ObjectPropertyExpression)
+	StoreInverseObjectProperties(axioms.InverseObjectProperties)
+	StoreIrreflexiveObjectProperty(meta.ObjectPropertyExpression)
+	StoreDataPropertyDomain(axioms.DataPropertyDomain)
+	StoreDataPropertyRange(axioms.DataPropertyRange)
+	StoreDisjointClasses(axioms.DisjointClasses)
+	StoreDifferentIndividuals(axioms.DifferentIndividuals)
+	StoreEquivalentClasses(axioms.EquivalentClasses)
+	StoreObjectPropertyDomain(axioms.ObjectPropertyDomain)
+	StoreObjectPropertyRange(axioms.ObjectPropertyRange)
+	StoreReflexiveObjectProperty(meta.ObjectPropertyExpression)
+	StoreSubClassOf(axioms.SubClassOf)
+	StoreSubDataPropertyOf(axioms.SubDataPropertyOf)
+	StoreSubObjectPropertyOf(axioms.SubObjectPropertyOf)
+	StoreSymmetricObjectProperty(meta.ObjectPropertyExpression)
+	StoreTransitiveObjectProperty(meta.ObjectPropertyExpression)
 }
 
 type Prefixes interface {

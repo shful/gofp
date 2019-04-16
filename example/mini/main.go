@@ -46,7 +46,7 @@ func main() {
 	}
 
 	fmt.Println("All declared class names are:")
-	for name, _ := range o.AllClassDecls {
+	for name, _ := range o.Kb.AllClassDecls {
 		fmt.Println(name)
 	}
 }
