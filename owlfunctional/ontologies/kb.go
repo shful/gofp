@@ -22,33 +22,34 @@ type KB struct {
 	AllObjectPropertyDecls     map[string]*declarations.ObjectPropertyDecl
 
 	// Axioms
-	AllAnnotationAssertions              []annotations.AnnotationAssertion
-	AllAsymmetricObjectProperties        []meta.ObjectPropertyExpression
-	AllClassAssertions                   []axioms.ClassAssertion
-	AllDataPropertyAssertions            []axioms.DataPropertyAssertion
-	AllFunctionalDataProperties          []meta.DataProperty
-	AllFunctionalObjectProperties        []meta.ObjectPropertyExpression
-	AllInverseFunctionalObjectProperties []meta.ObjectPropertyExpression
-	AllInverseObjectProperties           []axioms.InverseObjectProperties
-	AllIrreflexiveObjectProperties       []meta.ObjectPropertyExpression
-	AllDataPropertyDomains               []axioms.DataPropertyDomain
-	AllDataPropertyRanges                []axioms.DataPropertyRange
-	AllDisjointClasses                   []axioms.DisjointClasses
-	AllDifferentIndividuals              []axioms.DifferentIndividuals
-	AllEquivalentClasses                 []axioms.EquivalentClasses
-	AllObjectPropertyDomains             []axioms.ObjectPropertyDomain
-	AllObjectPropertyRanges              []axioms.ObjectPropertyRange
-	AllReflexiveObjectProperties         []meta.ObjectPropertyExpression
-	AllSubClassOfs                       []axioms.SubClassOf
-	AllSubDataPropertyOfs                []axioms.SubDataPropertyOf
-	AllSubObjectPropertyOfs              []axioms.SubObjectPropertyOf
-	AllSymmetricObjectProperties         []meta.ObjectPropertyExpression
-	AllTransitiveObjectProperties        []meta.ObjectPropertyExpression
+	allAnnotationAssertions              []annotations.AnnotationAssertion
+	allAsymmetricObjectProperties        []meta.ObjectPropertyExpression
+	allClassAssertions                   []axioms.ClassAssertion
+	allDataPropertyAssertions            []axioms.DataPropertyAssertion
+	allFunctionalDataProperties          []meta.DataProperty
+	allFunctionalObjectProperties        []meta.ObjectPropertyExpression
+	allInverseFunctionalObjectProperties []meta.ObjectPropertyExpression
+	allInverseObjectProperties           []axioms.InverseObjectProperties
+	allIrreflexiveObjectProperties       []meta.ObjectPropertyExpression
+	allDataPropertyDomains               []axioms.DataPropertyDomain
+	allDataPropertyRanges                []axioms.DataPropertyRange
+	allDisjointClasses                   []axioms.DisjointClasses
+	allDifferentIndividuals              []axioms.DifferentIndividuals
+	allEquivalentClasses                 []axioms.EquivalentClasses
+	allObjectPropertyDomains             []axioms.ObjectPropertyDomain
+	allObjectPropertyRanges              []axioms.ObjectPropertyRange
+	allReflexiveObjectProperties         []meta.ObjectPropertyExpression
+	allSubClassOfs                       []axioms.SubClassOf
+	allSubDataPropertyOfs                []axioms.SubDataPropertyOf
+	allSubObjectPropertyOfs              []axioms.SubObjectPropertyOf
+	allSymmetricObjectProperties         []meta.ObjectPropertyExpression
+	allTransitiveObjectProperties        []meta.ObjectPropertyExpression
 }
 
 var _ tech.Declarations = (*KB)(nil)
-var _ tech.AxiomStore = (*KB)(nil)
 var _ tech.DeclStore = (*KB)(nil)
+var _ tech.Axioms = (*KB)(nil)
+var _ tech.AxiomStore = (*KB)(nil)
 
 func NewKB() *KB {
 	return &KB{
@@ -90,6 +91,94 @@ func (s *KB) GetObjectPropertyDecl(ident tech.IRI) (decl *declarations.ObjectPro
 	return
 }
 
+func (s *KB) AllAnnotationAssertions() []annotations.AnnotationAssertion {
+	return s.allAnnotationAssertions
+}
+
+func (s *KB) AllAsymmetricObjectProperties() []meta.ObjectPropertyExpression {
+	return s.allAsymmetricObjectProperties
+}
+
+func (s *KB) AllClassAssertions() []axioms.ClassAssertion {
+	return s.allClassAssertions
+}
+
+func (s *KB) AllDataPropertyAssertions() []axioms.DataPropertyAssertion {
+	return s.allDataPropertyAssertions
+}
+
+func (s *KB) AllFunctionalDataProperties() []meta.DataProperty {
+	return s.allFunctionalDataProperties
+}
+
+func (s *KB) AllFunctionalObjectProperties() []meta.ObjectPropertyExpression {
+	return s.allFunctionalObjectProperties
+}
+
+func (s *KB) AllInverseFunctionalObjectProperties() []meta.ObjectPropertyExpression {
+	return s.allInverseFunctionalObjectProperties
+}
+
+func (s *KB) AllInverseObjectProperties() []axioms.InverseObjectProperties {
+	return s.allInverseObjectProperties
+}
+
+func (s *KB) AllIrreflexiveObjectProperties() []meta.ObjectPropertyExpression {
+	return s.allIrreflexiveObjectProperties
+}
+
+func (s *KB) AllDataPropertyDomains() []axioms.DataPropertyDomain {
+	return s.allDataPropertyDomains
+}
+
+func (s *KB) AllDataPropertyRanges() []axioms.DataPropertyRange {
+	return s.allDataPropertyRanges
+}
+
+func (s *KB) AllDisjointClasses() []axioms.DisjointClasses {
+	return s.allDisjointClasses
+}
+
+func (s *KB) AllDifferentIndividuals() []axioms.DifferentIndividuals {
+	return s.allDifferentIndividuals
+}
+
+func (s *KB) AllEquivalentClasses() []axioms.EquivalentClasses {
+	return s.allEquivalentClasses
+}
+
+func (s *KB) AllObjectPropertyDomains() []axioms.ObjectPropertyDomain {
+	return s.allObjectPropertyDomains
+}
+
+func (s *KB) AllObjectPropertyRanges() []axioms.ObjectPropertyRange {
+	return s.allObjectPropertyRanges
+}
+
+func (s *KB) AllReflexiveObjectProperties() []meta.ObjectPropertyExpression {
+	return s.allReflexiveObjectProperties
+}
+
+func (s *KB) AllSubClassOfs() []axioms.SubClassOf {
+	return s.allSubClassOfs
+}
+
+func (s *KB) AllSubDataPropertyOfs() []axioms.SubDataPropertyOf {
+	return s.allSubDataPropertyOfs
+}
+
+func (s *KB) AllSubObjectPropertyOfs() []axioms.SubObjectPropertyOf {
+	return s.allSubObjectPropertyOfs
+}
+
+func (s *KB) AllSymmetricObjectProperties() []meta.ObjectPropertyExpression {
+	return s.allSymmetricObjectProperties
+}
+
+func (s *KB) AllTransitiveObjectProperties() []meta.ObjectPropertyExpression {
+	return s.allTransitiveObjectProperties
+}
+
 func (s *KB) StoreAnnotationPropertyDecl(ident tech.IRI, decl *declarations.AnnotationPropertyDecl) {
 	s.AllAnnotationPropertyDecls[ident.String()] = decl
 }
@@ -115,88 +204,88 @@ func (s *KB) StoreObjectPropertyDecl(ident tech.IRI, decl *declarations.ObjectPr
 }
 
 func (s *KB) StoreAnnotationAssertion(a annotations.AnnotationAssertion) {
-	s.AllAnnotationAssertions = append(s.AllAnnotationAssertions, a)
+	s.allAnnotationAssertions = append(s.allAnnotationAssertions, a)
 }
 func (s *KB) StoreAsymmetricObjectProperty(a meta.ObjectPropertyExpression) {
-	s.AllAsymmetricObjectProperties = append(s.AllAsymmetricObjectProperties, a)
+	s.allAsymmetricObjectProperties = append(s.allAsymmetricObjectProperties, a)
 }
 
 func (s *KB) StoreClassAssertion(a axioms.ClassAssertion) {
-	s.AllClassAssertions = append(s.AllClassAssertions, a)
+	s.allClassAssertions = append(s.allClassAssertions, a)
 }
 
 func (s *KB) StoreDataPropertyAssertion(a axioms.DataPropertyAssertion) {
-	s.AllDataPropertyAssertions = append(s.AllDataPropertyAssertions, a)
+	s.allDataPropertyAssertions = append(s.allDataPropertyAssertions, a)
 }
 
 func (s *KB) StoreFunctionalDataProperty(a meta.DataProperty) {
-	s.AllFunctionalDataProperties = append(s.AllFunctionalDataProperties, a)
+	s.allFunctionalDataProperties = append(s.allFunctionalDataProperties, a)
 }
 
 func (s *KB) StoreFunctionalObjectProperty(a meta.ObjectPropertyExpression) {
-	s.AllFunctionalObjectProperties = append(s.AllFunctionalObjectProperties, a)
+	s.allFunctionalObjectProperties = append(s.allFunctionalObjectProperties, a)
 }
 
 func (s *KB) StoreInverseFunctionalObjectProperty(a meta.ObjectPropertyExpression) {
-	s.AllInverseFunctionalObjectProperties = append(s.AllInverseFunctionalObjectProperties, a)
+	s.allInverseFunctionalObjectProperties = append(s.allInverseFunctionalObjectProperties, a)
 }
 
 func (s *KB) StoreInverseObjectProperties(a axioms.InverseObjectProperties) {
-	s.AllInverseObjectProperties = append(s.AllInverseObjectProperties, a)
+	s.allInverseObjectProperties = append(s.allInverseObjectProperties, a)
 }
 
 func (s *KB) StoreIrreflexiveObjectProperty(a meta.ObjectPropertyExpression) {
-	s.AllIrreflexiveObjectProperties = append(s.AllIrreflexiveObjectProperties, a)
+	s.allIrreflexiveObjectProperties = append(s.allIrreflexiveObjectProperties, a)
 }
 
 func (s *KB) StoreDataPropertyDomain(a axioms.DataPropertyDomain) {
-	s.AllDataPropertyDomains = append(s.AllDataPropertyDomains, a)
+	s.allDataPropertyDomains = append(s.allDataPropertyDomains, a)
 }
 
 func (s *KB) StoreDataPropertyRange(a axioms.DataPropertyRange) {
-	s.AllDataPropertyRanges = append(s.AllDataPropertyRanges, a)
+	s.allDataPropertyRanges = append(s.allDataPropertyRanges, a)
 }
 
 func (s *KB) StoreDisjointClasses(a axioms.DisjointClasses) {
-	s.AllDisjointClasses = append(s.AllDisjointClasses, a)
+	s.allDisjointClasses = append(s.allDisjointClasses, a)
 }
 
 func (s *KB) StoreDifferentIndividuals(a axioms.DifferentIndividuals) {
-	s.AllDifferentIndividuals = append(s.AllDifferentIndividuals, a)
+	s.allDifferentIndividuals = append(s.allDifferentIndividuals, a)
 }
 
 func (s *KB) StoreEquivalentClasses(a axioms.EquivalentClasses) {
-	s.AllEquivalentClasses = append(s.AllEquivalentClasses, a)
+	s.allEquivalentClasses = append(s.allEquivalentClasses, a)
 }
 
 func (s *KB) StoreObjectPropertyDomain(a axioms.ObjectPropertyDomain) {
-	s.AllObjectPropertyDomains = append(s.AllObjectPropertyDomains, a)
+	s.allObjectPropertyDomains = append(s.allObjectPropertyDomains, a)
 }
 
 func (s *KB) StoreObjectPropertyRange(a axioms.ObjectPropertyRange) {
-	s.AllObjectPropertyRanges = append(s.AllObjectPropertyRanges, a)
+	s.allObjectPropertyRanges = append(s.allObjectPropertyRanges, a)
 }
 
 func (s *KB) StoreReflexiveObjectProperty(a meta.ObjectPropertyExpression) {
-	s.AllReflexiveObjectProperties = append(s.AllReflexiveObjectProperties, a)
+	s.allReflexiveObjectProperties = append(s.allReflexiveObjectProperties, a)
 }
 
 func (s *KB) StoreSubClassOf(a axioms.SubClassOf) {
-	s.AllSubClassOfs = append(s.AllSubClassOfs, a)
+	s.allSubClassOfs = append(s.allSubClassOfs, a)
 }
 
 func (s *KB) StoreSubDataPropertyOf(a axioms.SubDataPropertyOf) {
-	s.AllSubDataPropertyOfs = append(s.AllSubDataPropertyOfs, a)
+	s.allSubDataPropertyOfs = append(s.allSubDataPropertyOfs, a)
 }
 
 func (s *KB) StoreSubObjectPropertyOf(a axioms.SubObjectPropertyOf) {
-	s.AllSubObjectPropertyOfs = append(s.AllSubObjectPropertyOfs, a)
+	s.allSubObjectPropertyOfs = append(s.allSubObjectPropertyOfs, a)
 }
 
 func (s *KB) StoreSymmetricObjectProperty(a meta.ObjectPropertyExpression) {
-	s.AllSymmetricObjectProperties = append(s.AllSymmetricObjectProperties, a)
+	s.allSymmetricObjectProperties = append(s.allSymmetricObjectProperties, a)
 }
 
 func (s *KB) StoreTransitiveObjectProperty(a meta.ObjectPropertyExpression) {
-	s.AllTransitiveObjectProperties = append(s.AllTransitiveObjectProperties, a)
+	s.allTransitiveObjectProperties = append(s.allTransitiveObjectProperties, a)
 }
