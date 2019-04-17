@@ -22,7 +22,7 @@ type Ontology struct {
 	Prefixes     map[string]string
 	Axioms       tech.Axioms
 	AxiomStore   tech.AxiomStore
-	Declarations tech.Declarations
+	Decls tech.Decls
 	DeclStore    tech.DeclStore
 }
 
@@ -35,7 +35,7 @@ func NewOntology(prefixes map[string]string) (res *Ontology) {
 		Prefixes:     prefixes,
 		Axioms:       as,
 		AxiomStore:   as,
-		Declarations: ds,
+		Decls: ds,
 		DeclStore:    ds,
 	}
 	return
@@ -152,14 +152,14 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	var s_ string
-	s_, _, err = parsefuncs.Parses(p, s.Declarations, s)
+	s_, _, err = parsefuncs.Parses(p, s.Decls, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 2nd param in AnnotationAssertion")
 		return
 	}
 	var t string
 
-	t, _, err = parsefuncs.Parset(p, s.Declarations, s)
+	t, _, err = parsefuncs.Parset(p, s.Decls, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 3rd param in AnnotationAssertion")
 		return
@@ -196,12 +196,12 @@ func (s *Ontology) parseClassAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	var C meta.ClassExpression
-	C, err = parsefuncs.ParseClassExpression(p, s.Declarations, s)
+	C, err = parsefuncs.ParseClassExpression(p, s.Decls, s)
 	if err != nil {
 		return
 	}
 	var a individual.Individual
-	a, err = parsefuncs.ParseIndividual(p, s.Declarations, s)
+	a, err = parsefuncs.ParseIndividual(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -219,13 +219,13 @@ func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
 	}
 	pos := p.Pos()
 	var R meta.DataProperty
-	R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s)
+	R, err = parsefuncs.ParseDataProperty(p, s.Decls, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "1st param in DataPropertyAssertion")
 		return
 	}
 	var a individual.Individual
-	a, err = parsefuncs.ParseIndividual(p, s.Declarations, s)
+	a, err = parsefuncs.ParseIndividual(p, s.Decls, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "2nd param in DataPropertyAssertion")
 		return
@@ -295,7 +295,7 @@ func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
 	}
 
 	var as []individual.Individual
-	as, err = parsefuncs.ParseIndividualsUntilB2(p, s.Declarations, s)
+	as, err = parsefuncs.ParseIndividualsUntilB2(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -330,12 +330,12 @@ func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
 		return
 	}
 	var R meta.DataProperty
-	R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s)
+	R, err = parsefuncs.ParseDataProperty(p, s.Decls, s)
 	if err != nil {
 		return
 	}
 	var C meta.ClassExpression
-	C, err = parsefuncs.ParseClassExpression(p, s.Declarations, s)
+	C, err = parsefuncs.ParseClassExpression(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -352,12 +352,12 @@ func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
 		return
 	}
 	var R meta.DataProperty
-	R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s)
+	R, err = parsefuncs.ParseDataProperty(p, s.Decls, s)
 	if err != nil {
 		return
 	}
 	var D meta.DataRange
-	D, err = parsefuncs.ParseDataRange(p, s.Declarations, s)
+	D, err = parsefuncs.ParseDataRange(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -376,7 +376,7 @@ func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
 
 	var Cs []meta.ClassExpression
 	pos := p.Pos()
-	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Declarations, s)
+	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -397,7 +397,7 @@ func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
 	}
 
 	var Cs []meta.ClassExpression
-	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Declarations, s)
+	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -417,7 +417,7 @@ func (s *Ontology) parseFunctionalDataProperty(p *parser.Parser) (err error) {
 		return
 	}
 
-	if R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s); err != nil {
+	if R, err = parsefuncs.ParseDataProperty(p, s.Decls, s); err != nil {
 		return
 	}
 
@@ -461,10 +461,10 @@ func (s *Ontology) parseInverseObjectProperties(p *parser.Parser) (err error) {
 	}
 
 	var P1, P2 meta.ObjectPropertyExpression
-	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
+	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s); err != nil {
 		return
 	}
-	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
+	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s); err != nil {
 		return
 	}
 
@@ -494,7 +494,7 @@ func (s *Ontology) parseObjectPropertyDomain(p *parser.Parser) (err error) {
 	}
 	var P meta.ObjectPropertyExpression
 	var C meta.ClassExpression
-	P, C, err = parsefuncs.ParsePC(p, s.Declarations, s)
+	P, C, err = parsefuncs.ParsePC(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -508,7 +508,7 @@ func (s *Ontology) parseObjectPropertyRange(p *parser.Parser) (err error) {
 	}
 	var P meta.ObjectPropertyExpression
 	var C meta.ClassExpression
-	P, C, err = parsefuncs.ParsePC(p, s.Declarations, s)
+	P, C, err = parsefuncs.ParsePC(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -536,7 +536,7 @@ func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 
 	var Cs []meta.ClassExpression
 	pos := p.Pos()
-	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Declarations, s)
+	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -557,10 +557,10 @@ func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
 	}
 
 	var P1, P2 meta.DataProperty
-	if P1, err = parsefuncs.ParseDataProperty(p, s.Declarations, s); err != nil {
+	if P1, err = parsefuncs.ParseDataProperty(p, s.Decls, s); err != nil {
 		return
 	}
-	if P2, err = parsefuncs.ParseDataProperty(p, s.Declarations, s); err != nil {
+	if P2, err = parsefuncs.ParseDataProperty(p, s.Decls, s); err != nil {
 		return
 	}
 
@@ -578,10 +578,10 @@ func (s *Ontology) parseSubObjectPropertyOf(p *parser.Parser) (err error) {
 	}
 
 	var P1, P2 meta.ObjectPropertyExpression
-	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
+	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s); err != nil {
 		return
 	}
-	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
+	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s); err != nil {
 		return
 	}
 
@@ -624,7 +624,7 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 		return
 	}
 
-	if P, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
+	if P, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s); err != nil {
 		return
 	}
 
@@ -635,22 +635,22 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 }
 
 func (s *Ontology) ClassDeclExists(ident string) bool {
-	_, ok := s.Declarations.ClassDecl(ident)
+	_, ok := s.Decls.ClassDecl(ident)
 	return ok
 }
 
 func (s *Ontology) DataPropertyDeclExists(ident string) bool {
-	_, ok := s.Declarations.DataPropertyDecl(ident)
+	_, ok := s.Decls.DataPropertyDecl(ident)
 	return ok
 }
 
 func (s *Ontology) NamedIndividualDeclExists(ident string) bool {
-	_, ok := s.Declarations.NamedIndividualDecl(ident)
+	_, ok := s.Decls.NamedIndividualDecl(ident)
 	return ok
 }
 
 func (s *Ontology) ObjectPropertyDeclExists(ident string) bool {
-	_, ok := s.Declarations.ObjectPropertyDecl(ident)
+	_, ok := s.Decls.ObjectPropertyDecl(ident)
 	return ok
 }
 
@@ -662,6 +662,6 @@ func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
 func (s *Ontology) About() string {
 	return fmt.Sprintf("%v with %v.",
 		s.IRI,
-		s.Declarations,
+		s.Decls,
 	)
 }

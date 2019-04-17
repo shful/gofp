@@ -11,7 +11,7 @@ import (
 	"github.com/shful/gofp/tech"
 )
 
-func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func ParseClassExpression(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	p.Unscan()
 	switch tok {
@@ -89,7 +89,7 @@ func ParseClassExpression(p *parser.Parser, decls tech.Declarations, prefixes te
 	return
 }
 
-func parseDataAllValuesFrom(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseDataAllValuesFrom(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	var R meta.DataProperty
 	var D meta.DataRange
 	R, D, err = ParseRD(p, decls, prefixes)
@@ -100,7 +100,7 @@ func parseDataAllValuesFrom(p *parser.Parser, decls tech.Declarations, prefixes 
 	return
 }
 
-func parseDataExactCardinality(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseDataExactCardinality(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.DataExactCardinality); err != nil {
 		return
 	}
@@ -121,7 +121,7 @@ func parseDataExactCardinality(p *parser.Parser, decls tech.Declarations, prefix
 	return
 }
 
-func parseDataMaxCardinality(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseDataMaxCardinality(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.DataMaxCardinality); err != nil {
 		return
 	}
@@ -142,7 +142,7 @@ func parseDataMaxCardinality(p *parser.Parser, decls tech.Declarations, prefixes
 	return
 }
 
-func parseDataMinCardinality(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseDataMinCardinality(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.DataMinCardinality); err != nil {
 		return
 	}
@@ -164,7 +164,7 @@ func parseDataMinCardinality(p *parser.Parser, decls tech.Declarations, prefixes
 	return
 }
 
-func parseDataHasValue(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseDataHasValue(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	var R meta.DataProperty
 	var v literal.OWLLiteral
 	pos := p.Pos()
@@ -191,7 +191,7 @@ func parseDataHasValue(p *parser.Parser, decls tech.Declarations, prefixes tech.
 	return
 }
 
-func parseDataSomeValuesFrom(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseDataSomeValuesFrom(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.DataSomeValuesFrom); err != nil {
 		return
 	}
@@ -206,7 +206,7 @@ func parseDataSomeValuesFrom(p *parser.Parser, decls tech.Declarations, prefixes
 	return
 }
 
-func parseObjectAllValuesFrom(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectAllValuesFrom(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectAllValuesFrom); err != nil {
 		return
 	}
@@ -220,7 +220,7 @@ func parseObjectAllValuesFrom(p *parser.Parser, decls tech.Declarations, prefixe
 	return
 }
 
-func parseObjectSomeValuesFrom(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectSomeValuesFrom(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectSomeValuesFrom); err != nil {
 		return
 	}
@@ -234,7 +234,7 @@ func parseObjectSomeValuesFrom(p *parser.Parser, decls tech.Declarations, prefix
 	return
 }
 
-func parseObjectExactCardinality(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectExactCardinality(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectExactCardinality); err != nil {
 		return
 	}
@@ -251,7 +251,7 @@ func parseObjectExactCardinality(p *parser.Parser, decls tech.Declarations, pref
 	return
 }
 
-func parseObjectHasValue(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectHasValue(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectHasValue); err != nil {
 		return
 	}
@@ -267,7 +267,7 @@ func parseObjectHasValue(p *parser.Parser, decls tech.Declarations, prefixes tec
 	return
 }
 
-func parseObjectHasSelf(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectHasSelf(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectHasSelf, parser.B1); err != nil {
 		return
 	}
@@ -282,7 +282,7 @@ func parseObjectHasSelf(p *parser.Parser, decls tech.Declarations, prefixes tech
 	return
 }
 
-func parseObjectMaxCardinality(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectMaxCardinality(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectMaxCardinality); err != nil {
 		return
 	}
@@ -298,7 +298,7 @@ func parseObjectMaxCardinality(p *parser.Parser, decls tech.Declarations, prefix
 	return
 }
 
-func parseObjectMinCardinality(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectMinCardinality(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectMinCardinality); err != nil {
 		return
 	}
@@ -315,7 +315,7 @@ func parseObjectMinCardinality(p *parser.Parser, decls tech.Declarations, prefix
 	return
 }
 
-func parseObjectComplementOf(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectComplementOf(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectComplementOf, parser.B1); err != nil {
 		return
 	}
@@ -337,7 +337,7 @@ func parseObjectComplementOf(p *parser.Parser, decls tech.Declarations, prefixes
 	return
 }
 
-func parseObjectIntersectionOf(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectIntersectionOf(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectIntersectionOf, parser.B1); err != nil {
 		return
 	}
@@ -359,7 +359,7 @@ func parseObjectIntersectionOf(p *parser.Parser, decls tech.Declarations, prefix
 	return
 }
 
-func parseObjectOneOf(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectOneOf(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectOneOf, parser.B1); err != nil {
 		return
 	}
@@ -378,7 +378,7 @@ func parseObjectOneOf(p *parser.Parser, decls tech.Declarations, prefixes tech.P
 	return
 }
 
-func parseObjectUnionOf(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+func parseObjectUnionOf(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.ObjectUnionOf, parser.B1); err != nil {
 		return
 	}
@@ -402,7 +402,7 @@ func parseObjectUnionOf(p *parser.Parser, decls tech.Declarations, prefixes tech
 
 // ParseClassExpressionsUntilB2 parses all ClassExpression until ")" is found
 // The closing ")" is not consumed.
-func ParseClassExpressionsUntilB2(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (Cs []meta.ClassExpression, err error) {
+func ParseClassExpressionsUntilB2(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (Cs []meta.ClassExpression, err error) {
 
 	var tok parser.Token
 	var C meta.ClassExpression

@@ -14,7 +14,7 @@ type MockDeclarations struct {
 	defaults.DeclStore
 }
 
-var _ tech.Declarations = (*MockDeclarations)(nil)
+var _ tech.Decls = (*MockDeclarations)(nil)
 
 type MockPrefixes struct {
 	data map[string]string
@@ -40,7 +40,7 @@ func NewBuilder() *Builder {
 	}
 }
 
-func (s *Builder) Get() (tech.Declarations, tech.Prefixes) {
+func (s *Builder) Get() (tech.Decls, tech.Prefixes) {
 	return s.decls, s.prefixes
 }
 

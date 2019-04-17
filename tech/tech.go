@@ -11,7 +11,8 @@ import (
 	"github.com/shful/gofp/owlfunctional/meta"
 )
 
-type Declarations interface {
+// Decls gives read access to all Declarations that were parsed yet.
+type Decls interface {
 	AnnotationPropertyDecl(ident string) (*declarations.AnnotationPropertyDecl, bool)
 	ClassDecl(ident string) (*declarations.ClassDecl, bool)
 	DataPropertyDecl(ident string) (*declarations.DataPropertyDecl, bool)

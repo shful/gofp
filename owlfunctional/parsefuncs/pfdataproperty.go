@@ -9,7 +9,7 @@ import (
 	"github.com/shful/gofp/tech"
 )
 
-func ParseDataProperty(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.DataProperty, err error) {
+func ParseDataProperty(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.DataProperty, err error) {
 
 	pos := p.Pos()
 	// must be R

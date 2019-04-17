@@ -9,7 +9,7 @@ import (
 	"github.com/shful/gofp/tech"
 )
 
-func ParseObjectPropertyExpression(p *parser.Parser, decls tech.Declarations, prefixes tech.Prefixes) (expr meta.ObjectPropertyExpression, err error) {
+func ParseObjectPropertyExpression(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.ObjectPropertyExpression, err error) {
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	switch tok {
 	case parser.ObjectInverseOf:

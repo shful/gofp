@@ -32,7 +32,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	if o.VERSIONIRI != "<http://test.de/1.0.777>" {
 		t.Fatal(o.VERSIONIRI)
 	}
-	decls := o.Declarations
+	decls := o.Decls
 
 	// === Decls
 	if len(decls.AllClassDecls()) != 51 {
@@ -194,7 +194,7 @@ func TestParseEquivalentClasses(t *testing.T) {
 	var err error
 	var o *Ontology = NewOntology(map[string]string{})
 	o.Prefixes[""] = "localprefix#"
-	// decls := o.Declarations.(*defaults.DeclStore)
+	// decls := o.Decls.(*defaults.DeclStore)
 	decls := o.DeclStore
 	decls.StoreClassDecl(tech.IRI{Head: `localprefix#`, Fragment: `Pizza`}, &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#Pizza"}})
 	decls.StoreClassDecl(tech.IRI{Head: `localprefix#`, Fragment: `InterestingPizza`}, &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#InterestingPizza"}})
