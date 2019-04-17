@@ -9,6 +9,7 @@ import (
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
 	"github.com/shful/gofp/owlfunctional/meta"
+	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parsefuncs"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
@@ -16,18 +17,26 @@ import (
 )
 
 type Ontology struct {
-	IRI        string
-	VERSIONIRI string
-	Prefixes   map[string]string
-	Kb         *KB
+	IRI          string
+	VERSIONIRI   string
+	Prefixes     map[string]string
+	Axioms       tech.Axioms
+	AxiomStore   tech.AxiomStore
+	Declarations tech.Declarations
+	DeclStore    tech.DeclStore
 }
 
 var _ tech.Prefixes = (*Ontology)(nil)
 
 func NewOntology(prefixes map[string]string) (res *Ontology) {
+	as := defaults.NewAxiomStore()
+	ds := defaults.NewDeclStore()
 	res = &Ontology{
-		Prefixes: prefixes,
-		Kb:       NewKB(),
+		Prefixes:     prefixes,
+		Axioms:       as,
+		AxiomStore:   as,
+		Declarations: ds,
+		DeclStore:    ds,
 	}
 	return
 }
@@ -143,14 +152,14 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	var s_ string
-	s_, _, err = parsefuncs.Parses(p, s.Kb, s)
+	s_, _, err = parsefuncs.Parses(p, s.Declarations, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 2nd param in AnnotationAssertion")
 		return
 	}
 	var t string
 
-	t, _, err = parsefuncs.Parset(p, s.Kb, s)
+	t, _, err = parsefuncs.Parset(p, s.Declarations, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 3rd param in AnnotationAssertion")
 		return
@@ -159,7 +168,7 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreAnnotationAssertion(
+	s.AxiomStore.StoreAnnotationAssertion(
 		annotations.AnnotationAssertion{
 			A: ident.String(),
 			S: s_,
@@ -177,7 +186,7 @@ func (s *Ontology) parseAsymmetricObjectProperty(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.Kb.StoreAsymmetricObjectProperty(P)
+	s.AxiomStore.StoreAsymmetricObjectProperty(P)
 	return
 }
 
@@ -187,19 +196,19 @@ func (s *Ontology) parseClassAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	var C meta.ClassExpression
-	C, err = parsefuncs.ParseClassExpression(p, s.Kb, s)
+	C, err = parsefuncs.ParseClassExpression(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
 	var a individual.Individual
-	a, err = parsefuncs.ParseIndividual(p, s.Kb, s)
+	a, err = parsefuncs.ParseIndividual(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreClassAssertion(axioms.ClassAssertion{C: C, A: a})
+	s.AxiomStore.StoreClassAssertion(axioms.ClassAssertion{C: C, A: a})
 	return
 }
 
@@ -210,13 +219,13 @@ func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
 	}
 	pos := p.Pos()
 	var R meta.DataProperty
-	R, err = parsefuncs.ParseDataProperty(p, s.Kb, s)
+	R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "1st param in DataPropertyAssertion")
 		return
 	}
 	var a individual.Individual
-	a, err = parsefuncs.ParseIndividual(p, s.Kb, s)
+	a, err = parsefuncs.ParseIndividual(p, s.Declarations, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "2nd param in DataPropertyAssertion")
 		return
@@ -230,7 +239,7 @@ func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreDataPropertyAssertion(axioms.DataPropertyAssertion{R: R, A: a, V: v})
+	s.AxiomStore.StoreDataPropertyAssertion(axioms.DataPropertyAssertion{R: R, A: a, V: v})
 	return
 }
 
@@ -246,32 +255,32 @@ func (s *Ontology) parseDeclaration(p *parser.Parser) (err error) {
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.Kb.StoreAnnotationPropertyDecl(*ident, &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreAnnotationPropertyDecl(*ident, &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
 	case parser.Class:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.Kb.StoreClassDecl(*ident, &declarations.ClassDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreClassDecl(*ident, &declarations.ClassDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
 	case parser.DataProperty:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.Kb.StoreDataPropertyDecl(*ident, &declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreDataPropertyDecl(*ident, &declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
 	case parser.Datatype:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.Kb.StoreDatatypeDecl(*ident, &declarations.DatatypeDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreDatatypeDecl(*ident, &declarations.DatatypeDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
 	case parser.NamedIndividual:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.Kb.StoreNamedIndividualDecl(*ident, &declarations.NamedIndividualDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreNamedIndividualDecl(*ident, &declarations.NamedIndividualDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
 	case parser.ObjectProperty:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.Kb.StoreObjectPropertyDecl(*ident, &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreObjectPropertyDecl(*ident, &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
 	}
 
 	if err = p.ConsumeTokens(parser.B2); err != nil {
@@ -286,7 +295,7 @@ func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
 	}
 
 	var as []individual.Individual
-	as, err = parsefuncs.ParseIndividualsUntilB2(p, s.Kb, s)
+	as, err = parsefuncs.ParseIndividualsUntilB2(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
@@ -295,7 +304,7 @@ func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.Kb.StoreDifferentIndividuals(axioms.DifferentIndividuals{As: as})
+	s.AxiomStore.StoreDifferentIndividuals(axioms.DifferentIndividuals{As: as})
 
 	return
 }
@@ -321,12 +330,12 @@ func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
 		return
 	}
 	var R meta.DataProperty
-	R, err = parsefuncs.ParseDataProperty(p, s.Kb, s)
+	R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
 	var C meta.ClassExpression
-	C, err = parsefuncs.ParseClassExpression(p, s.Kb, s)
+	C, err = parsefuncs.ParseClassExpression(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
@@ -334,7 +343,7 @@ func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreDataPropertyDomain(axioms.DataPropertyDomain{R: R, C: C})
+	s.AxiomStore.StoreDataPropertyDomain(axioms.DataPropertyDomain{R: R, C: C})
 	return
 }
 
@@ -343,12 +352,12 @@ func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
 		return
 	}
 	var R meta.DataProperty
-	R, err = parsefuncs.ParseDataProperty(p, s.Kb, s)
+	R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
 	var D meta.DataRange
-	D, err = parsefuncs.ParseDataRange(p, s.Kb, s)
+	D, err = parsefuncs.ParseDataRange(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
@@ -356,7 +365,7 @@ func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreDataPropertyRange(axioms.DataPropertyRange{R: R, D: D})
+	s.AxiomStore.StoreDataPropertyRange(axioms.DataPropertyRange{R: R, D: D})
 	return
 }
 
@@ -367,7 +376,7 @@ func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
 
 	var Cs []meta.ClassExpression
 	pos := p.Pos()
-	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Kb, s)
+	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
@@ -378,7 +387,7 @@ func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreDisjointClasses(axioms.DisjointClasses{Cs})
+	s.AxiomStore.StoreDisjointClasses(axioms.DisjointClasses{Cs})
 	return
 }
 
@@ -388,7 +397,7 @@ func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
 	}
 
 	var Cs []meta.ClassExpression
-	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Kb, s)
+	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
@@ -397,7 +406,7 @@ func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.Kb.StoreEquivalentClasses(axioms.EquivalentClasses{Cs})
+	s.AxiomStore.StoreEquivalentClasses(axioms.EquivalentClasses{Cs})
 	return
 }
 
@@ -408,7 +417,7 @@ func (s *Ontology) parseFunctionalDataProperty(p *parser.Parser) (err error) {
 		return
 	}
 
-	if R, err = parsefuncs.ParseDataProperty(p, s.Kb, s); err != nil {
+	if R, err = parsefuncs.ParseDataProperty(p, s.Declarations, s); err != nil {
 		return
 	}
 
@@ -416,7 +425,7 @@ func (s *Ontology) parseFunctionalDataProperty(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.Kb.StoreFunctionalDataProperty(R)
+	s.AxiomStore.StoreFunctionalDataProperty(R)
 	return
 }
 
@@ -429,7 +438,7 @@ func (s *Ontology) parseFunctionalObjectProperty(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.Kb.StoreFunctionalObjectProperty(P)
+	s.AxiomStore.StoreFunctionalObjectProperty(P)
 	return
 }
 
@@ -442,7 +451,7 @@ func (s *Ontology) parseInverseFunctionalObjectProperty(p *parser.Parser) (err e
 	if err != nil {
 		return
 	}
-	s.Kb.StoreInverseFunctionalObjectProperty(P)
+	s.AxiomStore.StoreInverseFunctionalObjectProperty(P)
 	return
 }
 
@@ -452,14 +461,14 @@ func (s *Ontology) parseInverseObjectProperties(p *parser.Parser) (err error) {
 	}
 
 	var P1, P2 meta.ObjectPropertyExpression
-	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Kb, s); err != nil {
+	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
 		return
 	}
-	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Kb, s); err != nil {
+	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
 		return
 	}
 
-	s.Kb.StoreInverseObjectProperties(axioms.InverseObjectProperties{P1, P2})
+	s.AxiomStore.StoreInverseObjectProperties(axioms.InverseObjectProperties{P1, P2})
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
@@ -475,7 +484,7 @@ func (s *Ontology) parseIrreflexiveObjectProperty(p *parser.Parser) (err error) 
 	if err != nil {
 		return
 	}
-	s.Kb.StoreIrreflexiveObjectProperty(P)
+	s.AxiomStore.StoreIrreflexiveObjectProperty(P)
 	return
 }
 
@@ -485,11 +494,11 @@ func (s *Ontology) parseObjectPropertyDomain(p *parser.Parser) (err error) {
 	}
 	var P meta.ObjectPropertyExpression
 	var C meta.ClassExpression
-	P, C, err = parsefuncs.ParsePC(p, s.Kb, s)
+	P, C, err = parsefuncs.ParsePC(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
-	s.Kb.StoreObjectPropertyDomain(axioms.ObjectPropertyDomain{P: P, C: C})
+	s.AxiomStore.StoreObjectPropertyDomain(axioms.ObjectPropertyDomain{P: P, C: C})
 	return
 }
 
@@ -499,11 +508,11 @@ func (s *Ontology) parseObjectPropertyRange(p *parser.Parser) (err error) {
 	}
 	var P meta.ObjectPropertyExpression
 	var C meta.ClassExpression
-	P, C, err = parsefuncs.ParsePC(p, s.Kb, s)
+	P, C, err = parsefuncs.ParsePC(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
-	s.Kb.StoreObjectPropertyRange(axioms.ObjectPropertyRange{P: P, C: C})
+	s.AxiomStore.StoreObjectPropertyRange(axioms.ObjectPropertyRange{P: P, C: C})
 	return
 }
 
@@ -516,7 +525,7 @@ func (s *Ontology) parseReflexiveObjectProperty(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.Kb.StoreReflexiveObjectProperty(P)
+	s.AxiomStore.StoreReflexiveObjectProperty(P)
 	return
 }
 
@@ -527,7 +536,7 @@ func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 
 	var Cs []meta.ClassExpression
 	pos := p.Pos()
-	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Kb, s)
+	Cs, err = parsefuncs.ParseClassExpressionsUntilB2(p, s.Declarations, s)
 	if err != nil {
 		return
 	}
@@ -538,7 +547,7 @@ func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreSubClassOf(axioms.SubClassOf{C1: Cs[0], C2: Cs[1]})
+	s.AxiomStore.StoreSubClassOf(axioms.SubClassOf{C1: Cs[0], C2: Cs[1]})
 	return
 }
 
@@ -548,17 +557,17 @@ func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
 	}
 
 	var P1, P2 meta.DataProperty
-	if P1, err = parsefuncs.ParseDataProperty(p, s.Kb, s); err != nil {
+	if P1, err = parsefuncs.ParseDataProperty(p, s.Declarations, s); err != nil {
 		return
 	}
-	if P2, err = parsefuncs.ParseDataProperty(p, s.Kb, s); err != nil {
+	if P2, err = parsefuncs.ParseDataProperty(p, s.Declarations, s); err != nil {
 		return
 	}
 
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreSubDataPropertyOf(axioms.SubDataPropertyOf{P1, P2})
+	s.AxiomStore.StoreSubDataPropertyOf(axioms.SubDataPropertyOf{P1, P2})
 
 	return
 }
@@ -569,17 +578,17 @@ func (s *Ontology) parseSubObjectPropertyOf(p *parser.Parser) (err error) {
 	}
 
 	var P1, P2 meta.ObjectPropertyExpression
-	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Kb, s); err != nil {
+	if P1, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
 		return
 	}
-	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Kb, s); err != nil {
+	if P2, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
 		return
 	}
 
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.Kb.StoreSubObjectPropertyOf(axioms.SubObjectPropertyOf{P1, P2})
+	s.AxiomStore.StoreSubObjectPropertyOf(axioms.SubObjectPropertyOf{P1, P2})
 
 	return
 }
@@ -593,7 +602,7 @@ func (s *Ontology) parseSymmetricObjectProperty(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.Kb.StoreSymmetricObjectProperty(P)
+	s.AxiomStore.StoreSymmetricObjectProperty(P)
 	return
 }
 
@@ -606,7 +615,7 @@ func (s *Ontology) parseTransitiveObjectProperty(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.Kb.StoreTransitiveObjectProperty(P)
+	s.AxiomStore.StoreTransitiveObjectProperty(P)
 	return
 }
 
@@ -615,7 +624,7 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 		return
 	}
 
-	if P, err = parsefuncs.ParseObjectPropertyExpression(p, s.Kb, s); err != nil {
+	if P, err = parsefuncs.ParseObjectPropertyExpression(p, s.Declarations, s); err != nil {
 		return
 	}
 
@@ -626,22 +635,22 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 }
 
 func (s *Ontology) ClassDeclExists(ident string) bool {
-	_, ok := s.Kb.AllClassDecls[ident]
+	_, ok := s.Declarations.ClassDecl(ident)
 	return ok
 }
 
 func (s *Ontology) DataPropertyDeclExists(ident string) bool {
-	_, ok := s.Kb.AllDataPropertyDecls[ident]
+	_, ok := s.Declarations.DataPropertyDecl(ident)
 	return ok
 }
 
 func (s *Ontology) NamedIndividualDeclExists(ident string) bool {
-	_, ok := s.Kb.AllNamedIndividualDecls[ident]
+	_, ok := s.Declarations.NamedIndividualDecl(ident)
 	return ok
 }
 
 func (s *Ontology) ObjectPropertyDeclExists(ident string) bool {
-	_, ok := s.Kb.AllObjectPropertyDecls[ident]
+	_, ok := s.Declarations.ObjectPropertyDecl(ident)
 	return ok
 }
 
@@ -651,13 +660,8 @@ func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
 }
 
 func (s *Ontology) About() string {
-	return fmt.Sprintf("%v with %d annotations, %d classes, %d object properties, %d data properties, %d named individuals, %d datatypes.",
+	return fmt.Sprintf("%v with %v.",
 		s.IRI,
-		len(s.Kb.AllAnnotationPropertyDecls),
-		len(s.Kb.AllClassDecls),
-		len(s.Kb.AllObjectPropertyDecls),
-		len(s.Kb.AllDataPropertyDecls),
-		len(s.Kb.AllNamedIndividualDecls),
-		len(s.Kb.AllDatatypeDecls),
+		s.Declarations,
 	)
 }

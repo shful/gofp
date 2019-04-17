@@ -12,12 +12,28 @@ import (
 )
 
 type Declarations interface {
+	AnnotationPropertyDecl(ident string) (*declarations.AnnotationPropertyDecl, bool)
+	ClassDecl(ident string) (*declarations.ClassDecl, bool)
+	DataPropertyDecl(ident string) (*declarations.DataPropertyDecl, bool)
+	DatatypeDecl(ident string) (*declarations.DatatypeDecl, bool)
+	NamedIndividualDecl(ident string) (*declarations.NamedIndividualDecl, bool)
+	ObjectPropertyDecl(ident string) (*declarations.ObjectPropertyDecl, bool)
+
+	// old IRI-based variants of the methods above. Only one of the variants must be kept:
 	GetAnnotationPropertyDecl(ident IRI) (*declarations.AnnotationPropertyDecl, bool)
 	GetClassDecl(ident IRI) (*declarations.ClassDecl, bool)
 	GetDataPropertyDecl(ident IRI) (*declarations.DataPropertyDecl, bool)
 	GetDatatypeDecl(ident IRI) (*declarations.DatatypeDecl, bool)
 	GetNamedIndividualDecl(ident IRI) (*declarations.NamedIndividualDecl, bool)
 	GetObjectPropertyDecl(ident IRI) (*declarations.ObjectPropertyDecl, bool)
+
+	// All (as-slice) - methods:
+	AllAnnotationPropertyDecls() []*declarations.AnnotationPropertyDecl
+	AllClassDecls() []*declarations.ClassDecl
+	AllDataPropertyDecls() []*declarations.DataPropertyDecl
+	AllDatatypeDecls() []*declarations.DatatypeDecl
+	AllNamedIndividualDecls() []*declarations.NamedIndividualDecl
+	AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl
 }
 
 type Axioms interface {
@@ -86,6 +102,7 @@ type Prefixes interface {
 	ResolvePrefix(prefix string) (resolved string, ok bool)
 }
 
+//todo: Eventually remove the IRI type, it comes from my early wrong idea of a special role of fragments (RR)
 // IRI resembles an IRI that OWL uses as identifier.
 // In case the IRI has a fragment, it is stored in two pieces - the fragment (without hash sign), and everything before.
 // The intention is that the part before the fragment, in some cases, has a meaning for itself,
