@@ -28,19 +28,37 @@ import (
 	"io"
 
 	"github.com/shful/gofp/owlfunctional/ontologies"
+	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/tech"
 )
 
 // OntologyFromReader parses an owl-functional file contents into an Ontology struct.
 // r is the OWL-Functional file contents.
 // sourceName: see parser.NewParser()
+// For less convenience but more control, see the OntologyFromParser function.
 func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.Ontology, err error) {
-	var prefixes map[string]string
 
 	p := parser.NewParser(r, sourceName)
 	parser.TokenLog = false
-	prefixes = map[string]string{}
+	as := defaults.NewAxiomStore()
+	ds := defaults.NewDeclStore()
+
+	rc := ReaderConfig{
+		Axioms:     as,
+		AxiomStore: as,
+		Decls:      ds,
+		DeclStore:  ds,
+	}
+	return OntologyFromParser(p, rc)
+}
+
+// OntologyFromReader uses the Parser p to create an Ontology struct.
+// The configuration rc allows custom storage of Declarations and Axioms.
+func OntologyFromParser(p *parser.Parser, rc ReaderConfig) (ontology *ontologies.Ontology, err error) {
+	prefixes := map[string]string{}
+
 	for {
 		tok, lit, pos := p.ScanIgnoreWSAndComment()
 		switch tok {
@@ -52,7 +70,7 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 			}
 		case parser.Ontology:
 			p.Unscan()
-			ontology = ontologies.NewOntology(prefixes)
+			ontology = ontologies.NewOntology(prefixes, rc.Axioms, rc.AxiomStore, rc.Decls, rc.DeclStore)
 			if err = ontology.Parse(p); err != nil {
 				return
 			}
@@ -64,6 +82,13 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 		}
 	}
 
+}
+
+type ReaderConfig struct {
+	Axioms     tech.Axioms
+	AxiomStore tech.AxiomStore
+	Decls      tech.Decls
+	DeclStore  tech.DeclStore
 }
 
 // parsePrefixTo parses the next Prefix expression and

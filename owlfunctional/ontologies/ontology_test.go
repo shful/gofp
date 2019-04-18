@@ -10,6 +10,7 @@ import (
 	"github.com/shful/gofp/owlfunctional/builtindatatypes"
 	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/owlfunctional/facets"
+	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/owlfunctional/properties"
 	"github.com/shful/gofp/tech"
@@ -18,8 +19,13 @@ import (
 func TestParsePizzaOntology(t *testing.T) {
 	var p *parser.Parser
 	var err error
+	as := defaults.NewAxiomStore()
+	ds := defaults.NewDeclStore()
 	p = mock.NewTestParser(ontologyTestString)
-	o := NewOntology(map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL})
+	o := NewOntology(
+		map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
+		as, as, ds, ds,
+	)
 
 	parser.TokenLog = true
 	err = o.Parse(p)
@@ -192,7 +198,9 @@ func TestParsePizzaOntology(t *testing.T) {
 func TestParseEquivalentClasses(t *testing.T) {
 	var p *parser.Parser
 	var err error
-	var o *Ontology = NewOntology(map[string]string{})
+	as := defaults.NewAxiomStore()
+	ds := defaults.NewDeclStore()
+	var o *Ontology = NewOntology(map[string]string{}, as, as, ds, ds)
 	o.Prefixes[""] = "localprefix#"
 	// decls := o.Decls.(*defaults.DeclStore)
 	decls := o.DeclStore
@@ -229,7 +237,9 @@ func TestParseAnnotationAssertion(t *testing.T) {
 	var p *parser.Parser
 	var err error
 	var expr annotations.AnnotationAssertion
-	var o *Ontology = NewOntology(map[string]string{})
+	as := defaults.NewAxiomStore()
+	ds := defaults.NewDeclStore()
+	var o *Ontology = NewOntology(map[string]string{}, as, as, ds, ds)
 	o.Prefixes[""] = "The local ns/"
 	o.Prefixes["xsd"] = "The xsd-ns#"
 	o.Prefixes["rdfs"] = "The rdfs-ns#"

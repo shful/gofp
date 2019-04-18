@@ -9,7 +9,6 @@ import (
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
 	"github.com/shful/gofp/owlfunctional/meta"
-	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parsefuncs"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
@@ -17,26 +16,31 @@ import (
 )
 
 type Ontology struct {
-	IRI          string
-	VERSIONIRI   string
-	Prefixes     map[string]string
-	Axioms       tech.Axioms
-	AxiomStore   tech.AxiomStore
-	Decls tech.Decls
-	DeclStore    tech.DeclStore
+	IRI        string
+	VERSIONIRI string
+	Prefixes   map[string]string
+	Axioms     tech.Axioms
+	AxiomStore tech.AxiomStore
+	Decls      tech.Decls
+	DeclStore  tech.DeclStore
 }
 
 var _ tech.Prefixes = (*Ontology)(nil)
 
-func NewOntology(prefixes map[string]string) (res *Ontology) {
-	as := defaults.NewAxiomStore()
-	ds := defaults.NewDeclStore()
+func NewOntology(
+	prefixes map[string]string,
+	a tech.Axioms,
+	as tech.AxiomStore,
+	d tech.Decls,
+	ds tech.DeclStore,
+) (res *Ontology) {
+
 	res = &Ontology{
-		Prefixes:     prefixes,
-		Axioms:       as,
-		AxiomStore:   as,
-		Decls: ds,
-		DeclStore:    ds,
+		Prefixes:   prefixes,
+		Axioms:     a,
+		AxiomStore: as,
+		Decls:      d,
+		DeclStore:  ds,
 	}
 	return
 }
