@@ -7,7 +7,7 @@ import (
 	"github.com/shful/gofp/store"
 )
 
-//todo: Is there sense in separating Axioms and Decls, or should be join both into a KnowledgeBase (AxiomStore) as owlapi does ?
+//todo: Is separating Axioms and Decls a good idea? Or should be join both into a KnowledgeBase struct, similar to OWLAPI?
 // AxiomStore holds all axioms and declarations of a single ontology, as read by the parser. It's the "raw" data. i.e. has no inferred knowledge.
 type AxiomStore struct {
 

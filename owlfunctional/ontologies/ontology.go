@@ -17,13 +17,13 @@ import (
 )
 
 type Ontology struct {
+	store.Axioms
+	store.AxiomStore
+	store.Decls
+	store.DeclStore
 	IRI        string
 	VERSIONIRI string
 	Prefixes   map[string]string
-	Axioms     store.Axioms
-	AxiomStore store.AxiomStore
-	Decls      store.Decls
-	DeclStore  store.DeclStore
 }
 
 var _ tech.Prefixes = (*Ontology)(nil)

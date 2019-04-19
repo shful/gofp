@@ -12,8 +12,10 @@ type Prefixes interface {
 	ResolvePrefix(prefix string) (resolved string, ok bool)
 }
 
-//todo: Eventually remove the IRI type, it comes from my early wrong idea of a special role of fragments (RR)
-// IRI resembles an IRI that OWL uses as identifier.
+//todo: Eventually remove the IRI type, it comes from my early wrong idea that IRI fragments play a special role (RR)
+// Simply a string may work.
+
+// IRI is an identifier used by all OWL declarations.
 // In case the IRI has a fragment, it is stored in two pieces - the fragment (without hash sign), and everything before.
 // The intention is that the part before the fragment, in some cases, has a meaning for itself,
 // e.g. to answer the question "is this an element of the OWL namespace". While not beeing of great value, storing these two pices sometimes saves some Strings.startsWith - operations.

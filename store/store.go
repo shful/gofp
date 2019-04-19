@@ -1,5 +1,8 @@
 package store
 
+// store has interfaces to read and write Declarations and Axioms.
+// The intentions is to parse into custom structures, optionally.
+
 import (
 	"github.com/shful/gofp/owlfunctional/annotations"
 	"github.com/shful/gofp/owlfunctional/axioms"
