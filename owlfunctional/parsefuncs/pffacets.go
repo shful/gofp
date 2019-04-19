@@ -9,10 +9,11 @@ import (
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/store"
 	"github.com/shful/gofp/tech"
 )
 
-func ParseDataRange(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.DataRange, err error) {
+func ParseDataRange(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.DataRange, err error) {
 	tok, _, _ := p.ScanIgnoreWSAndComment()
 
 	p.Unscan()
@@ -35,7 +36,7 @@ func ParseDataRange(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) 
 	return
 }
 
-func parseDatatypeRestriction(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr facets.DatatypeRestriction, err error) {
+func parseDatatypeRestriction(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr facets.DatatypeRestriction, err error) {
 	if err = p.ConsumeTokens(parser.DatatypeRestriction, parser.B1); err != nil {
 		return
 	}
@@ -132,7 +133,7 @@ func parseFVPairUntilB2(p *parser.Parser, prefixes tech.Prefixes) (fvPair *facet
 // Datatypes are a kind of data range, which allows them to be used in restrictions.
 // As explained in Section 7, each data range is associated with an arity; for datatypes, the arity is always one.
 // The built-in datatype rdfs:Literal denotes any set of data values that contains the union of the value spaces of all datatypes.
-func parseNamedDatatype(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.NamedDatatype, err error) {
+func parseNamedDatatype(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.NamedDatatype, err error) {
 	var ident *tech.IRI
 
 	pos := p.Pos()

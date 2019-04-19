@@ -4,10 +4,11 @@ import (
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/store"
 	"github.com/shful/gofp/tech"
 )
 
-func ParseIndividual(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (a individual.Individual, err error) {
+func ParseIndividual(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (a individual.Individual, err error) {
 	var prefix, name string
 	pos := p.Pos()
 	prefix, name, err = parsehelper.ParsePrefixedName(p)
@@ -21,7 +22,7 @@ func ParseIndividual(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes)
 
 // ParseIndividualsUntilB2 parses all Individuals until ")" is found
 // The closing ")" is not consumed.
-func ParseIndividualsUntilB2(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (as []individual.Individual, err error) {
+func ParseIndividualsUntilB2(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (as []individual.Individual, err error) {
 
 	var tok parser.Token
 	var a individual.Individual

@@ -31,7 +31,7 @@ import (
 	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
-	"github.com/shful/gofp/tech"
+	"github.com/shful/gofp/store"
 )
 
 // OntologyFromReader parses an owl-functional file contents into an Ontology struct.
@@ -85,10 +85,10 @@ func OntologyFromParser(p *parser.Parser, rc ReaderConfig) (ontology *ontologies
 }
 
 type ReaderConfig struct {
-	Axioms     tech.Axioms
-	AxiomStore tech.AxiomStore
-	Decls      tech.Decls
-	DeclStore  tech.DeclStore
+	Axioms     store.Axioms
+	AxiomStore store.AxiomStore
+	Decls      store.Decls
+	DeclStore  store.DeclStore
 }
 
 // parsePrefixTo parses the next Prefix expression and

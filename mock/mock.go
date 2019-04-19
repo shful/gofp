@@ -7,6 +7,7 @@ import (
 	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
+	"github.com/shful/gofp/store"
 	"github.com/shful/gofp/tech"
 )
 
@@ -14,7 +15,7 @@ type MockDeclarations struct {
 	defaults.DeclStore
 }
 
-var _ tech.Decls = (*MockDeclarations)(nil)
+var _ store.Decls = (*MockDeclarations)(nil)
 
 type MockPrefixes struct {
 	data map[string]string
@@ -40,7 +41,7 @@ func NewBuilder() *Builder {
 	}
 }
 
-func (s *Builder) Get() (tech.Decls, tech.Prefixes) {
+func (s *Builder) Get() (store.Decls, tech.Prefixes) {
 	return s.decls, s.prefixes
 }
 

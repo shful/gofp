@@ -6,12 +6,13 @@ import (
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/store"
 	"github.com/shful/gofp/tech"
 )
 
 // parseNPC parses the triple (n,P,[C]) and consumes both braces.
 // C is optional. If found, isQualified is true.
-func parseNPC(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (n int, P meta.ObjectPropertyExpression, C meta.ClassExpression, isQualified bool, err error) {
+func parseNPC(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (n int, P meta.ObjectPropertyExpression, C meta.ClassExpression, isQualified bool, err error) {
 	if err = p.ConsumeTokens(parser.B1); err != nil {
 		return
 	}
@@ -45,7 +46,7 @@ func parseNPC(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (n int
 
 // ParseNRD parses the triple (n,R,[D]) and consumes both braces.
 // D is optional. If found, isQualified is true.
-func parseNRD(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (n int, R meta.DataProperty, D meta.DataRange, isQualified bool, err error) {
+func parseNRD(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (n int, R meta.DataProperty, D meta.DataRange, isQualified bool, err error) {
 	if err = p.ConsumeTokens(parser.B1); err != nil {
 		return
 	}
@@ -80,7 +81,7 @@ func parseNRD(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (n int
 }
 
 // ParseRD parses the pair (R,D) and consumes both braces.
-func ParseRD(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (R meta.DataProperty, D meta.DataRange, err error) {
+func ParseRD(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (R meta.DataProperty, D meta.DataRange, err error) {
 	if err = p.ConsumeTokens(parser.B1); err != nil {
 		return
 	}
@@ -103,7 +104,7 @@ func ParseRD(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (R meta
 }
 
 // ParsePC parses the pair (P,C) and consumes both braces.
-func ParsePC(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (P meta.ObjectPropertyExpression, C meta.ClassExpression, err error) {
+func ParsePC(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (P meta.ObjectPropertyExpression, C meta.ClassExpression, err error) {
 	if err = p.ConsumeTokens(parser.B1); err != nil {
 		return
 	}
@@ -126,7 +127,7 @@ func ParsePC(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (P meta
 }
 
 // ParsePa parses the pair (P,a) and consumes both braces.
-func ParsePa(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (P meta.ObjectPropertyExpression, A individual.Individual, err error) {
+func ParsePa(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (P meta.ObjectPropertyExpression, A individual.Individual, err error) {
 	if err = p.ConsumeTokens(parser.B1); err != nil {
 		return
 	}
@@ -157,7 +158,7 @@ const (
 )
 
 // Parset reads IRI or anonymous individual, which is shortened as "s" in the OWL spec
-func Parses(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
+func Parses(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
 	pos := p.Pos()
 
 	_, expr, _ = p.ScanIgnoreWSAndComment()
@@ -188,7 +189,7 @@ func Parses(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr st
 }
 
 // Parset reads IRI or literal or anonymous individual, which is shortened as "t" in the OWL spec
-func Parset(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
+func Parset(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
 	var tok parser.Token
 	pos := p.Pos()
 

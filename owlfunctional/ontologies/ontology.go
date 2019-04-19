@@ -12,6 +12,7 @@ import (
 	"github.com/shful/gofp/owlfunctional/parsefuncs"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/store"
 	"github.com/shful/gofp/tech"
 )
 
@@ -19,20 +20,20 @@ type Ontology struct {
 	IRI        string
 	VERSIONIRI string
 	Prefixes   map[string]string
-	Axioms     tech.Axioms
-	AxiomStore tech.AxiomStore
-	Decls      tech.Decls
-	DeclStore  tech.DeclStore
+	Axioms     store.Axioms
+	AxiomStore store.AxiomStore
+	Decls      store.Decls
+	DeclStore  store.DeclStore
 }
 
 var _ tech.Prefixes = (*Ontology)(nil)
 
 func NewOntology(
 	prefixes map[string]string,
-	a tech.Axioms,
-	as tech.AxiomStore,
-	d tech.Decls,
-	ds tech.DeclStore,
+	a store.Axioms,
+	as store.AxiomStore,
+	d store.Decls,
+	ds store.DeclStore,
 ) (res *Ontology) {
 
 	res = &Ontology{

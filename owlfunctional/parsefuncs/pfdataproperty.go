@@ -6,10 +6,11 @@ import (
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/owlfunctional/properties"
 	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/store"
 	"github.com/shful/gofp/tech"
 )
 
-func ParseDataProperty(p *parser.Parser, decls tech.Decls, prefixes tech.Prefixes) (expr meta.DataProperty, err error) {
+func ParseDataProperty(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.DataProperty, err error) {
 
 	pos := p.Pos()
 	// must be R
