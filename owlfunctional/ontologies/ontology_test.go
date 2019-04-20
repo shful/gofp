@@ -13,7 +13,6 @@ import (
 	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/owlfunctional/properties"
-	"github.com/shful/gofp/tech"
 )
 
 func TestParsePizzaOntology(t *testing.T) {
@@ -204,9 +203,9 @@ func TestParseEquivalentClasses(t *testing.T) {
 	o.Prefixes[""] = "localprefix#"
 	// decls := o.Decls.(*defaults.DeclStore)
 	decls := o.DeclStore
-	decls.StoreClassDecl(tech.IRI{Head: `localprefix#`, Fragment: `Pizza`}, &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#Pizza"}})
-	decls.StoreClassDecl(tech.IRI{Head: `localprefix#`, Fragment: `InterestingPizza`}, &declarations.ClassDecl{declarations.Declaration{IRI: "localprefix#InterestingPizza"}})
-	decls.StoreObjectPropertyDecl(tech.IRI{Head: `localprefix#`, Fragment: `hasTopping`}, &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: "localprefix#hasTopping"}})
+	decls.StoreClassDecl("localprefix#Pizza")
+	decls.StoreClassDecl("localprefix#InterestingPizza")
+	decls.StoreObjectPropertyDecl("localprefix#hasTopping")
 
 	p = mock.NewTestParser(`EquivalentClasses(:InterestingPizza ObjectIntersectionOf(:Pizza ObjectMinCardinality(3 :hasTopping)))	`)
 	// parser.TokenLog = true
@@ -245,7 +244,7 @@ func TestParseAnnotationAssertion(t *testing.T) {
 	o.Prefixes["rdfs"] = "The rdfs-ns#"
 	o.Prefixes["pizza"] = "The-Pizza-Namespace"
 	decls := o.DeclStore
-	decls.StoreClassDecl(tech.IRI{Head: `The local ns:MargheritaPizza`}, &declarations.ClassDecl{declarations.Declaration{IRI: "The local ns#MargheritaPizza"}})
+	decls.StoreClassDecl("The local ns#MargheritaPizza")
 
 	// 3rd param in AnnotationAssertion can be IRI, literal, or anonymous individual
 

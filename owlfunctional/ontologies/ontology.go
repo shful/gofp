@@ -3,9 +3,6 @@ package ontologies
 import (
 	"fmt"
 
-	"github.com/shful/gofp/owlfunctional/annotations"
-	"github.com/shful/gofp/owlfunctional/axioms"
-	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
 	"github.com/shful/gofp/owlfunctional/meta"
@@ -174,11 +171,10 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	s.AxiomStore.StoreAnnotationAssertion(
-		annotations.AnnotationAssertion{
-			A: ident.String(),
-			S: s_,
-			T: t,
-		})
+		ident.String(),
+		s_,
+		t,
+	)
 	return
 }
 
@@ -213,7 +209,7 @@ func (s *Ontology) parseClassAssertion(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreClassAssertion(axioms.ClassAssertion{C: C, A: a})
+	s.AxiomStore.StoreClassAssertion(C, a)
 	return
 }
 
@@ -244,7 +240,7 @@ func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDataPropertyAssertion(axioms.DataPropertyAssertion{R: R, A: a, V: v})
+	s.AxiomStore.StoreDataPropertyAssertion(R, a, v)
 	return
 }
 
@@ -260,32 +256,32 @@ func (s *Ontology) parseDeclaration(p *parser.Parser) (err error) {
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.DeclStore.StoreAnnotationPropertyDecl(*ident, &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreAnnotationPropertyDecl(ident.String())
 	case parser.Class:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.DeclStore.StoreClassDecl(*ident, &declarations.ClassDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreClassDecl(ident.String())
 	case parser.DataProperty:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.DeclStore.StoreDataPropertyDecl(*ident, &declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreDataPropertyDecl(ident.String())
 	case parser.Datatype:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.DeclStore.StoreDatatypeDecl(*ident, &declarations.DatatypeDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreDatatypeDecl(ident.String())
 	case parser.NamedIndividual:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.DeclStore.StoreNamedIndividualDecl(*ident, &declarations.NamedIndividualDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreNamedIndividualDecl(ident.String())
 	case parser.ObjectProperty:
 		if ident, err = s.parseBracedIRI(p); err != nil {
 			return
 		}
-		s.DeclStore.StoreObjectPropertyDecl(*ident, &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}})
+		s.DeclStore.StoreObjectPropertyDecl(ident.String())
 	}
 
 	if err = p.ConsumeTokens(parser.B2); err != nil {
@@ -309,7 +305,7 @@ func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.AxiomStore.StoreDifferentIndividuals(axioms.DifferentIndividuals{As: as})
+	s.AxiomStore.StoreDifferentIndividuals(as)
 
 	return
 }
@@ -348,7 +344,7 @@ func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDataPropertyDomain(axioms.DataPropertyDomain{R: R, C: C})
+	s.AxiomStore.StoreDataPropertyDomain(R, C)
 	return
 }
 
@@ -370,7 +366,7 @@ func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDataPropertyRange(axioms.DataPropertyRange{R: R, D: D})
+	s.AxiomStore.StoreDataPropertyRange(R, D)
 	return
 }
 
@@ -392,7 +388,7 @@ func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDisjointClasses(axioms.DisjointClasses{Cs})
+	s.AxiomStore.StoreDisjointClasses(Cs)
 	return
 }
 
@@ -411,7 +407,7 @@ func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.AxiomStore.StoreEquivalentClasses(axioms.EquivalentClasses{Cs})
+	s.AxiomStore.StoreEquivalentClasses(Cs)
 	return
 }
 
@@ -473,7 +469,7 @@ func (s *Ontology) parseInverseObjectProperties(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.AxiomStore.StoreInverseObjectProperties(axioms.InverseObjectProperties{P1, P2})
+	s.AxiomStore.StoreInverseObjectProperties(P1, P2)
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
@@ -503,7 +499,7 @@ func (s *Ontology) parseObjectPropertyDomain(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreObjectPropertyDomain(axioms.ObjectPropertyDomain{P: P, C: C})
+	s.AxiomStore.StoreObjectPropertyDomain(P, C)
 	return
 }
 
@@ -517,7 +513,7 @@ func (s *Ontology) parseObjectPropertyRange(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreObjectPropertyRange(axioms.ObjectPropertyRange{P: P, C: C})
+	s.AxiomStore.StoreObjectPropertyRange(P, C)
 	return
 }
 
@@ -552,7 +548,7 @@ func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreSubClassOf(axioms.SubClassOf{C1: Cs[0], C2: Cs[1]})
+	s.AxiomStore.StoreSubClassOf(Cs[0], Cs[1])
 	return
 }
 
@@ -572,7 +568,7 @@ func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreSubDataPropertyOf(axioms.SubDataPropertyOf{P1, P2})
+	s.AxiomStore.StoreSubDataPropertyOf(P1, P2)
 
 	return
 }
@@ -593,7 +589,7 @@ func (s *Ontology) parseSubObjectPropertyOf(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreSubObjectPropertyOf(axioms.SubObjectPropertyOf{P1, P2})
+	s.AxiomStore.StoreSubObjectPropertyOf(P1, P2)
 
 	return
 }

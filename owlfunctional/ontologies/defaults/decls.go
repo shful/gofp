@@ -169,28 +169,28 @@ func (s *DeclStore) AddObjectPropertyDeclForTest(prefixedName string, value *dec
 	s.objectPropertyDecls[prefixedName] = value
 }
 
-func (s *DeclStore) StoreAnnotationPropertyDecl(ident tech.IRI, decl *declarations.AnnotationPropertyDecl) {
-	s.annotationPropertyDecls[ident.String()] = decl
+func (s *DeclStore) StoreAnnotationPropertyDecl(iri string) {
+	s.annotationPropertyDecls[iri] = &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
 
-func (s *DeclStore) StoreClassDecl(ident tech.IRI, decl *declarations.ClassDecl) {
-	s.classDecls[ident.String()] = decl
+func (s *DeclStore) StoreClassDecl(iri string) {
+	s.classDecls[iri] = &declarations.ClassDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
 
-func (s *DeclStore) StoreDataPropertyDecl(ident tech.IRI, decl *declarations.DataPropertyDecl) {
-	s.dataPropertyDecls[ident.String()] = decl
+func (s *DeclStore) StoreDataPropertyDecl(iri string) {
+	s.dataPropertyDecls[iri] = &declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
 
-func (s *DeclStore) StoreDatatypeDecl(ident tech.IRI, decl *declarations.DatatypeDecl) {
-	s.datatypeDecls[ident.String()] = decl
+func (s *DeclStore) StoreDatatypeDecl(iri string) {
+	s.datatypeDecls[iri] = &declarations.DatatypeDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
 
-func (s *DeclStore) StoreNamedIndividualDecl(ident tech.IRI, decl *declarations.NamedIndividualDecl) {
-	s.namedIndividualDecls[ident.String()] = decl
+func (s *DeclStore) StoreNamedIndividualDecl(iri string) {
+	s.namedIndividualDecls[iri] = &declarations.NamedIndividualDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
 
-func (s *DeclStore) StoreObjectPropertyDecl(ident tech.IRI, decl *declarations.ObjectPropertyDecl) {
-	s.objectPropertyDecls[ident.String()] = decl
+func (s *DeclStore) StoreObjectPropertyDecl(iri string) {
+	s.objectPropertyDecls[iri] = &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
 
 func (s *DeclStore) String() string {
