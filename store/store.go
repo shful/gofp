@@ -11,26 +11,17 @@ import (
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
 	"github.com/shful/gofp/owlfunctional/meta"
-	"github.com/shful/gofp/tech"
 )
 
 // Decls gives read access to all Declarations that were parsed yet.
 type Decls interface {
+	// By Key - methods:
 	AnnotationPropertyDecl(ident string) (*declarations.AnnotationPropertyDecl, bool)
 	ClassDecl(ident string) (*declarations.ClassDecl, bool)
 	DataPropertyDecl(ident string) (*declarations.DataPropertyDecl, bool)
 	DatatypeDecl(ident string) (*declarations.DatatypeDecl, bool)
 	NamedIndividualDecl(ident string) (*declarations.NamedIndividualDecl, bool)
 	ObjectPropertyDecl(ident string) (*declarations.ObjectPropertyDecl, bool)
-
-	// old IRI-based variants of the methods above
-	//todo: probably, this 6 funcs are to be removed:
-	GetAnnotationPropertyDecl(ident tech.IRI) (*declarations.AnnotationPropertyDecl, bool)
-	GetClassDecl(ident tech.IRI) (*declarations.ClassDecl, bool)
-	GetDataPropertyDecl(ident tech.IRI) (*declarations.DataPropertyDecl, bool)
-	GetDatatypeDecl(ident tech.IRI) (*declarations.DatatypeDecl, bool)
-	GetNamedIndividualDecl(ident tech.IRI) (*declarations.NamedIndividualDecl, bool)
-	GetObjectPropertyDecl(ident tech.IRI) (*declarations.ObjectPropertyDecl, bool)
 
 	// All (as-slice) - methods:
 	AllAnnotationPropertyDecls() []*declarations.AnnotationPropertyDecl

@@ -150,7 +150,7 @@ func parseNamedDatatype(p *parser.Parser, decls store.Decls, prefixes tech.Prefi
 	}
 
 	// Declared Datatype IRI is allowed:
-	if _, ok := decls.GetDatatypeDecl(*ident); ok {
+	if _, ok := decls.DatatypeDecl(ident.String()); ok {
 		expr = &facets.CustomNamedDatatype{facets.NamedDatatypeImpl{DatatypeIRI: ident.String()}}
 		return
 	}

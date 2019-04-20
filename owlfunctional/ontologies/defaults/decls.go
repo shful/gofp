@@ -5,7 +5,6 @@ import (
 
 	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/store"
-	"github.com/shful/gofp/tech"
 )
 
 type DeclStore struct {
@@ -68,7 +67,7 @@ func (s *DeclStore) ObjectPropertyDecl(ident string) (decl *declarations.ObjectP
 	return
 }
 
-// === All (as slice) - methods ========
+// === All* - methods that return slices ========
 func (s *DeclStore) AllAnnotationPropertyDecls() []*declarations.AnnotationPropertyDecl {
 	res := make([]*declarations.AnnotationPropertyDecl, 0, len(s.annotationPropertyDecls))
 	for _, v := range s.annotationPropertyDecls {
@@ -117,44 +116,6 @@ func (s *DeclStore) AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl 
 }
 
 // === end All - methods =======
-
-// === old IRI-Variants of the string-bases get methods. I think we'll deprecate the IRI variants =====
-
-func (s *DeclStore) GetAnnotationPropertyDecl(ident tech.IRI) (decl *declarations.AnnotationPropertyDecl, ok bool) {
-	decl, ok = s.annotationPropertyDecls[ident.String()]
-	return
-}
-func (s *DeclStore) GetClassDecl(ident tech.IRI) (decl *declarations.ClassDecl, ok bool) {
-	decl, ok = s.classDecls[ident.String()]
-	return
-}
-
-func (s *DeclStore) GetDataPropertyDecl(ident tech.IRI) (decl *declarations.DataPropertyDecl, ok bool) {
-	decl, ok = s.dataPropertyDecls[ident.String()]
-	if !ok {
-		for k, val := range s.dataPropertyDecls {
-			fmt.Println("  have only:", k, "->", val)
-		}
-	}
-	return
-}
-
-func (s *DeclStore) GetDatatypeDecl(ident tech.IRI) (decl *declarations.DatatypeDecl, ok bool) {
-	decl, ok = s.datatypeDecls[ident.String()]
-	return
-}
-
-func (s *DeclStore) GetNamedIndividualDecl(ident tech.IRI) (decl *declarations.NamedIndividualDecl, ok bool) {
-	decl, ok = s.namedIndividualDecls[ident.String()]
-	return
-}
-
-func (s *DeclStore) GetObjectPropertyDecl(ident tech.IRI) (decl *declarations.ObjectPropertyDecl, ok bool) {
-	decl, ok = s.objectPropertyDecls[ident.String()]
-	return
-}
-
-// === end of IRI-Variants =====
 
 //todo remove the ForTest-Funcs:
 func (s *DeclStore) AddClassDeclForTest(prefixedName string, value *declarations.ClassDecl) {

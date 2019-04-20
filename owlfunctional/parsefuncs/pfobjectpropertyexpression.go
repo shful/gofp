@@ -39,7 +39,7 @@ func ParseObjectPropertyExpression(p *parser.Parser, decls store.Decls, prefixes
 			return
 		}
 		var ok bool
-		expr, ok = decls.GetObjectPropertyDecl(*ident)
+		expr, ok = decls.ObjectPropertyDecl(ident.String())
 		if !ok {
 			err = pos.Errorf("Unknown ref to %v. Expected object property name.", ident)
 		}

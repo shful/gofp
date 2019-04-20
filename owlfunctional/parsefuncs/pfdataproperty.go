@@ -35,7 +35,7 @@ func ParseDataProperty(p *parser.Parser, decls store.Decls, prefixes tech.Prefix
 	}
 
 	var ok bool
-	expr, ok = decls.GetDataPropertyDecl(*ident)
+	expr, ok = decls.DataPropertyDecl(ident.String())
 	if !ok {
 		err = pos.Errorf("Unknown ref to %v. Expected datatype property.", ident)
 	}
