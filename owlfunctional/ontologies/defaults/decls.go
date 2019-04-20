@@ -117,19 +117,6 @@ func (s *DeclStore) AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl 
 
 // === end All - methods =======
 
-//todo remove the ForTest-Funcs:
-func (s *DeclStore) AddClassDeclForTest(prefixedName string, value *declarations.ClassDecl) {
-	s.classDecls[prefixedName] = value
-}
-
-func (s *DeclStore) AddDataPropertyDeclForTest(prefixedName string, value *declarations.DataPropertyDecl) {
-	s.dataPropertyDecls[prefixedName] = value
-}
-
-func (s *DeclStore) AddObjectPropertyDeclForTest(prefixedName string, value *declarations.ObjectPropertyDecl) {
-	s.objectPropertyDecls[prefixedName] = value
-}
-
 func (s *DeclStore) StoreAnnotationPropertyDecl(iri string) {
 	s.annotationPropertyDecls[iri] = &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
 }

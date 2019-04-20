@@ -4,7 +4,6 @@ package mock
 import (
 	"strings"
 
-	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/store"
@@ -65,26 +64,17 @@ func (s *Builder) AddOWLStandardPrefixes() *Builder {
 }
 
 func (s *Builder) AddClassDecl(ident tech.IRI) *Builder {
-	s.decls.AddClassDeclForTest(
-		ident.String(),
-		&declarations.ClassDecl{Declaration: declarations.Declaration{IRI: ident.String()}},
-	)
+	s.decls.StoreClassDecl(ident.String())
 	return s
 }
 
 func (s *Builder) AddDataPropertyDecl(ident tech.IRI) *Builder {
-	s.decls.AddDataPropertyDeclForTest(
-		ident.String(),
-		&declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}},
-	)
+	s.decls.StoreDataPropertyDecl(ident.String())
 	return s
 }
 
 func (s *Builder) AddObjectPropertyDecl(ident tech.IRI) *Builder {
-	s.decls.AddObjectPropertyDeclForTest(
-		ident.String(),
-		&declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: ident.String()}},
-	)
+	s.decls.StoreObjectPropertyDecl(ident.String())
 	return s
 }
 
