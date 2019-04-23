@@ -23,8 +23,9 @@ func TestParsePizzaOntology(t *testing.T) {
 	p = mock.NewTestParser(ontologyTestString)
 	o := NewOntology(
 		map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
-		as, as, ds, ds,
+		StoreConfig{AxiomStore: as, Decls: ds, DeclStore: ds},
 	)
+	o.Axioms = as
 
 	parser.TokenLog = true
 	err = o.Parse(p)
@@ -199,7 +200,12 @@ func TestParseEquivalentClasses(t *testing.T) {
 	var err error
 	as := defaults.NewAxiomStore()
 	ds := defaults.NewDeclStore()
-	var o *Ontology = NewOntology(map[string]string{}, as, as, ds, ds)
+	var o *Ontology = NewOntology(
+		map[string]string{},
+		StoreConfig{AxiomStore: as, Decls: ds, DeclStore: ds},
+	)
+	o.Axioms = as
+
 	o.Prefixes[""] = "localprefix#"
 	// decls := o.Decls.(*defaults.DeclStore)
 	decls := o.DeclStore
@@ -238,7 +244,12 @@ func TestParseAnnotationAssertion(t *testing.T) {
 	var expr annotations.AnnotationAssertion
 	as := defaults.NewAxiomStore()
 	ds := defaults.NewDeclStore()
-	var o *Ontology = NewOntology(map[string]string{}, as, as, ds, ds)
+	var o *Ontology = NewOntology(
+		map[string]string{},
+		StoreConfig{AxiomStore: as, Decls: ds, DeclStore: ds},
+	)
+	o.Axioms = as
+
 	o.Prefixes[""] = "The local ns/"
 	o.Prefixes["xsd"] = "The xsd-ns#"
 	o.Prefixes["rdfs"] = "The rdfs-ns#"

@@ -5,8 +5,6 @@ package store
 // See gofp/ontologies/defaults/ for the reference implementation.
 
 import (
-	"github.com/shful/gofp/owlfunctional/annotations"
-	"github.com/shful/gofp/owlfunctional/axioms"
 	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
@@ -30,31 +28,6 @@ type Decls interface {
 	AllDatatypeDecls() []*declarations.DatatypeDecl
 	AllNamedIndividualDecls() []*declarations.NamedIndividualDecl
 	AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl
-}
-
-type Axioms interface {
-	AllAnnotationAssertions() []annotations.AnnotationAssertion
-	AllAsymmetricObjectProperties() []meta.ObjectPropertyExpression
-	AllClassAssertions() []axioms.ClassAssertion
-	AllDataPropertyAssertions() []axioms.DataPropertyAssertion
-	AllFunctionalDataProperties() []meta.DataProperty
-	AllFunctionalObjectProperties() []meta.ObjectPropertyExpression
-	AllInverseFunctionalObjectProperties() []meta.ObjectPropertyExpression
-	AllInverseObjectProperties() []axioms.InverseObjectProperties
-	AllIrreflexiveObjectProperties() []meta.ObjectPropertyExpression
-	AllDataPropertyDomains() []axioms.DataPropertyDomain
-	AllDataPropertyRanges() []axioms.DataPropertyRange
-	AllDisjointClasses() []axioms.DisjointClasses
-	AllDifferentIndividuals() []axioms.DifferentIndividuals
-	AllEquivalentClasses() []axioms.EquivalentClasses
-	AllObjectPropertyDomains() []axioms.ObjectPropertyDomain
-	AllObjectPropertyRanges() []axioms.ObjectPropertyRange
-	AllReflexiveObjectProperties() []meta.ObjectPropertyExpression
-	AllSubClassOfs() []axioms.SubClassOf
-	AllSubDataPropertyOfs() []axioms.SubDataPropertyOf
-	AllSubObjectPropertyOfs() []axioms.SubObjectPropertyOf
-	AllSymmetricObjectProperties() []meta.ObjectPropertyExpression
-	AllTransitiveObjectProperties() []meta.ObjectPropertyExpression
 }
 
 type DeclStore interface {

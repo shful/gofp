@@ -31,7 +31,6 @@ import (
 	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
-	"github.com/shful/gofp/store"
 )
 
 // OntologyFromReader parses an owl-functional file contents into an Ontology struct.
@@ -45,18 +44,27 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 	as := defaults.NewAxiomStore()
 	ds := defaults.NewDeclStore()
 
-	rc := ReaderConfig{
-		Axioms:     as,
+	rc := ontologies.StoreConfig{
 		AxiomStore: as,
 		Decls:      ds,
 		DeclStore:  ds,
 	}
-	return OntologyFromParser(p, rc)
+	ontology, err = OntologyFromParser(p, rc)
+	if err != nil {
+		return
+	}
+
+	// place the Get functions for the OWL axioms beside the Get functions of the OWL declarations.
+	// Note that the parse process does not need the axioms get functions, contrary to the declaration Get functions.
+	// OntologyFromReader ist a convenience function.
+	ontology.Axioms = as
+
+	return
 }
 
 // OntologyFromReader uses the Parser p to create an Ontology struct.
 // The configuration rc allows custom storage of Declarations and Axioms.
-func OntologyFromParser(p *parser.Parser, rc ReaderConfig) (ontology *ontologies.Ontology, err error) {
+func OntologyFromParser(p *parser.Parser, rc ontologies.StoreConfig) (ontology *ontologies.Ontology, err error) {
 	prefixes := map[string]string{}
 
 	for {
@@ -70,7 +78,7 @@ func OntologyFromParser(p *parser.Parser, rc ReaderConfig) (ontology *ontologies
 			}
 		case parser.Ontology:
 			p.Unscan()
-			ontology = ontologies.NewOntology(prefixes, rc.Axioms, rc.AxiomStore, rc.Decls, rc.DeclStore)
+			ontology = ontologies.NewOntology(prefixes, rc)
 			if err = ontology.Parse(p); err != nil {
 				return
 			}
@@ -82,13 +90,6 @@ func OntologyFromParser(p *parser.Parser, rc ReaderConfig) (ontology *ontologies
 		}
 	}
 
-}
-
-type ReaderConfig struct {
-	Axioms     store.Axioms
-	AxiomStore store.AxiomStore
-	Decls      store.Decls
-	DeclStore  store.DeclStore
 }
 
 // parsePrefixTo parses the next Prefix expression and

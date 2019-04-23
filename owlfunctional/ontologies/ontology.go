@@ -25,20 +25,25 @@ type Ontology struct {
 
 var _ tech.Prefixes = (*Ontology)(nil)
 
+// StoreConfig are the interfaces needs by the parser to store Axioms and Declarations.
+// Note that Axioms are only written but not read by the parser, unlike Declarations.
+// That's why there is no interface to read Axioms.
+type StoreConfig struct {
+	AxiomStore store.AxiomStore
+	Decls      store.Decls
+	DeclStore  store.DeclStore
+}
+
 func NewOntology(
 	prefixes map[string]string,
-	a store.Axioms,
-	as store.AxiomStore,
-	d store.Decls,
-	ds store.DeclStore,
+	rc StoreConfig,
 ) (res *Ontology) {
 
 	res = &Ontology{
 		Prefixes:   prefixes,
-		Axioms:     a,
-		AxiomStore: as,
-		Decls:      d,
-		DeclStore:  ds,
+		AxiomStore: rc.AxiomStore,
+		Decls:      rc.Decls,
+		DeclStore:  rc.DeclStore,
 	}
 	return
 }
