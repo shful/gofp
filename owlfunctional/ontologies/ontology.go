@@ -31,32 +31,37 @@ type Ontology struct {
 	Prefixes   map[string]string
 
 	// K is a convenience attribute  which gives read access to all parsed Knowledge
-	// Note that K references the default container types.
-	// When parsing into custom data structures instead, K must remain unset (see the "store" package for custom types.)
+	// Note that K references the default container types from the storedefaults package.
+	// When parsing into custom structures instead, K must remain unset.
 	K storedefaults.K
 }
 
 var _ tech.Prefixes = (*Ontology)(nil)
 
-// StoreConfig are the interfaces needs by the parser to store Axioms and Declarations.
-// Note that Axioms are only written but not read by the parser, unlike Declarations.
-// That's why there is no interface to read Axioms.
+// StoreConfig keeps the interfaces needs by the parser to store Axioms and Declarations.
+// Note that the parser needs to both read and write declarations, while Axioms are written only.
+// That's why here is no interface needed to read Axioms.
 type StoreConfig struct {
 	AxiomStore store.AxiomStore
 	Decls      store.Decls
 	DeclStore  store.DeclStore
 }
 
+// NewOntology
+// takes a parser configuration which optionally allows parsing into custom types.
+// i.e. own types for ClassDecl,ObjectPropertyDecl...
+// For parsing into custom types, three interfaces of StoreConfig must be implemented.
+// By default, the reference implementation of the storedefaults package is used.
 func NewOntology(
 	prefixes map[string]string,
-	rc StoreConfig,
+	cfg StoreConfig,
 ) (res *Ontology) {
 
 	res = &Ontology{
 		Prefixes:   prefixes,
-		AxiomStore: rc.AxiomStore,
-		Decls:      rc.Decls,
-		DeclStore:  rc.DeclStore,
+		AxiomStore: cfg.AxiomStore,
+		Decls:      cfg.Decls,
+		DeclStore:  cfg.DeclStore,
 	}
 	return
 }

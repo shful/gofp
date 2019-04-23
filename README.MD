@@ -32,8 +32,9 @@ To run that example, cd into the gofp/example/pizza/ directory and type
 
 
 #### How to access the parsed data ?
-You will notice there's not much of an API yet. We get an ontology.Ontology instance from the parser, and
-all parsed structures are found in (slice and map) members therein, accessible with methods like AllSubClassOfs(), or AllClassDecls(), or ClassDecl("example.com/Pizza"). These method definitions are in the "Axioms" and "Decls" interfaces of the gofp/store package.
+We get an ontology.Ontology instance from the parser, and, by default, this has an Ontology.K attribute with exactly all parsed knowledge (OWL axioms and declarations).
+All elements are returned by the "All"-prefixed methods therein, like "AllSubClassOfs()." Additionally, Declarations can be taken by their IRI - for example, ClassDecl("example.com/Pizza").
+While this is the default, Gofp can parse directly into custom types, alternatively. See also the parameter documentation of the ontologies.NewOntology() function.
 
 
 #### Caveats
@@ -45,7 +46,9 @@ The current Gofp has further expectations that clash with OWL. Gofp needs all cl
 
 
 #### Recent API changes
-The current API may change and Gofp does not use a semantic version yet. Note that since commit 8589ce from Apr 17 2019, the parsed elements are not in Ontology.All* - slices and maps anymore. Instead, we got functions prefixed with "All*" which return slices for both axioms and declarations - for example, Ontology.AllClassDecls(). Declarations, additionally, can be taken by IRI - for example, with Ontology.ClassDecl(iri string).
+Note that the API may continue to change, and Gofp does not use a semantic version yet. 
+Since commit 018e1d from Apr 23 2019, the parsed elements are not found in Ontology.All* - slices and maps anymore. See above, "How to access the parsed data" for details.
+That API change was made to (optionally) parse directly into custom types.
 
 
 #### Prerequisites

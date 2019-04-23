@@ -1,11 +1,9 @@
 package store
 
-// store has interfaces for read-and-write container types, which hold Declarations and Axioms.
+// store has interfaces for container types, used by the parser to hold Declarations and Axioms.
 
-// All these types can be replaced by custom types. This holds for both the OWL elements (like ClassDecl,ObjectPropertyDecl...)
-// and for the containers which hold these elements.
 // See the storedefaults package for the reference implementation.
-//todo: there are some struct types required like NamedIndividualDecl which is wrong. For customization, store must reference interfaces only.
+//todo: some struct types are left in the interfaces, like NamedIndividualDecl, and that's wrong. For customization, store must reference interfaces only.
 
 import (
 	"github.com/shful/gofp/owlfunctional/declarations"
