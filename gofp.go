@@ -28,9 +28,9 @@ import (
 	"io"
 
 	"github.com/shful/gofp/owlfunctional/ontologies"
-	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
+	"github.com/shful/gofp/storedefaults"
 )
 
 // OntologyFromReader parses an owl-functional file contents into an Ontology struct.
@@ -41,23 +41,21 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 
 	p := parser.NewParser(r, sourceName)
 	parser.TokenLog = false
-	as := defaults.NewAxiomStore()
-	ds := defaults.NewDeclStore()
+	k := storedefaults.NewDefaultK()
 
 	rc := ontologies.StoreConfig{
-		AxiomStore: as,
-		Decls:      ds,
-		DeclStore:  ds,
+		AxiomStore: k,
+		Decls:      k,
+		DeclStore:  k,
 	}
 	ontology, err = OntologyFromParser(p, rc)
 	if err != nil {
 		return
 	}
 
-	// place the Get functions for the OWL axioms beside the Get functions of the OWL declarations.
-	// Note that the parse process does not need the axioms get functions, contrary to the declaration Get functions.
-	// OntologyFromReader ist a convenience function.
-	ontology.Axioms = as
+	// When parsing into the default structures, we can set the convenience attribute Ontology.K
+	// See package "store" for parsing into custom structures instead:
+	ontology.K = k
 
 	return
 }

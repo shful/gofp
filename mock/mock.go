@@ -4,14 +4,14 @@ package mock
 import (
 	"strings"
 
-	"github.com/shful/gofp/owlfunctional/ontologies/defaults"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/store"
+	"github.com/shful/gofp/storedefaults"
 	"github.com/shful/gofp/tech"
 )
 
 type MockDeclarations struct {
-	defaults.DeclStore
+	storedefaults.DeclStore
 }
 
 var _ store.Decls = (*MockDeclarations)(nil)
@@ -35,7 +35,7 @@ type Builder struct {
 
 func NewBuilder() *Builder {
 	return &Builder{
-		decls:    &MockDeclarations{DeclStore: *defaults.NewDeclStore()},
+		decls:    &MockDeclarations{DeclStore: *storedefaults.NewDeclStore()},
 		prefixes: &MockPrefixes{map[string]string{}},
 	}
 }

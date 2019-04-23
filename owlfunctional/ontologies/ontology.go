@@ -10,17 +10,30 @@ import (
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
 	"github.com/shful/gofp/store"
+	"github.com/shful/gofp/storedefaults"
 	"github.com/shful/gofp/tech"
 )
 
 type Ontology struct {
-	store.Axioms
-	store.AxiomStore
-	store.Decls
+
+	// DeclStore has write methods for the parser, to store all declarations while parsing.
 	store.DeclStore
+
+	// AxiomStore has write methods for the parser, to store all axioms while parsing.
+	store.AxiomStore
+
+	// Decls has read methods for the parser to ask for known declarations.
+	// These get methods may dynamically create any requested declaration, since, according to OWL2, declarations can be made implicit.
+	store.Decls
+
 	IRI        string
 	VERSIONIRI string
 	Prefixes   map[string]string
+
+	// K is a convenience attribute  which gives read access to all parsed Knowledge
+	// Note that K references the default container types.
+	// When parsing into custom data structures instead, K must remain unset (see the "store" package for custom types.)
+	K storedefaults.K
 }
 
 var _ tech.Prefixes = (*Ontology)(nil)

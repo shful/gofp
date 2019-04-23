@@ -1,8 +1,11 @@
 package store
 
 // store has interfaces for read-and-write container types, which hold Declarations and Axioms.
-// The intentions is to optionally parse into custom container types.
-// See gofp/ontologies/defaults/ for the reference implementation.
+
+// All these types can be replaced by custom types. This holds for both the OWL elements (like ClassDecl,ObjectPropertyDecl...)
+// and for the containers which hold these elements.
+// See the storedefaults package for the reference implementation.
+//todo: there are some struct types required like NamedIndividualDecl which is wrong. For customization, store must reference interfaces only.
 
 import (
 	"github.com/shful/gofp/owlfunctional/declarations"
@@ -20,14 +23,6 @@ type Decls interface {
 	DatatypeDecl(ident string) (*declarations.DatatypeDecl, bool)
 	NamedIndividualDecl(ident string) (*declarations.NamedIndividualDecl, bool)
 	ObjectPropertyDecl(ident string) (*declarations.ObjectPropertyDecl, bool)
-
-	// All (as-slice) - methods:
-	AllAnnotationPropertyDecls() []*declarations.AnnotationPropertyDecl
-	AllClassDecls() []*declarations.ClassDecl
-	AllDataPropertyDecls() []*declarations.DataPropertyDecl
-	AllDatatypeDecls() []*declarations.DatatypeDecl
-	AllNamedIndividualDecls() []*declarations.NamedIndividualDecl
-	AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl
 }
 
 type DeclStore interface {

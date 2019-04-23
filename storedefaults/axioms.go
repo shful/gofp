@@ -1,4 +1,4 @@
-package defaults
+package storedefaults
 
 import (
 	"github.com/shful/gofp/owlfunctional/annotations"
@@ -37,7 +37,7 @@ type AxiomStore struct {
 	allTransitiveObjectProperties        []meta.ObjectPropertyExpression
 }
 
-var _ store.Axioms = (*AxiomStore)(nil)
+var _ AllAxioms = (*AxiomStore)(nil)
 var _ store.AxiomStore = (*AxiomStore)(nil)
 
 func NewAxiomStore() *AxiomStore {
