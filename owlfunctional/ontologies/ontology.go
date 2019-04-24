@@ -659,25 +659,6 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 	return
 }
 
-func (s *Ontology) ClassDeclExists(ident string) bool {
-	_, ok := s.Decls.ClassDecl(ident)
-	return ok
-}
-
-func (s *Ontology) DataPropertyDeclExists(ident string) bool {
-	_, ok := s.Decls.DataPropertyDecl(ident)
-	return ok
-}
-
-func (s *Ontology) NamedIndividualDeclExists(ident string) bool {
-	_, ok := s.Decls.NamedIndividualDecl(ident)
-	return ok
-}
-
-func (s *Ontology) ObjectPropertyDeclExists(ident string) bool {
-	_, ok := s.Decls.ObjectPropertyDecl(ident)
-	return ok
-}
 
 func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
 	res, ok = s.Prefixes[prefix]

@@ -35,6 +35,13 @@ To run that example, cd into the gofp/example/pizza/ directory and type
 We get an ontology.Ontology instance from the parser, and, by default, this has an Ontology.K attribute with exactly all parsed knowledge (OWL axioms and declarations).
 All elements are returned by the "All"-prefixed methods therein, like "AllSubClassOfs()." Additionally, declarations can be taken by their IRI - for example, ClassDecl("example.com/Pizza").
 
+```
+// Example: print all parsed class declaration IRIs:
+for _, decl := range o.K.AllClassDecls() {
+	fmt.Println(decl.IRI)
+}
+```
+
 While this is the default, Gofp can parse directly into custom types, alternatively. See also the parameter documentation of the ontologies.NewOntology function.
 
 
@@ -42,8 +49,7 @@ While this is the default, Gofp can parse directly into custom types, alternativ
 The implementation is not complete. The "import" statement is unknown and breaks parsing.
 Annotations and free text inside an Ontology element are unknown and break parsing.
 Some more statements and datatypes are unknown; most of these come from the "Individual" and "Annotation" categories.
-
-The current Gofp has further expectations that clash with OWL. Gofp needs all classes, individuals and properties explicitly declared with "Declaration(...)" before the first reference. Further, all input must be UTF-8.
+Further, all input must be UTF-8.
 
 
 #### Recent API changes

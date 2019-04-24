@@ -15,6 +15,88 @@ import (
 	"github.com/shful/gofp/storedefaults"
 )
 
+func helperTestExplicitDecl(ontologyTestString string, explicitDecls bool) (*Ontology,*parser.Parser,*storedefaults.DefaultK) {
+	var p *parser.Parser
+
+	k := storedefaults.NewDefaultK()
+	rc := StoreConfig{
+		AxiomStore: k,
+		Decls:      k,
+		DeclStore:  k,
+	}
+	o := NewOntology(
+		map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
+		rc,
+	)
+	o.K = k
+
+	// Explicit mode and ontology has only explicit Decls
+	k.ExplicitDecls = explicitDecls
+	p = mock.NewTestParser(ontologyTestString)
+	parser.TokenLog = false
+
+	return o,p,k
+}
+
+func TestParseExplicitDeclMode(t *testing.T) {
+	var err error
+var o *Ontology
+var p *parser.Parser
+var k *storedefaults.DefaultK
+
+
+	// Explicit mode and ontology has no implicit Decls
+	o,p,k = helperTestExplicitDecl(ontologyMiniTestString1_ExplicitDecl, true)
+
+	err = o.Parse(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(o.K.AllClassDecls()) != 2 {
+		t.Fatal(o.K.AllClassDecls())
+	}
+	if !k.ClassDeclExists("localprefix#AmericanHotPizza") {
+		t.Fatal()
+	}
+	if !k.ClassDeclExists("hello.de#FishbonePizza") {
+		t.Fatal()
+	}
+	if len(o.K.AllObjectPropertyDecls()) != 2 {
+		t.Fatal(o.K.AllObjectPropertyDecls())
+	}
+
+
+	// Explicit mode and ontology has implicit Decls
+	o,p,k = helperTestExplicitDecl(ontologyMiniTestString2_ImplicitDecl, true)
+
+	err = o.Parse(p) //todo add machine readable error types, instead human-readable messages only
+	if err == nil {
+		t.Fatal("error expected because implicit decl")
+	}
+
+
+	// Implicit mode and ontology has implicit Decls
+	o,p,k = helperTestExplicitDecl(ontologyMiniTestString2_ImplicitDecl, false)
+
+	err = o.Parse(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(o.K.AllClassDecls()) != 2 {
+		t.Fatal(o.K.AllClassDecls())
+	}
+	if !k.ClassDeclExists("localprefix#AmericanHotPizza") {
+		t.Fatal()
+	}
+	if k.ClassDeclExists("hello.de#NotExistingPizza") {
+		t.Fatal()
+	}
+	if len(o.K.AllObjectPropertyDecls()) != 3 {
+		t.Fatal(o.K.AllObjectPropertyDecls())
+	}
+}
+
 func TestParsePizzaOntology(t *testing.T) {
 	var p *parser.Parser
 	var err error
@@ -33,7 +115,7 @@ func TestParsePizzaOntology(t *testing.T) {
 
 	o.K = k
 
-	parser.TokenLog = true
+	// parser.TokenLog = true
 	err = o.Parse(p)
 	if err != nil {
 		t.Fatal(err)
@@ -49,39 +131,39 @@ func TestParsePizzaOntology(t *testing.T) {
 	if len(o.K.AllClassDecls()) != 51 {
 		t.Fatal(o.K.AllClassDecls())
 	}
-	if !o.ClassDeclExists("localprefix#AmericanHotPizza") {
+	if !k.ClassDeclExists("localprefix#AmericanHotPizza") {
 		t.Fatal()
 	}
-	if !o.ClassDeclExists("hello.de#FishbonePizza") {
+	if !k.ClassDeclExists("hello.de#FishbonePizza") {
 		t.Fatal()
 	}
-	if o.ClassDeclExists("notexisting") {
+	if k.ClassDeclExists("notexisting") {
 		t.Fatal()
 	}
 
 	if len(o.K.AllDataPropertyDecls()) != 2 {
 		t.Fatal(o.K.AllDataPropertyDecls())
 	}
-	if !o.DataPropertyDeclExists("localprefix#hasCaloricContentValue") {
+	if !k.DataPropertyDeclExists("localprefix#hasCaloricContentValue") {
 		t.Fatal()
 	}
-	if o.DataPropertyDeclExists("localprefix#hasTopping") {
+	if k.DataPropertyDeclExists("localprefix#hasTopping") {
 		t.Fatal()
 	}
-	if o.DataPropertyDeclExists("localprefix#HasTopping") { // case differs
+	if k.DataPropertyDeclExists("localprefix#HasTopping") { // case differs
 		t.Fatal()
 	}
 	if len(o.K.AllObjectPropertyDecls()) != 7 {
 		t.Fatal(o.K.AllObjectPropertyDecls())
 	}
-	if !o.ObjectPropertyDeclExists("localprefix#hasTopping") {
+	if !k.ObjectPropertyDeclExists("localprefix#hasTopping") {
 		t.Fatal()
 	}
 
 	if len(o.K.AllNamedIndividualDecls()) != 4 {
 		t.Fatal(o.K.AllNamedIndividualDecls())
 	}
-	if !o.NamedIndividualDeclExists("localprefix#MyQuattroFormaggio") {
+	if !k.NamedIndividualDeclExists("localprefix#MyQuattroFormaggio") {
 		t.Fatal()
 	}
 
@@ -700,3 +782,37 @@ Ontology(<urn:absolute:test.de><http://test.de/1.0.777>
 	DisjointClasses(:Hot :Medium :Mild)		
 )
 `
+
+const ontologyMiniTestString1_ExplicitDecl = `
+Ontology(
+	<urn:absolute:test.de>
+	<http://test.de/1.0.777>
+
+	Declaration(Class(hello:FishbonePizza))
+	Declaration(Class(:AmericanHotPizza))
+	Declaration(ObjectProperty(:hasBase))
+	Declaration(ObjectProperty(:hasIngredient))
+
+	# Object Property: :hasBase (:hasBase)
+	SubObjectPropertyOf(:hasBase :hasIngredient)
+)
+`
+
+// ontologyMiniTestString2_ImplicitDecl declares :hasBase implicitly.
+const ontologyMiniTestString2_ImplicitDecl = `
+Ontology(
+	<urn:absolute:test.de>
+	<http://test.de/1.0.777>
+
+	Declaration(Class(hello:FishbonePizza))
+	Declaration(Class(:AmericanHotPizza))
+	Declaration(ObjectProperty(:hasIngredient))
+
+	# ObjectProperty implicit...
+	SubObjectPropertyOf(:hasBase :hasIngredient)
+
+	# and yet another ObjectProperty implicit:
+	SubObjectPropertyOf(<https://example.com/hasAnything> :hasIngredient)
+)
+`
+

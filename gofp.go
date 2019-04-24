@@ -43,6 +43,10 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 	parser.TokenLog = false
 	k := storedefaults.NewDefaultK()
 
+	// In this convenience method, by default, accept implicit declarations which is OWL standard
+	// When true, any declaration needs to be explicit written before usage, or the parser stops with a error.
+	k.ExplicitDecls = false
+
 	rc := ontologies.StoreConfig{
 		AxiomStore: k,
 		Decls:      k,
@@ -62,6 +66,8 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 
 // OntologyFromReader uses the Parser p to create an Ontology struct.
 // The configuration rc allows custom storage of Declarations and Axioms.
+// As a usage example of OntologyFromParser, see the code of the OntologyFromReader function.
+// Note that the API may change and Gofp, in its early state, does not use a semantic version number.
 func OntologyFromParser(p *parser.Parser, rc ontologies.StoreConfig) (ontology *ontologies.Ontology, err error) {
 	prefixes := map[string]string{}
 

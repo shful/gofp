@@ -18,6 +18,10 @@ type DeclStore struct {
 	datatypeDecls           map[string]*declarations.DatatypeDecl
 	namedIndividualDecls    map[string]*declarations.NamedIndividualDecl
 	objectPropertyDecls     map[string]*declarations.ObjectPropertyDecl
+
+	// ExplicitDecls = true means, any declaration must be stored explicitly before it can be requested with a Get method.
+	// ExplicitDecls = false is the standard OWL behaviour where a declaration is created implicitly when we request it.
+	ExplicitDecls bool
 }
 
 var _ store.Decls = (*DeclStore)(nil)
@@ -25,48 +29,69 @@ var _ store.DeclStore = (*DeclStore)(nil)
 
 func NewDeclStore() *DeclStore {
 	return &DeclStore{
-		map[string]*declarations.AnnotationPropertyDecl{},
-		map[string]*declarations.ClassDecl{},
-		map[string]*declarations.DataPropertyDecl{},
-		map[string]*declarations.DatatypeDecl{},
-		map[string]*declarations.NamedIndividualDecl{},
-		map[string]*declarations.ObjectPropertyDecl{},
+		annotationPropertyDecls: map[string]*declarations.AnnotationPropertyDecl{},
+		classDecls:              map[string]*declarations.ClassDecl{},
+		dataPropertyDecls:       map[string]*declarations.DataPropertyDecl{},
+		datatypeDecls:           map[string]*declarations.DatatypeDecl{},
+		namedIndividualDecls:    map[string]*declarations.NamedIndividualDecl{},
+		objectPropertyDecls:     map[string]*declarations.ObjectPropertyDecl{},
+		ExplicitDecls:           true,
 	}
 }
+
+// === Get - methods that return a single decl by key ========
 
 func (s *DeclStore) AnnotationPropertyDecl(ident string) (decl interface{}, ok bool) {
 	decl, ok = s.annotationPropertyDecls[ident]
 	return
 }
+
 func (s *DeclStore) ClassDecl(ident string) (decl meta.ClassExpression, ok bool) {
 	decl, ok = s.classDecls[ident]
+	if !ok && !s.ExplicitDecls {
+		s.StoreClassDecl(ident)
+		decl, ok = s.classDecls[ident]
+	}
 	return
 }
 
 func (s *DeclStore) DataPropertyDecl(ident string) (decl meta.DataProperty, ok bool) {
 	decl, ok = s.dataPropertyDecls[ident]
-	if !ok {
-		for k, val := range s.dataPropertyDecls {
-			fmt.Println("  have only:", k, "->", val)
-		}
+	if !ok && !s.ExplicitDecls {
+		s.StoreDataPropertyDecl(ident)
+		decl, ok = s.dataPropertyDecls[ident]
 	}
 	return
 }
 
 func (s *DeclStore) DatatypeDecl(ident string) (decl meta.DataRange, ok bool) {
 	decl, ok = s.datatypeDecls[ident]
+	if !ok && !s.ExplicitDecls {
+		s.StoreDatatypeDecl(ident)
+		decl, ok = s.datatypeDecls[ident]
+	}
 	return
 }
 
 func (s *DeclStore) NamedIndividualDecl(ident string) (decl interface{}, ok bool) {
 	decl, ok = s.namedIndividualDecls[ident]
+	if !ok && !s.ExplicitDecls {
+		s.StoreNamedIndividualDecl(ident)
+		decl, ok = s.namedIndividualDecls[ident]
+	}
 	return
 }
 
 func (s *DeclStore) ObjectPropertyDecl(ident string) (decl meta.ObjectPropertyExpression, ok bool) {
 	decl, ok = s.objectPropertyDecls[ident]
+	if !ok && !s.ExplicitDecls {
+		s.StoreObjectPropertyDecl(ident)
+		decl, ok = s.objectPropertyDecls[ident]
+	}
 	return
 }
+
+// === End Get - methods ========
 
 // === All* - methods that return slices ========
 func (s *DeclStore) AllAnnotationPropertyDecls() []*declarations.AnnotationPropertyDecl {
@@ -118,6 +143,8 @@ func (s *DeclStore) AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl 
 
 // === end All - methods =======
 
+// === Store - methods =======
+
 func (s *DeclStore) StoreAnnotationPropertyDecl(iri string) {
 	s.annotationPropertyDecls[iri] = &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
@@ -141,6 +168,32 @@ func (s *DeclStore) StoreNamedIndividualDecl(iri string) {
 func (s *DeclStore) StoreObjectPropertyDecl(iri string) {
 	s.objectPropertyDecls[iri] = &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
 }
+
+// === end Store - methods =======
+
+// === Exists - methods, intended for tests only =======
+
+func (s *DeclStore) ClassDeclExists(ident string) bool {
+	_, ok := s.classDecls[ident]
+	return ok
+}
+
+func (s *DeclStore) DataPropertyDeclExists(ident string) bool {
+	_, ok := s.dataPropertyDecls[ident]
+	return ok
+}
+
+func (s *DeclStore) NamedIndividualDeclExists(ident string) bool {
+	_, ok := s.namedIndividualDecls[ident]
+	return ok
+}
+
+func (s *DeclStore) ObjectPropertyDeclExists(ident string) bool {
+	_, ok := s.objectPropertyDecls[ident]
+	return ok
+}
+
+// === End Exists - methods =======
 
 func (s *DeclStore) String() string {
 	return fmt.Sprintf("%d annotations, %d classes, %d object properties, %d data properties, %d named individuals, %d datatypes",
