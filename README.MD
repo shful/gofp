@@ -33,8 +33,9 @@ To run that example, cd into the gofp/example/pizza/ directory and type
 
 #### How to access the parsed data ?
 We get an ontology.Ontology instance from the parser, and, by default, this has an Ontology.K attribute with exactly all parsed knowledge (OWL axioms and declarations).
-All elements are returned by the "All"-prefixed methods therein, like "AllSubClassOfs()." Additionally, Declarations can be taken by their IRI - for example, ClassDecl("example.com/Pizza").
-While this is the default, Gofp can parse directly into custom types, alternatively. See also the parameter documentation of the ontologies.NewOntology() function.
+All elements are returned by the "All"-prefixed methods therein, like "AllSubClassOfs()." Additionally, declarations can be taken by their IRI - for example, ClassDecl("example.com/Pizza").
+
+While this is the default, Gofp can parse directly into custom types, alternatively. See also the parameter documentation of the ontologies.NewOntology function.
 
 
 #### Caveats

@@ -1,12 +1,9 @@
 package store
 
 // store has interfaces for container types, used by the parser to hold Declarations and Axioms.
-
 // See the storedefaults package for the reference implementation.
-//todo: some struct types are left in the interfaces, like NamedIndividualDecl, and that's wrong. For customization, store must reference interfaces only.
 
 import (
-	"github.com/shful/gofp/owlfunctional/declarations"
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
 	"github.com/shful/gofp/owlfunctional/meta"
@@ -15,12 +12,12 @@ import (
 // Decls gives read access to all Declarations that were parsed yet.
 type Decls interface {
 	// By Key - methods:
-	AnnotationPropertyDecl(ident string) (*declarations.AnnotationPropertyDecl, bool)
-	ClassDecl(ident string) (*declarations.ClassDecl, bool)
-	DataPropertyDecl(ident string) (*declarations.DataPropertyDecl, bool)
-	DatatypeDecl(ident string) (*declarations.DatatypeDecl, bool)
-	NamedIndividualDecl(ident string) (*declarations.NamedIndividualDecl, bool)
-	ObjectPropertyDecl(ident string) (*declarations.ObjectPropertyDecl, bool)
+	AnnotationPropertyDecl(ident string) (interface{}, bool)
+	ClassDecl(ident string) (meta.ClassExpression, bool)
+	DataPropertyDecl(ident string) (meta.DataProperty, bool)
+	DatatypeDecl(ident string) (meta.DataRange, bool)
+	NamedIndividualDecl(ident string) (interface{}, bool)
+	ObjectPropertyDecl(ident string) (meta.ObjectPropertyExpression, bool)
 }
 
 type DeclStore interface {

@@ -14,6 +14,7 @@ import (
 	"github.com/shful/gofp/tech"
 )
 
+// Ontology is associated with exactly the content of a single OWL Ontology() element.
 type Ontology struct {
 
 	// DeclStore has write methods for the parser, to store all declarations while parsing.
@@ -50,7 +51,7 @@ type StoreConfig struct {
 // NewOntology
 // takes a parser configuration which optionally allows parsing into custom types.
 // i.e. own types for ClassDecl,ObjectPropertyDecl...
-// For parsing into custom types, three interfaces of StoreConfig must be implemented.
+// For parsing into custom types, the three interfaces used in StoreConfig must be implemented.
 // By default, the reference implementation of the storedefaults package is used.
 func NewOntology(
 	prefixes map[string]string,

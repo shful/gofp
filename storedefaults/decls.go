@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/store"
 )
 
@@ -33,16 +34,16 @@ func NewDeclStore() *DeclStore {
 	}
 }
 
-func (s *DeclStore) AnnotationPropertyDecl(ident string) (decl *declarations.AnnotationPropertyDecl, ok bool) {
+func (s *DeclStore) AnnotationPropertyDecl(ident string) (decl interface{}, ok bool) {
 	decl, ok = s.annotationPropertyDecls[ident]
 	return
 }
-func (s *DeclStore) ClassDecl(ident string) (decl *declarations.ClassDecl, ok bool) {
+func (s *DeclStore) ClassDecl(ident string) (decl meta.ClassExpression, ok bool) {
 	decl, ok = s.classDecls[ident]
 	return
 }
 
-func (s *DeclStore) DataPropertyDecl(ident string) (decl *declarations.DataPropertyDecl, ok bool) {
+func (s *DeclStore) DataPropertyDecl(ident string) (decl meta.DataProperty, ok bool) {
 	decl, ok = s.dataPropertyDecls[ident]
 	if !ok {
 		for k, val := range s.dataPropertyDecls {
@@ -52,17 +53,17 @@ func (s *DeclStore) DataPropertyDecl(ident string) (decl *declarations.DataPrope
 	return
 }
 
-func (s *DeclStore) DatatypeDecl(ident string) (decl *declarations.DatatypeDecl, ok bool) {
+func (s *DeclStore) DatatypeDecl(ident string) (decl meta.DataRange, ok bool) {
 	decl, ok = s.datatypeDecls[ident]
 	return
 }
 
-func (s *DeclStore) NamedIndividualDecl(ident string) (decl *declarations.NamedIndividualDecl, ok bool) {
+func (s *DeclStore) NamedIndividualDecl(ident string) (decl interface{}, ok bool) {
 	decl, ok = s.namedIndividualDecls[ident]
 	return
 }
 
-func (s *DeclStore) ObjectPropertyDecl(ident string) (decl *declarations.ObjectPropertyDecl, ok bool) {
+func (s *DeclStore) ObjectPropertyDecl(ident string) (decl meta.ObjectPropertyExpression, ok bool) {
 	decl, ok = s.objectPropertyDecls[ident]
 	return
 }
