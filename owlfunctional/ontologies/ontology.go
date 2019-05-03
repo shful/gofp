@@ -659,7 +659,6 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 	return
 }
 
-
 func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
 	res, ok = s.Prefixes[prefix]
 	return

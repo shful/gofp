@@ -20,13 +20,17 @@ type Decls interface {
 	ObjectPropertyDecl(ident string) (meta.ObjectPropertyExpression, bool)
 }
 
+// DeclStore is used by the parser to store explicit declarations.
+// The store functions should return error if the declaration was already explicitly given. The "should" wording is because a custom implementation
+// of DeclStore may choose to silently ignore double declarations.
+// No error is returned if the declaration is already known, but was implicitly declared only.
 type DeclStore interface {
-	StoreAnnotationPropertyDecl(iri string)
-	StoreClassDecl(iri string)
-	StoreDataPropertyDecl(iri string)
-	StoreDatatypeDecl(iri string)
-	StoreNamedIndividualDecl(iri string)
-	StoreObjectPropertyDecl(iri string)
+	StoreAnnotationPropertyDecl(iri string) error
+	StoreClassDecl(iri string) error
+	StoreDataPropertyDecl(iri string) error
+	StoreDatatypeDecl(iri string) error
+	StoreNamedIndividualDecl(iri string) error
+	StoreObjectPropertyDecl(iri string) error
 }
 
 // AxiomStore takes all possible axioms and encapsulates the data structures to store them.

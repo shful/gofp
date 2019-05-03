@@ -56,10 +56,10 @@ var k *storedefaults.DefaultK
 	if len(o.K.AllClassDecls()) != 2 {
 		t.Fatal(o.K.AllClassDecls())
 	}
-	if !k.ClassDeclExists("localprefix#AmericanHotPizza") {
+	if !k.ClassDeclExists("localprefix#AmericanHotPizza", false) {
 		t.Fatal()
 	}
-	if !k.ClassDeclExists("hello.de#FishbonePizza") {
+	if !k.ClassDeclExists("hello.de#FishbonePizza", false) {
 		t.Fatal()
 	}
 	if len(o.K.AllObjectPropertyDecls()) != 2 {
@@ -75,7 +75,6 @@ var k *storedefaults.DefaultK
 		t.Fatal("error expected because implicit decl")
 	}
 
-
 	// Implicit mode and ontology has implicit Decls
 	o,p,k = helperTestExplicitDecl(ontologyMiniTestString2_ImplicitDecl, false)
 
@@ -83,18 +82,34 @@ var k *storedefaults.DefaultK
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(o.K.AllClassDecls()) != 2 {
+	if len(o.K.AllClassDecls()) != 6 {
 		t.Fatal(o.K.AllClassDecls())
 	}
-	if !k.ClassDeclExists("localprefix#AmericanHotPizza") {
-		t.Fatal()
-	}
-	if k.ClassDeclExists("hello.de#NotExistingPizza") {
-		t.Fatal()
-	}
+
+	// also, one ObjectProperty came implicitly:
 	if len(o.K.AllObjectPropertyDecls()) != 3 {
 		t.Fatal(o.K.AllObjectPropertyDecls())
 	}
+
+	// existence of class decls:
+	if !k.ClassDeclExists("localprefix#AmericanHotPizza", false) {
+		t.Fatal()
+	}
+	if !k.ClassDeclExists("localprefix#BritishPizza", false) {
+		t.Fatal()
+	}
+	if k.ClassDeclExists("hello.de#NotExistingPizza", false) {
+		t.Fatal()
+	}
+	
+	// this Class was declared implicitly. Check that declaration was implicit only:
+	if k.ClassDeclExists("spdy://example.com/NewWorldPizza", false) {
+		t.Fatal()
+	}
+	if !k.ClassDeclExists("spdy://example.com/NewWorldPizza", true) {
+		t.Fatal()
+	}
+
 }
 
 func TestParsePizzaOntology(t *testing.T) {
@@ -115,7 +130,6 @@ func TestParsePizzaOntology(t *testing.T) {
 
 	o.K = k
 
-	// parser.TokenLog = true
 	err = o.Parse(p)
 	if err != nil {
 		t.Fatal(err)
@@ -131,39 +145,39 @@ func TestParsePizzaOntology(t *testing.T) {
 	if len(o.K.AllClassDecls()) != 51 {
 		t.Fatal(o.K.AllClassDecls())
 	}
-	if !k.ClassDeclExists("localprefix#AmericanHotPizza") {
+	if !k.ClassDeclExists("localprefix#AmericanHotPizza", false) {
 		t.Fatal()
 	}
-	if !k.ClassDeclExists("hello.de#FishbonePizza") {
+	if !k.ClassDeclExists("hello.de#FishbonePizza", false) {
 		t.Fatal()
 	}
-	if k.ClassDeclExists("notexisting") {
+	if k.ClassDeclExists("notexisting", false) {
 		t.Fatal()
 	}
 
 	if len(o.K.AllDataPropertyDecls()) != 2 {
 		t.Fatal(o.K.AllDataPropertyDecls())
 	}
-	if !k.DataPropertyDeclExists("localprefix#hasCaloricContentValue") {
+	if !k.DataPropertyDeclExists("localprefix#hasCaloricContentValue", false) {
 		t.Fatal()
 	}
-	if k.DataPropertyDeclExists("localprefix#hasTopping") {
+	if k.DataPropertyDeclExists("localprefix#hasTopping", false) {
 		t.Fatal()
 	}
-	if k.DataPropertyDeclExists("localprefix#HasTopping") { // case differs
+	if k.DataPropertyDeclExists("localprefix#HasTopping", false) { // case differs
 		t.Fatal()
 	}
 	if len(o.K.AllObjectPropertyDecls()) != 7 {
 		t.Fatal(o.K.AllObjectPropertyDecls())
 	}
-	if !k.ObjectPropertyDeclExists("localprefix#hasTopping") {
+	if !k.ObjectPropertyDeclExists("localprefix#hasTopping", false) {
 		t.Fatal()
 	}
 
 	if len(o.K.AllNamedIndividualDecls()) != 4 {
 		t.Fatal(o.K.AllNamedIndividualDecls())
 	}
-	if !k.NamedIndividualDeclExists("localprefix#MyQuattroFormaggio") {
+	if !k.NamedIndividualDeclExists("localprefix#MyQuattroFormaggio", false) {
 		t.Fatal()
 	}
 
@@ -808,11 +822,20 @@ Ontology(
 	Declaration(Class(:AmericanHotPizza))
 	Declaration(ObjectProperty(:hasIngredient))
 
-	# ObjectProperty implicit...
+	# ObjectProperty shortened implicit:
 	SubObjectPropertyOf(:hasBase :hasIngredient)
 
-	# and yet another ObjectProperty implicit:
+	# ObjectProperty with full IRI implicit:
 	SubObjectPropertyOf(<https://example.com/hasAnything> :hasIngredient)
+
+	# and a 3rd Class with full IRI implicit:
+	SubClassOf(:AmericanHotPizza <spdy://example.com/NewWorldPizza>)
+
+	# and Classes 4 and 5 shortened implicit:
+	SubClassOf(:JamAndKidneyPizza :BritishPizza)
+
+	# and an already implicit declared Class 6 explicit now:
+	Declaration(Class(:BritishPizza))
 )
 `
 
