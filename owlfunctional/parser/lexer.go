@@ -102,6 +102,7 @@ const (
 	OWLTopDataProperty
 	Prefix
 	ReflexiveObjectProperty
+	SubAnnotationPropertyOf
 	SubClassOf
 	SubDataPropertyOf
 	SubObjectPropertyOf
@@ -161,6 +162,7 @@ var keywords map[string]Token = map[string]Token{
 	"Ontology":                        Ontology,
 	"Prefix":                          Prefix,
 	"ReflexiveObjectProperty":         ReflexiveObjectProperty,
+	"SubAnnotationPropertyOf":         SubAnnotationPropertyOf,
 	"SubClassOf":                      SubClassOf,
 	"SubDataPropertyOf":               SubDataPropertyOf,
 	"SubObjectPropertyOf":             SubObjectPropertyOf,

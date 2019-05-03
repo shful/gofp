@@ -30,6 +30,7 @@ type AxiomStore struct {
 	allObjectPropertyDomains             []axioms.ObjectPropertyDomain
 	allObjectPropertyRanges              []axioms.ObjectPropertyRange
 	allReflexiveObjectProperties         []meta.ObjectPropertyExpression
+	allSubAnnotationPropertyOfs          []annotations.SubAnnotationPropertyOf
 	allSubClassOfs                       []axioms.SubClassOf
 	allSubDataPropertyOfs                []axioms.SubDataPropertyOf
 	allSubObjectPropertyOfs              []axioms.SubObjectPropertyOf
@@ -135,6 +136,7 @@ func (s *AxiomStore) AllTransitiveObjectProperties() []meta.ObjectPropertyExpres
 func (s *AxiomStore) StoreAnnotationAssertion(A string, S string, t string) {
 	s.allAnnotationAssertions = append(s.allAnnotationAssertions, annotations.AnnotationAssertion{A: A, S: S, T: t})
 }
+
 func (s *AxiomStore) StoreAsymmetricObjectProperty(a meta.ObjectPropertyExpression) {
 	s.allAsymmetricObjectProperties = append(s.allAsymmetricObjectProperties, a)
 }
@@ -197,6 +199,10 @@ func (s *AxiomStore) StoreObjectPropertyRange(P meta.ObjectPropertyExpression, C
 
 func (s *AxiomStore) StoreReflexiveObjectProperty(a meta.ObjectPropertyExpression) {
 	s.allReflexiveObjectProperties = append(s.allReflexiveObjectProperties, a)
+}
+
+func (s *AxiomStore) StoreSubAnnotationPropertyOf(A1, A2 string) {
+	s.allSubAnnotationPropertyOfs = append(s.allSubAnnotationPropertyOfs, annotations.SubAnnotationPropertyOf{A1: A1, A2: A2})
 }
 
 func (s *AxiomStore) StoreSubClassOf(C1, C2 meta.ClassExpression) {

@@ -145,6 +145,8 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 			err = s.parseObjectPropertyRange(p)
 		case parser.ReflexiveObjectProperty:
 			err = s.parseReflexiveObjectProperty(p)
+		case parser.SubAnnotationPropertyOf:
+			err = s.parseSubAnnotationPropertyOf(p)
 		case parser.SubClassOf:
 			err = s.parseSubClassOf(p)
 		case parser.SubDataPropertyOf:
@@ -179,13 +181,13 @@ func (s *Ontology) parseAnnotation(p *parser.Parser) (err error) {
 
 	ident, err = parsehelper.ParseAndResolveIRI(p, s)
 	if err != nil {
-		err = pos.EnrichErrorMsg(err, "reading 1st param in AnnotationAssertion")
+		err = pos.EnrichErrorMsg(err, "reading 1st param in Annotation")
 		return
 	}
 	var t string
 	t, _, err = parsefuncs.Parset(p, s.Decls, s)
 	if err != nil {
-		err = pos.EnrichErrorMsg(err, "reading 3rd param in AnnotationAssertion")
+		err = pos.EnrichErrorMsg(err, "reading 2nd param in Annotation")
 		return
 	}
 
@@ -588,6 +590,36 @@ func (s *Ontology) parseReflexiveObjectProperty(p *parser.Parser) (err error) {
 		return
 	}
 	s.AxiomStore.StoreReflexiveObjectProperty(P)
+	return
+}
+
+func (s *Ontology) parseSubAnnotationPropertyOf(p *parser.Parser) (err error) {
+
+	if err = p.ConsumeTokens(parser.SubAnnotationPropertyOf, parser.B1); err != nil {
+		return
+	}
+	pos := p.Pos()
+	var A1, A2 *tech.IRI
+
+	A1, err = parsehelper.ParseAndResolveIRI(p, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 1st param in SubAnnotationPropertyOf")
+		return
+	}
+
+	A2, err = parsehelper.ParseAndResolveIRI(p, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 2nd param in SubAnnotationPropertyOf")
+		return
+	}
+
+	if err = p.ConsumeTokens(parser.B2); err != nil {
+		return
+	}
+	s.AxiomStore.StoreSubAnnotationPropertyOf(
+		A1.String(),
+		A2.String(),
+	)
 	return
 }
 

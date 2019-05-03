@@ -20,3 +20,8 @@ type AnnotationAssertion struct {
 	// If not given, langTag is empty. For non-string types, it is also empty.
 	T string
 }
+
+type SubAnnotationPropertyOf struct {
+	A1 string
+	A2 string
+}

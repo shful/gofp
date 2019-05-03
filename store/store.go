@@ -52,6 +52,7 @@ type AxiomStore interface {
 	StoreObjectPropertyDomain(P meta.ObjectPropertyExpression, C meta.ClassExpression)
 	StoreObjectPropertyRange(P meta.ObjectPropertyExpression, C meta.ClassExpression)
 	StoreReflexiveObjectProperty(meta.ObjectPropertyExpression)
+	StoreSubAnnotationPropertyOf(A1, A2 string)
 	StoreSubClassOf(C1, C2 meta.ClassExpression) //todo comment which is sup, which is super
 	StoreSubDataPropertyOf(P1, P2 meta.DataProperty)
 	StoreSubObjectPropertyOf(P1, P2 meta.ObjectPropertyExpression)
