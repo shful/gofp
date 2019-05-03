@@ -46,6 +46,7 @@ const (
 	MINUS  // -
 
 	// Keywords
+	Annotation
 	AnnotationAssertion
 	AnnotationProperty
 	AsymmetricObjectProperty
@@ -109,6 +110,7 @@ const (
 )
 
 var keywords map[string]Token = map[string]Token{
+	"Annotation":                      Annotation,
 	"AnnotationAssertion":             AnnotationAssertion,
 	"AnnotationProperty":              AnnotationProperty,
 	"AsymmetricObjectProperty":        AsymmetricObjectProperty,
@@ -164,7 +166,7 @@ var keywords map[string]Token = map[string]Token{
 	"SubObjectPropertyOf":             SubObjectPropertyOf,
 	"SymmetricObjectProperty":         SymmetricObjectProperty,
 	"TransitiveObjectProperty":        TransitiveObjectProperty,
-	"true": OWLTrue,
+	"true":                            OWLTrue,
 }
 
 func Tokenname(t Token) string {

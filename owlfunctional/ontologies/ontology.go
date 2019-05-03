@@ -3,6 +3,7 @@ package ontologies
 import (
 	"fmt"
 
+	"github.com/shful/gofp/owlfunctional/annotations"
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
 	"github.com/shful/gofp/owlfunctional/meta"
@@ -27,9 +28,10 @@ type Ontology struct {
 	// These get methods may dynamically create any requested declaration, since, according to OWL2, declarations can be made implicit.
 	store.Decls
 
-	IRI        string
-	VERSIONIRI string
-	Prefixes   map[string]string
+	IRI            string
+	VERSIONIRI     string
+	Prefixes       map[string]string
+	allAnnotations []annotations.Annotation
 
 	// K is a convenience attribute  which gives read access to all parsed Knowledge
 	// Note that K references the default container types from the storedefaults package.
@@ -59,10 +61,11 @@ func NewOntology(
 ) (res *Ontology) {
 
 	res = &Ontology{
-		Prefixes:   prefixes,
-		AxiomStore: cfg.AxiomStore,
-		Decls:      cfg.Decls,
-		DeclStore:  cfg.DeclStore,
+		Prefixes:       prefixes,
+		AxiomStore:     cfg.AxiomStore,
+		Decls:          cfg.Decls,
+		DeclStore:      cfg.DeclStore,
+		allAnnotations: make([]annotations.Annotation, 0),
 	}
 	return
 }
@@ -104,6 +107,8 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 		p.Unscan()
 
 		switch tok {
+		case parser.Annotation:
+			err = s.parseAnnotation(p)
 		case parser.AnnotationAssertion:
 			err = s.parseAnnotationAssertion(p)
 		case parser.AsymmetricObjectProperty:
@@ -159,6 +164,38 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 		}
 	}
 
+	return
+}
+
+// parseAnnotation
+// parses into the ontologies allAnnotations member (not in the axiom store - OWL models annotation tags as ontology members)
+func (s *Ontology) parseAnnotation(p *parser.Parser) (err error) {
+
+	if err = p.ConsumeTokens(parser.Annotation, parser.B1); err != nil {
+		return
+	}
+	pos := p.Pos()
+	var ident *tech.IRI
+
+	ident, err = parsehelper.ParseAndResolveIRI(p, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 1st param in AnnotationAssertion")
+		return
+	}
+	var t string
+	t, _, err = parsefuncs.Parset(p, s.Decls, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 3rd param in AnnotationAssertion")
+		return
+	}
+
+	if err = p.ConsumeTokens(parser.B2); err != nil {
+		return
+	}
+	s.allAnnotations = append(s.allAnnotations, annotations.Annotation{
+		A: ident.String(),
+		T: t,
+	})
 	return
 }
 
@@ -657,6 +694,11 @@ func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, er
 		return
 	}
 	return
+}
+
+// Annotations are all "Annotation" statements directly given in the Ontology.
+func (s *Ontology) Annotations() []annotations.Annotation {
+	return s.allAnnotations
 }
 
 func (s *Ontology) ResolvePrefix(prefix string) (res string, ok bool) {
