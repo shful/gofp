@@ -17,9 +17,9 @@ func main() {
 	}
 	defer f.Close()
 
-	ontology, err := gofp.OntologyFromReader(f, "source was pizza-functional.owl")
+	o, err := gofp.OntologyFromReader(f, "the pizza-functional.owl file")
 	if err != nil {
 		log.Fatal(gofp.ErrorMsgWithPosition(err))
 	}
-	log.Println("That's what we parsed:", ontology.About())
+	log.Println("That's what we parsed:", o.About())
 }

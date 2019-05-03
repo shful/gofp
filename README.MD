@@ -20,11 +20,11 @@ if err != nil {
 }
 defer f.Close()
 
-ontology, err := gofp.OntologyFromReader(f, "source was pizza-functional.owl")
+o, err := gofp.OntologyFromReader(f, "source was pizza-functional.owl")
 if err != nil {
 	log.Fatal(gofp.ErrorMsgWithPosition(err))
 }
-log.Println("That's what we parsed:", ontology.About())
+log.Println("That's what we parsed:", o.About())
 ```
 
 To run that example, cd into the gofp/example/pizza/ directory and type
