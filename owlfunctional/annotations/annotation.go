@@ -1,17 +1,16 @@
 package annotations
 
-type Annotation struct {
-	// Value comes without type info and without language tag.
-	A string
+import (
+	"github.com/shful/gofp/owlfunctional/meta"
+)
 
-	// langTag can be set on strings. The literal "foo"@en results in langTag="en".
-	// If not given, langTag is empty. For non-string types, it is also empty.
+type Annotation struct {
+	A meta.AnnotationProperty
 	T string
 }
 
 type AnnotationAssertion struct {
-	// Value comes without type info and without language tag.
-	A string
+	A meta.AnnotationProperty
 
 	// Literaltype can be one of the builtin datatypes like xsd:integer, or a custom IRI.
 	S string
@@ -21,7 +20,17 @@ type AnnotationAssertion struct {
 	T string
 }
 
+type AnnotationPropertyDomain struct {
+	A meta.AnnotationProperty
+	U string
+}
+
+type AnnotationPropertyRange struct {
+	A meta.AnnotationProperty
+	U string
+}
+
 type SubAnnotationPropertyOf struct {
-	A1 string
-	A2 string
+	A1 meta.AnnotationProperty
+	A2 meta.AnnotationProperty
 }

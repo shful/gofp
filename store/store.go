@@ -12,7 +12,7 @@ import (
 // Decls gives read access to all Declarations that were parsed yet.
 type Decls interface {
 	// By Key - methods:
-	AnnotationPropertyDecl(ident string) (interface{}, bool)
+	AnnotationPropertyDecl(ident string) (meta.AnnotationProperty, bool)
 	ClassDecl(ident string) (meta.ClassExpression, bool)
 	DataPropertyDecl(ident string) (meta.DataProperty, bool)
 	DatatypeDecl(ident string) (meta.DataRange, bool)
@@ -35,7 +35,9 @@ type DeclStore interface {
 
 // AxiomStore takes all possible axioms and encapsulates the data structures to store them.
 type AxiomStore interface {
-	StoreAnnotationAssertion(A string, S string, t string)
+	StoreAnnotationAssertion(A meta.AnnotationProperty, S string, t string)
+	StoreAnnotationPropertyDomain(A meta.AnnotationProperty, U string)
+	StoreAnnotationPropertyRange(A meta.AnnotationProperty, U string)
 	StoreAsymmetricObjectProperty(meta.ObjectPropertyExpression)
 	StoreClassAssertion(C meta.ClassExpression, a individual.Individual)
 	StoreDataPropertyAssertion(R meta.DataProperty, a individual.Individual, v literal.OWLLiteral)

@@ -40,7 +40,6 @@ import (
 func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.Ontology, err error) {
 
 	p := parser.NewParser(r, sourceName)
-	parser.TokenLog = false
 	k := storedefaults.NewDefaultK()
 
 	// In this convenience method, by default, accept implicit declarations which is OWL standard

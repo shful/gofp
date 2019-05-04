@@ -49,6 +49,8 @@ const (
 	Annotation
 	AnnotationAssertion
 	AnnotationProperty
+	AnnotationPropertyDomain
+	AnnotationPropertyRange
 	AsymmetricObjectProperty
 	Class
 	ClassAssertion
@@ -114,6 +116,8 @@ var keywords map[string]Token = map[string]Token{
 	"Annotation":                      Annotation,
 	"AnnotationAssertion":             AnnotationAssertion,
 	"AnnotationProperty":              AnnotationProperty,
+	"AnnotationPropertyDomain":        AnnotationPropertyDomain,
+	"AnnotationPropertyRange":         AnnotationPropertyRange,
 	"AsymmetricObjectProperty":        AsymmetricObjectProperty,
 	"Class":                           Class,
 	"ClassAssertion":                  ClassAssertion,

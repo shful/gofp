@@ -16,6 +16,8 @@ type AnnotationPropertyDecl struct {
 	Declaration
 }
 
+var _ meta.AnnotationProperty = (*AnnotationPropertyDecl)(nil)
+
 type ClassDecl struct {
 	Declaration
 }

@@ -58,7 +58,7 @@ func NewDeclStore() *DeclStore {
 
 // === Get - methods that return a single decl by key ========
 
-func (s *DeclStore) AnnotationPropertyDecl(iri string) (decl interface{}, ok bool) {
+func (s *DeclStore) AnnotationPropertyDecl(iri string) (decl meta.AnnotationProperty, ok bool) {
 	decl, ok = s.annotationPropertyDecls[iri]
 	if !ok && !s.ExplicitDecls {
 		decl, ok = s.impAnnotationPropertyDecls[iri]

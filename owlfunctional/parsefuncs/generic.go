@@ -188,6 +188,27 @@ func Parses(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr s
 	return
 }
 
+// ParseA reads IRI as AnnotationProperty, which is shortened as "A" in the OWL spec
+func ParseA(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.AnnotationProperty, err error) {
+	pos := p.Pos()
+
+	var AIRI *tech.IRI
+
+	AIRI, err = parsehelper.ParseAndResolveIRI(p, prefixes)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading AnnotationProperty IRI")
+		return
+	}
+
+	var ok bool
+	expr, ok = decls.AnnotationPropertyDecl(AIRI.String())
+	if !ok {
+		err = pos.Errorf("undeclared AnnotationProperty")
+		return
+	}
+	return
+}
+
 // Parset reads IRI or literal or anonymous individual, which is shortened as "t" in the OWL spec
 func Parset(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr string, argtype ARGTYPE, err error) {
 	var tok parser.Token

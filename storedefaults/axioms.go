@@ -14,6 +14,8 @@ type AxiomStore struct {
 
 	// Axioms
 	allAnnotationAssertions              []annotations.AnnotationAssertion
+	allAnnotationPropertyDomains         []annotations.AnnotationPropertyDomain
+	allAnnotationPropertyRanges          []annotations.AnnotationPropertyRange
 	allAsymmetricObjectProperties        []meta.ObjectPropertyExpression
 	allClassAssertions                   []axioms.ClassAssertion
 	allDataPropertyAssertions            []axioms.DataPropertyAssertion
@@ -47,6 +49,14 @@ func NewAxiomStore() *AxiomStore {
 
 func (s *AxiomStore) AllAnnotationAssertions() []annotations.AnnotationAssertion {
 	return s.allAnnotationAssertions
+}
+
+func (s *AxiomStore) AllAnnotationPropertyDomains() []annotations.AnnotationPropertyDomain {
+	return s.allAnnotationPropertyDomains
+}
+
+func (s *AxiomStore) AllAnnotationPropertyRanges() []annotations.AnnotationPropertyRange {
+	return s.allAnnotationPropertyRanges
 }
 
 func (s *AxiomStore) AllAsymmetricObjectProperties() []meta.ObjectPropertyExpression {
@@ -133,8 +143,16 @@ func (s *AxiomStore) AllTransitiveObjectProperties() []meta.ObjectPropertyExpres
 	return s.allTransitiveObjectProperties
 }
 
-func (s *AxiomStore) StoreAnnotationAssertion(A string, S string, t string) {
+func (s *AxiomStore) StoreAnnotationAssertion(A meta.AnnotationProperty, S string, t string) {
 	s.allAnnotationAssertions = append(s.allAnnotationAssertions, annotations.AnnotationAssertion{A: A, S: S, T: t})
+}
+
+func (s *AxiomStore) StoreAnnotationPropertyDomain(A meta.AnnotationProperty, U string) {
+	s.allAnnotationPropertyDomains = append(s.allAnnotationPropertyDomains, annotations.AnnotationPropertyDomain{A: A, U: U})
+}
+
+func (s *AxiomStore) StoreAnnotationPropertyRange(A meta.AnnotationProperty, U string) {
+	s.allAnnotationPropertyRanges = append(s.allAnnotationPropertyRanges, annotations.AnnotationPropertyRange{A: A, U: U})
 }
 
 func (s *AxiomStore) StoreAsymmetricObjectProperty(a meta.ObjectPropertyExpression) {

@@ -123,6 +123,7 @@ func TestParsePizzaOntology(t *testing.T) {
 		Decls:      k,
 		DeclStore:  k,
 	}
+	k.ExplicitDecls=false
 	o := NewOntology(
 		map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
 		rc,
@@ -353,6 +354,7 @@ func TestParseAnnotationAssertion(t *testing.T) {
 		Decls:      k,
 		DeclStore:  k,
 	}
+	k.ExplicitDecls = false
 
 	var o *Ontology = NewOntology(
 		map[string]string{},

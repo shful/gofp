@@ -111,6 +111,10 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 			err = s.parseAnnotation(p)
 		case parser.AnnotationAssertion:
 			err = s.parseAnnotationAssertion(p)
+		case parser.AnnotationPropertyDomain:
+			err = s.parseAnnotationPropertyDomain(p)
+		case parser.AnnotationPropertyRange:
+			err = s.parseAnnotationPropertyRange(p)
 		case parser.AsymmetricObjectProperty:
 			err = s.parseAsymmetricObjectProperty(p)
 		case parser.ClassAssertion:
@@ -177,13 +181,14 @@ func (s *Ontology) parseAnnotation(p *parser.Parser) (err error) {
 		return
 	}
 	pos := p.Pos()
-	var ident *tech.IRI
 
-	ident, err = parsehelper.ParseAndResolveIRI(p, s)
+	var A meta.AnnotationProperty
+	A, err = parsefuncs.ParseA(p, s.Decls, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 1st param in Annotation")
 		return
 	}
+
 	var t string
 	t, _, err = parsefuncs.Parset(p, s.Decls, s)
 	if err != nil {
@@ -195,7 +200,7 @@ func (s *Ontology) parseAnnotation(p *parser.Parser) (err error) {
 		return
 	}
 	s.allAnnotations = append(s.allAnnotations, annotations.Annotation{
-		A: ident.String(),
+		A: A,
 		T: t,
 	})
 	return
@@ -209,13 +214,14 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	pos := p.Pos()
-	var ident *tech.IRI
 
-	ident, err = parsehelper.ParseAndResolveIRI(p, s)
+	var A meta.AnnotationProperty
+	A, err = parsefuncs.ParseA(p, s.Decls, s)
 	if err != nil {
 		err = pos.EnrichErrorMsg(err, "reading 1st param in AnnotationAssertion")
 		return
 	}
+
 	var s_ string
 	s_, _, err = parsefuncs.Parses(p, s.Decls, s)
 	if err != nil {
@@ -234,9 +240,70 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		return
 	}
 	s.AxiomStore.StoreAnnotationAssertion(
-		ident.String(),
+		A,
 		s_,
 		t,
+	)
+	return
+}
+
+func (s *Ontology) parseAnnotationPropertyDomain(p *parser.Parser) (err error) {
+
+	if err = p.ConsumeTokens(parser.AnnotationPropertyDomain, parser.B1); err != nil {
+		return
+	}
+	pos := p.Pos()
+	var A meta.AnnotationProperty
+	A, err = parsefuncs.ParseA(p, s.Decls, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 1st param in Annotation")
+		return
+	}
+
+	var U *tech.IRI
+	U, err = parsehelper.ParseAndResolveIRI(p, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 2nd param in AnnotationPropertyDomain")
+		return
+	}
+
+	if err = p.ConsumeTokens(parser.B2); err != nil {
+		return
+	}
+
+	s.AxiomStore.StoreAnnotationPropertyDomain(
+		A,
+		U.String(),
+	)
+	return
+}
+
+func (s *Ontology) parseAnnotationPropertyRange(p *parser.Parser) (err error) {
+
+	if err = p.ConsumeTokens(parser.AnnotationPropertyRange, parser.B1); err != nil {
+		return
+	}
+	pos := p.Pos()
+	var A meta.AnnotationProperty
+	A, err = parsefuncs.ParseA(p, s.Decls, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 1st param in Annotation")
+		return
+	}
+
+	var U *tech.IRI
+	U, err = parsehelper.ParseAndResolveIRI(p, s)
+	if err != nil {
+		err = pos.EnrichErrorMsg(err, "reading 2nd param in AnnotationPropertyRange")
+		return
+	}
+
+	if err = p.ConsumeTokens(parser.B2); err != nil {
+		return
+	}
+	s.AxiomStore.StoreAnnotationPropertyRange(
+		A,
+		U.String(),
 	)
 	return
 }

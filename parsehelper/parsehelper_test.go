@@ -34,7 +34,7 @@ func TestParsePrefixedName(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	p = mock.NewTestParser(`:ßü_x :abc`)
+	p = mock.NewTestParser(`:ßü_x :abc`) //todo failure: support hyphens in names
 	prefix, name, err = ParsePrefixedName(p)
 	if err != nil {
 		t.Fatal(err)
@@ -94,6 +94,15 @@ func TestParseUnprefixedIRI(t *testing.T) {
 		t.Fatal(err)
 	}
 	if iri != "http://test.de#Hello" {
+		t.Fatal(iri)
+	}
+
+	p = mock.NewTestParser(`<http://test.de#Hel-lo>`)
+	iri, err = ParseUnprefixedIRI(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if iri != "http://test.de#Hel-lo" {
 		t.Fatal(iri)
 	}
 }
