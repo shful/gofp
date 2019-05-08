@@ -40,7 +40,7 @@ func NewBuilder() *Builder {
 	}
 }
 
-func (s *Builder) Get() (store.Decls, tech.Prefixes) {
+func (s *Builder) Get() (*MockDeclarations, tech.Prefixes) {
 	return s.decls, s.prefixes
 }
 

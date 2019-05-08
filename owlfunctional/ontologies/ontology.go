@@ -108,7 +108,7 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 
 		switch tok {
 		case parser.Annotation:
-			err = s.parseAnnotation(p)
+			err = s.parseOntologyAnnotation(p)
 		case parser.AnnotationAssertion:
 			err = s.parseAnnotationAssertion(p)
 		case parser.AnnotationPropertyDomain:
@@ -173,36 +173,14 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 	return
 }
 
-// parseAnnotation
-// parses into the ontologies allAnnotations member (not in the axiom store - OWL models annotation tags as ontology members)
-func (s *Ontology) parseAnnotation(p *parser.Parser) (err error) {
-
-	if err = p.ConsumeTokens(parser.Annotation, parser.B1); err != nil {
-		return
+// parseOntologyAnnotation
+// parses a single Annotation axion and writes it into the ontologies allAnnotations member (not in the axiom store - this is for Anntotations directly in the Ontology)
+func (s *Ontology) parseOntologyAnnotation(p *parser.Parser) (err error) {
+	var anno annotations.Annotation
+	anno, err = parsefuncs.ParseAnnotation(p, s.Decls, s)
+	if err == nil {
+		s.allAnnotations = append(s.allAnnotations, anno)
 	}
-	pos := p.Pos()
-
-	var A meta.AnnotationProperty
-	A, err = parsefuncs.ParseA(p, s.Decls, s)
-	if err != nil {
-		err = pos.EnrichErrorMsg(err, "reading 1st param in Annotation")
-		return
-	}
-
-	var t string
-	t, _, err = parsefuncs.Parset(p, s.Decls, s)
-	if err != nil {
-		err = pos.EnrichErrorMsg(err, "reading 2nd param in Annotation")
-		return
-	}
-
-	if err = p.ConsumeTokens(parser.B2); err != nil {
-		return
-	}
-	s.allAnnotations = append(s.allAnnotations, annotations.Annotation{
-		A: A,
-		T: t,
-	})
 	return
 }
 

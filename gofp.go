@@ -24,6 +24,9 @@ package gofp
 // - A functional-style syntax ontology document SHOULD use the UTF-8 encoding [RFC 3629].
 //  Remark: For gofp, it MUST be UTF-8
 
+//todo support Axiom := Declaration | ClassAxiom | ObjectPropertyAxiom | DataPropertyAxiom | DatatypeDefinition | HasKey | Assertion | AnnotationAxiom
+//where axiomAnnotations := { Annotation }
+
 import (
 	"io"
 
