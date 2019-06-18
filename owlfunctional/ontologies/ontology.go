@@ -296,15 +296,18 @@ func (s *Ontology) parseAnnotationPropertyRange(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseAsymmetricObjectProperty(p *parser.Parser) (err error) {
-	if err = p.ConsumeTokens(parser.AsymmetricObjectProperty); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.AsymmetricObjectProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	P, err = s.parseP(p)
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreAsymmetricObjectProperty(P)
+	s.AxiomStore.StoreAsymmetricObjectProperty(P, anns)
 	return
 }
 
@@ -548,28 +551,34 @@ func (s *Ontology) parseFunctionalDataProperty(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseFunctionalObjectProperty(p *parser.Parser) (err error) {
-	if err = p.ConsumeTokens(parser.FunctionalObjectProperty); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.FunctionalObjectProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	P, err = s.parseP(p)
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreFunctionalObjectProperty(P)
+	s.AxiomStore.StoreFunctionalObjectProperty(P, anns)
 	return
 }
 
 func (s *Ontology) parseInverseFunctionalObjectProperty(p *parser.Parser) (err error) {
-	if err = p.ConsumeTokens(parser.InverseFunctionalObjectProperty); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.InverseFunctionalObjectProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	P, err = s.parseP(p)
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreInverseFunctionalObjectProperty(P)
+	s.AxiomStore.StoreInverseFunctionalObjectProperty(P, anns)
 	return
 }
 
@@ -594,15 +603,18 @@ func (s *Ontology) parseInverseObjectProperties(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseIrreflexiveObjectProperty(p *parser.Parser) (err error) {
-	if err = p.ConsumeTokens(parser.IrreflexiveObjectProperty); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.IrreflexiveObjectProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	P, err = s.parseP(p)
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreIrreflexiveObjectProperty(P)
+	s.AxiomStore.StoreIrreflexiveObjectProperty(P, anns)
 	return
 }
 
@@ -635,15 +647,18 @@ func (s *Ontology) parseObjectPropertyRange(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseReflexiveObjectProperty(p *parser.Parser) (err error) {
-	if err = p.ConsumeTokens(parser.ReflexiveObjectProperty); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.ReflexiveObjectProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	P, err = s.parseP(p)
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreReflexiveObjectProperty(P)
+	s.AxiomStore.StoreReflexiveObjectProperty(P, anns)
 	return
 }
 
@@ -742,35 +757,41 @@ func (s *Ontology) parseSubObjectPropertyOf(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseSymmetricObjectProperty(p *parser.Parser) (err error) {
-	if err = p.ConsumeTokens(parser.SymmetricObjectProperty); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.SymmetricObjectProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	P, err = s.parseP(p)
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreSymmetricObjectProperty(P)
+	s.AxiomStore.StoreSymmetricObjectProperty(P, anns)
 	return
 }
 
 func (s *Ontology) parseTransitiveObjectProperty(p *parser.Parser) (err error) {
-	if err = p.ConsumeTokens(parser.TransitiveObjectProperty); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.TransitiveObjectProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	P, err = s.parseP(p)
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreTransitiveObjectProperty(P)
+	s.AxiomStore.StoreTransitiveObjectProperty(P, anns)
 	return
 }
 
 func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, err error) {
-	if err = p.ConsumeTokens(parser.B1); err != nil {
-		return
-	}
+	// if err = p.ConsumeTokens(parser.B1); err != nil { //todo: func is asymmmetric and not intuitive: parses content plus closing brace
+	// 	return
+	// }
 
 	if P, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s); err != nil {
 		return
