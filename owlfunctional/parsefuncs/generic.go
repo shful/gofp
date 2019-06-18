@@ -10,6 +10,16 @@ import (
 	"github.com/shful/gofp/tech"
 )
 
+// ParseAxiomBegin parses the Token, the opening brace and the axiomAnnotations
+// all of which which repeat with any OWL Axiom.
+func ParseAxiomBegin(tok parser.Token, p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (anns []meta.Annotation, err error) {
+	if err = p.ConsumeTokens(tok, parser.B1); err != nil {
+		return
+	}
+	anns, err = ParseAnnotations(p, decls, prefixes)
+	return
+}
+
 // parseNPC parses the triple (n,P,[C]) and consumes both braces.
 // C is optional. If found, isQualified is true.
 func parseNPC(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (n int, P meta.ObjectPropertyExpression, C meta.ClassExpression, isQualified bool, err error) {

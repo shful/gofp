@@ -176,10 +176,10 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 // parseOntologyAnnotation
 // parses a single Annotation axion and writes it into the ontologies allAnnotations member (not in the axiom store - this is for Anntotations directly in the Ontology)
 func (s *Ontology) parseOntologyAnnotation(p *parser.Parser) (err error) {
-	var anno annotations.Annotation
+	var anno *annotations.Annotation
 	anno, err = parsefuncs.ParseAnnotation(p, s.Decls, s)
 	if err == nil {
-		s.allAnnotations = append(s.allAnnotations, anno)
+		s.allAnnotations = append(s.allAnnotations, *anno)
 	}
 	return
 }
@@ -187,10 +187,12 @@ func (s *Ontology) parseOntologyAnnotation(p *parser.Parser) (err error) {
 // parseAnnotationAssertion
 // - should not parse individuals into strings but maintain these individuals and reference them
 func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
-
-	if err = p.ConsumeTokens(parser.AnnotationAssertion, parser.B1); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.AnnotationAssertion, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	pos := p.Pos()
 
 	var A meta.AnnotationProperty
@@ -221,15 +223,18 @@ func (s *Ontology) parseAnnotationAssertion(p *parser.Parser) (err error) {
 		A,
 		s_,
 		t,
+		anns,
 	)
 	return
 }
 
 func (s *Ontology) parseAnnotationPropertyDomain(p *parser.Parser) (err error) {
-
-	if err = p.ConsumeTokens(parser.AnnotationPropertyDomain, parser.B1); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.AnnotationPropertyDomain, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	pos := p.Pos()
 	var A meta.AnnotationProperty
 	A, err = parsefuncs.ParseA(p, s.Decls, s)
@@ -252,15 +257,18 @@ func (s *Ontology) parseAnnotationPropertyDomain(p *parser.Parser) (err error) {
 	s.AxiomStore.StoreAnnotationPropertyDomain(
 		A,
 		U.String(),
+		anns,
 	)
 	return
 }
 
 func (s *Ontology) parseAnnotationPropertyRange(p *parser.Parser) (err error) {
-
-	if err = p.ConsumeTokens(parser.AnnotationPropertyRange, parser.B1); err != nil {
+	var anns []meta.Annotation
+	anns, err = parsefuncs.ParseAxiomBegin(parser.AnnotationPropertyDomain, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	pos := p.Pos()
 	var A meta.AnnotationProperty
 	A, err = parsefuncs.ParseA(p, s.Decls, s)
@@ -282,6 +290,7 @@ func (s *Ontology) parseAnnotationPropertyRange(p *parser.Parser) (err error) {
 	s.AxiomStore.StoreAnnotationPropertyRange(
 		A,
 		U.String(),
+		anns,
 	)
 	return
 }

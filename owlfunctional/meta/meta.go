@@ -3,6 +3,11 @@ package meta
 type AnnotationProperty interface {
 }
 
+type Annotation interface {
+	A() AnnotationProperty
+	T() string
+}
+
 // ClassExpression is one of: a named class,
 // Thing or Nothing, a Boolean Connective, an Enumeration,
 // or a Property Restriction.

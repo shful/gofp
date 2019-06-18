@@ -76,8 +76,8 @@ func (pos *ParserPosition) ShortenedLineheadMsg() (linehead string) {
 	l := len(linehead)
 
 	if l > 0 {
-		if l > 20 {
-			linehead = "..." + linehead[l-20:]
+		if l > 30 {
+			linehead = "..." + linehead[l-30:]
 		}
 		linehead = fmt.Sprintf("after '%v'", linehead)
 	} else {

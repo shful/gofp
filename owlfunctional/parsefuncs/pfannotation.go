@@ -1,6 +1,8 @@
 package parsefuncs
 
 import (
+	"fmt"
+
 	"github.com/shful/gofp/owlfunctional/annotations"
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/owlfunctional/parser"
@@ -9,7 +11,7 @@ import (
 )
 
 // ParseAnnotation parses a single Annotation(...) expression, including braces.
-func ParseAnnotation(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr annotations.Annotation, err error) {
+func ParseAnnotation(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr *annotations.Annotation, err error) {
 
 	if err = p.ConsumeTokens(parser.Annotation, parser.B1); err != nil {
 		return
@@ -34,25 +36,24 @@ func ParseAnnotation(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes
 		return
 	}
 
-	expr = annotations.Annotation{
-		A: A,
-		T: t,
-	}
+	expr = annotations.NewAnnotation(A, t)
 	return
 }
 
 // ParseAnnotations parses 0..n Annotation(...) expressions, as long as such expressions are found.
 // OWL allows these as variadic first arguments of each Axiom, including Declarations.
-func ParseAnnotations(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (exprs []annotations.Annotation, err error) {
-	for err == nil {
+func ParseAnnotations(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (exprs []meta.Annotation, err error) {
+	for i := 1; err == nil; i++ {
 		// test if one or more Annotation expressions are found
 		tok, _, _ := p.ScanIgnoreWSAndComment()
 		p.Unscan()
 		switch tok {
 		case parser.Annotation:
-			var expr annotations.Annotation
+			pos := p.Pos()
+			var expr *annotations.Annotation
 			expr, err = ParseAnnotation(p, decls, prefixes)
 			if err != nil {
+				err = pos.EnrichErrorMsg(err, fmt.Sprintf("parsing %d. Annotation", i))
 				return
 			}
 			exprs = append(exprs, expr)

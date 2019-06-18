@@ -143,15 +143,15 @@ func (s *AxiomStore) AllTransitiveObjectProperties() []meta.ObjectPropertyExpres
 	return s.allTransitiveObjectProperties
 }
 
-func (s *AxiomStore) StoreAnnotationAssertion(A meta.AnnotationProperty, S string, t string) {
+func (s *AxiomStore) StoreAnnotationAssertion(A meta.AnnotationProperty, S string, t string, anns []meta.Annotation) {
 	s.allAnnotationAssertions = append(s.allAnnotationAssertions, annotations.AnnotationAssertion{A: A, S: S, T: t})
 }
 
-func (s *AxiomStore) StoreAnnotationPropertyDomain(A meta.AnnotationProperty, U string) {
+func (s *AxiomStore) StoreAnnotationPropertyDomain(A meta.AnnotationProperty, U string, anns []meta.Annotation) {
 	s.allAnnotationPropertyDomains = append(s.allAnnotationPropertyDomains, annotations.AnnotationPropertyDomain{A: A, U: U})
 }
 
-func (s *AxiomStore) StoreAnnotationPropertyRange(A meta.AnnotationProperty, U string) {
+func (s *AxiomStore) StoreAnnotationPropertyRange(A meta.AnnotationProperty, U string, anns []meta.Annotation) {
 	s.allAnnotationPropertyRanges = append(s.allAnnotationPropertyRanges, annotations.AnnotationPropertyRange{A: A, U: U})
 }
 
@@ -241,4 +241,12 @@ func (s *AxiomStore) StoreSymmetricObjectProperty(a meta.ObjectPropertyExpressio
 
 func (s *AxiomStore) StoreTransitiveObjectProperty(a meta.ObjectPropertyExpression) {
 	s.allTransitiveObjectProperties = append(s.allTransitiveObjectProperties, a)
+}
+
+type DefaultAxiom struct {
+	annotations []meta.Annotation
+}
+
+func (s *DefaultAxiom) Annotations() []meta.Annotation {
+	return s.annotations
 }

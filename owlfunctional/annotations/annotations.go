@@ -5,8 +5,25 @@ import (
 )
 
 type Annotation struct {
-	A meta.AnnotationProperty
-	T string
+	a meta.AnnotationProperty
+	t string
+}
+
+var _ meta.Annotation = (*Annotation)(nil)
+
+func NewAnnotation(a meta.AnnotationProperty, t string) *Annotation {
+	return &Annotation{
+		a: a,
+		t: t,
+	}
+}
+
+func (s *Annotation) A() meta.AnnotationProperty {
+	return s.a
+}
+
+func (s *Annotation) T() string {
+	return s.t
 }
 
 type AnnotationAssertion struct {

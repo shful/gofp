@@ -337,3 +337,11 @@ func (s *DeclStore) String() string {
 		len(s.datatypeDecls),
 	)
 }
+
+type DefaultDecl struct {
+	annotations []meta.Annotation
+}
+
+func (s *DefaultDecl) Annotations() []meta.Annotation {
+	return s.annotations
+}

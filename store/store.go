@@ -35,9 +35,9 @@ type DeclStore interface {
 
 // AxiomStore takes all possible axioms and encapsulates the data structures to store them.
 type AxiomStore interface {
-	StoreAnnotationAssertion(A meta.AnnotationProperty, S string, t string)
-	StoreAnnotationPropertyDomain(A meta.AnnotationProperty, U string)
-	StoreAnnotationPropertyRange(A meta.AnnotationProperty, U string)
+	StoreAnnotationAssertion(A meta.AnnotationProperty, S string, t string, anns []meta.Annotation)
+	StoreAnnotationPropertyDomain(A meta.AnnotationProperty, U string, anns []meta.Annotation)
+	StoreAnnotationPropertyRange(A meta.AnnotationProperty, U string, anns []meta.Annotation)
 	StoreAsymmetricObjectProperty(meta.ObjectPropertyExpression)
 	StoreClassAssertion(C meta.ClassExpression, a individual.Individual)
 	StoreDataPropertyAssertion(R meta.DataProperty, a individual.Individual, v literal.OWLLiteral)
