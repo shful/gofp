@@ -16,6 +16,7 @@ type DataPropertyRange struct {
 	D meta.DataRange
 }
 
+// SubClassOf states C1 is subclass of C2
 type SubClassOf struct {
 	C1 meta.ClassExpression
 	C2 meta.ClassExpression

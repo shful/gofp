@@ -223,8 +223,8 @@ func (s *AxiomStore) StoreSubAnnotationPropertyOf(A1, A2 string) {
 	s.allSubAnnotationPropertyOfs = append(s.allSubAnnotationPropertyOfs, annotations.SubAnnotationPropertyOf{A1: A1, A2: A2})
 }
 
-func (s *AxiomStore) StoreSubClassOf(C1, C2 meta.ClassExpression) {
-	s.allSubClassOfs = append(s.allSubClassOfs, axioms.SubClassOf{C1: C1, C2: C2})
+func (s *AxiomStore) StoreSubClassOf(Csub, Csuper meta.ClassExpression) {
+	s.allSubClassOfs = append(s.allSubClassOfs, axioms.SubClassOf{C1: Csub, C2: Csuper})
 }
 
 func (s *AxiomStore) StoreSubDataPropertyOf(P1, P2 meta.DataProperty) {

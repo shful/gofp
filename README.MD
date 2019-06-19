@@ -56,6 +56,7 @@ Further, all input must be UTF-8.
 Note that the API may continue to change, and Gofp does not use a semantic version yet. 
 Since commit 018e1d from Apr 23 2019, the parsed elements are not found in Ontology.All* - slices and maps anymore. See above, "How to access the parsed data" for details.
 That API change was made to (optionally) parse directly into custom types.
+Starting with commit 320bdd from Jun 18 2019, the "anns" parameter for annotations is added successively into the Store* functions.
 
 
 #### Prerequisites
