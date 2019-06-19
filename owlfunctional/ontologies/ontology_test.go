@@ -296,9 +296,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 }
 
-func TestParseEquivalentClasses(t *testing.T) {
-	var p *parser.Parser
-	var err error
+func testOntology() *Ontology {
 	k := storedefaults.NewDefaultK()
 	rc := StoreConfig{
 		AxiomStore: k,
@@ -311,8 +309,15 @@ func TestParseEquivalentClasses(t *testing.T) {
 		rc,
 	)
 	o.K = k
+	o.Prefixes[""] = "localprefix#"	
+	return o
+}
 
-	o.Prefixes[""] = "localprefix#"
+func TestParseEquivalentClasses(t *testing.T) {
+	var p *parser.Parser
+	var err error
+	o := testOntology()
+
 	// decls := o.Decls.(*storedefaults.DeclStore)
 	decls := o.DeclStore
 	decls.StoreClassDecl("localprefix#Pizza")
@@ -342,6 +347,92 @@ func TestParseEquivalentClasses(t *testing.T) {
 	}
 }
 
+func TestParseAnnotationPropertyDomain(t *testing.T) {
+	var p *parser.Parser
+	var err error
+	var parseds []annotations.AnnotationPropertyDomain
+	o := testOntology()
+	o.Prefixes["rdfs"] = "The rdfs-ns#"
+	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
+
+	p = mock.NewTestParser(
+`AnnotationPropertyDomain(rdfs:comment <my-comment-domain>)	`,
+)
+	err = o.parseAnnotationPropertyDomain(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	parseds = o.K.AllAnnotationPropertyDomains()
+	if len(parseds) != 1 {
+		t.Fatal(parseds)
+	}
+	if parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
+		t.Fatal(parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI)
+	}
+	if parseds[0].U != "my-comment-domain" {
+		t.Fatal(parseds[0])
+	}
+}
+
+
+func TestParseAnnotationPropertyRange1(t *testing.T) {
+	var p *parser.Parser
+	var err error
+	var parseds []annotations.AnnotationPropertyRange
+	o := testOntology()
+	o.Prefixes["rdfs"] = "The rdfs-ns#"
+	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
+
+	p = mock.NewTestParser(
+`AnnotationPropertyRange(rdfs:comment <my-comment-range>)	`,
+)
+	err = o.parseAnnotationPropertyRange(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	parseds = o.K.AllAnnotationPropertyRanges()
+	if len(parseds) != 1 {
+		t.Fatal(parseds)
+	}
+	if parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
+		t.Fatal(parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI)
+	}
+	if parseds[0].U != "my-comment-range" {
+		t.Fatal(parseds[0])
+	}
+}
+
+// TestParseAnnotationPropertyRange2 ist like TestParseAnnotationPropertyRange1
+// but with Annotations and other namespace shortcuts
+func TestParseAnnotationPropertyRange2(t *testing.T) {
+	var p *parser.Parser
+	var err error
+	var parseds []annotations.AnnotationPropertyRange
+	o := testOntology()
+	o.Prefixes["rdfs"] = "The rdfs-ns#"
+	o.Prefixes["abc"] = "The abc-ns#"
+	o.Prefixes["dc"] = "http://purl.org/dc/elements/1.1/"
+
+	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
+	p = mock.NewTestParser(
+	`AnnotationPropertyRange( Annotation(dc:license <http://creativecommons.org/licenses/by/4.0/>) <The rdfs-ns#comment> abc:def)	`,
+	)
+	err = o.parseAnnotationPropertyRange(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	parseds = o.K.AllAnnotationPropertyRanges()
+	if len(parseds) != 1 {
+		t.Fatal(parseds)
+	}
+	if parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
+		t.Fatal(parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI)
+	}
+	if parseds[0].U != "The abc-ns#def" {
+		t.Fatal(parseds[0].U)
+	}
+}
+
 func TestParseAnnotationAssertion(t *testing.T) {
 
 	var p *parser.Parser
@@ -354,13 +445,13 @@ func TestParseAnnotationAssertion(t *testing.T) {
 		Decls:      k,
 		DeclStore:  k,
 	}
-	k.ExplicitDecls = false
 
 	var o *Ontology = NewOntology(
 		map[string]string{},
 		rc,
 	)
 	o.K = k
+	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
 
 	o.Prefixes[""] = "The local ns/"
 	o.Prefixes["xsd"] = "The xsd-ns#"

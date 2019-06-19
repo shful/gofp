@@ -46,7 +46,7 @@ func ParseAndResolveIRI(p *parser.Parser, prefixes tech.Prefixes) (ident *tech.I
 			return
 		}
 	default:
-		err = pos.Errorf("unexpected %v, need IRI, or prefixed name, or _ for anonymous individual.", lit)
+		err = pos.Errorf("unexpected \"%v\" - need IRI, or prefixed name, or _ for anonymous individual.", lit)
 	}
 
 	return
@@ -65,13 +65,13 @@ func ParsePrefixedName(p *parser.Parser) (prefix, name string, err error) {
 		// :classname
 		prefix = ""
 	} else {
-		err = pos.Errorf("unexpected %v, need prefixed name", lit)
+		err = pos.Errorf("unexpected \"%v\" - need prefixed name", lit)
 		return
 	}
 
 	tok, name, pos = p.ScanIgnoreWSAndComment()
 	if tok != parser.IDENT {
-		err = pos.Errorf("unexpected %v, need identifier in prefixed name", lit)
+		err = pos.Errorf("unexpected \"%v\" - need identifier in prefixed name", lit)
 	}
 	return
 }

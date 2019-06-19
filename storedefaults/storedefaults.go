@@ -14,6 +14,8 @@ import (
 // AllAxioms are the methods to get slices of all parsed Axioms.
 type AllAxioms interface {
 	AllAnnotationAssertions() []annotations.AnnotationAssertion
+	AllAnnotationPropertyDomains() []annotations.AnnotationPropertyDomain
+	AllAnnotationPropertyRanges() []annotations.AnnotationPropertyRange
 	AllAsymmetricObjectProperties() []meta.ObjectPropertyExpression
 	AllClassAssertions() []axioms.ClassAssertion
 	AllDataPropertyAssertions() []axioms.DataPropertyAssertion

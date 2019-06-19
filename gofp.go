@@ -113,7 +113,7 @@ func parsePrefixTo(prefixes map[string]string, p *parser.Parser) (err error) {
 	} else {
 		// Prefix(IDENT:=...)
 		if tok != parser.IDENT {
-			return pos.Errorf("unexpected %v when parsing prefix, need IDENT", prefix)
+			return pos.Errorf("unexpected \"%v\" when parsing prefix, need IDENT", prefix)
 		}
 	}
 	if err = p.ConsumeTokens(parser.COLON, parser.EQUALS); err != nil {
@@ -121,7 +121,7 @@ func parsePrefixTo(prefixes map[string]string, p *parser.Parser) (err error) {
 	}
 	prefixVal, err := parsehelper.ParseUnprefixedIRI(p)
 	if err != nil {
-		return pos.Errorf("unexpected %v when parsing prefix, need IRI", prefixVal)
+		return pos.Errorf("unexpected \"%v\" when parsing prefix, need IRI", prefixVal)
 	}
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return err

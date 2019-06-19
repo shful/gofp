@@ -239,7 +239,7 @@ func (s *Ontology) parseAnnotationPropertyDomain(p *parser.Parser) (err error) {
 	var A meta.AnnotationProperty
 	A, err = parsefuncs.ParseA(p, s.Decls, s)
 	if err != nil {
-		err = pos.EnrichErrorMsg(err, "reading 1st param in Annotation")
+		err = pos.EnrichErrorMsg(err, "reading 1st param in AnnotationPropertyDomain")
 		return
 	}
 
@@ -264,7 +264,7 @@ func (s *Ontology) parseAnnotationPropertyDomain(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseAnnotationPropertyRange(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-	anns, err = parsefuncs.ParseAxiomBegin(parser.AnnotationPropertyDomain, p, s.Decls, s)
+	anns, err = parsefuncs.ParseAxiomBegin(parser.AnnotationPropertyRange, p, s.Decls, s)
 	if err != nil {
 		return
 	}
@@ -273,7 +273,7 @@ func (s *Ontology) parseAnnotationPropertyRange(p *parser.Parser) (err error) {
 	var A meta.AnnotationProperty
 	A, err = parsefuncs.ParseA(p, s.Decls, s)
 	if err != nil {
-		err = pos.EnrichErrorMsg(err, "reading 1st param in Annotation")
+		err = pos.EnrichErrorMsg(err, "reading 1st param in AnnotationPropertyRange")
 		return
 	}
 
@@ -788,8 +788,9 @@ func (s *Ontology) parseTransitiveObjectProperty(p *parser.Parser) (err error) {
 	return
 }
 
+//todo: parseP parses content plus closing brace, but not opening brace. Not intuitive.
 func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, err error) {
-	// if err = p.ConsumeTokens(parser.B1); err != nil { //todo: func is asymmmetric and not intuitive: parses content plus closing brace
+	// if err = p.ConsumeTokens(parser.B1); err != nil {
 	// 	return
 	// }
 
