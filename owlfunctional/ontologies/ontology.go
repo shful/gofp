@@ -313,10 +313,11 @@ func (s *Ontology) parseAsymmetricObjectProperty(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseClassAssertion(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.ClassAssertion, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.ClassAssertion, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var C meta.ClassExpression
 	C, err = parsefuncs.ParseClassExpression(p, s.Decls, s)
 	if err != nil {
@@ -336,10 +337,11 @@ func (s *Ontology) parseClassAssertion(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.DataPropertyAssertion, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.DataPropertyAssertion, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	pos := p.Pos()
 	var R meta.DataProperty
 	R, err = parsefuncs.ParseDataProperty(p, s.Decls, s)
@@ -414,8 +416,8 @@ func (s *Ontology) parseDeclaration(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.DifferentIndividuals, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.DifferentIndividuals, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -452,9 +454,11 @@ func (s *Ontology) parseBracedIRI(p *parser.Parser) (ident *tech.IRI, err error)
 
 func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-	if err = p.ConsumeTokens(parser.DataPropertyDomain, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.DataPropertyDomain, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var R meta.DataProperty
 	R, err = parsefuncs.ParseDataProperty(p, s.Decls, s)
 	if err != nil {
@@ -475,10 +479,11 @@ func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.DataPropertyRange, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.DataPropertyRange, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var R meta.DataProperty
 	R, err = parsefuncs.ParseDataProperty(p, s.Decls, s)
 	if err != nil {
@@ -499,8 +504,8 @@ func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.DisjointClasses, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.DisjointClasses, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -523,8 +528,8 @@ func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.EquivalentClasses, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.EquivalentClasses, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -545,8 +550,8 @@ func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
 func (s *Ontology) parseFunctionalDataProperty(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
 	var R meta.DataProperty
-
-	if err = p.ConsumeTokens(parser.FunctionalDataProperty, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.FunctionalDataProperty, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -596,8 +601,8 @@ func (s *Ontology) parseInverseFunctionalObjectProperty(p *parser.Parser) (err e
 
 func (s *Ontology) parseInverseObjectProperties(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.InverseObjectProperties, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.InverseObjectProperties, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -634,10 +639,13 @@ func (s *Ontology) parseIrreflexiveObjectProperty(p *parser.Parser) (err error) 
 
 func (s *Ontology) parseObjectPropertyDomain(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.ObjectPropertyDomain); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.ObjectPropertyDomain, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+	// if err = p.ConsumeTokens(parser.ObjectPropertyDomain); err != nil {
+	// 	return
+	// }
 	var P meta.ObjectPropertyExpression
 	var C meta.ClassExpression
 	P, C, err = parsefuncs.ParsePC(p, s.Decls, s)
@@ -650,10 +658,11 @@ func (s *Ontology) parseObjectPropertyDomain(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseObjectPropertyRange(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.ObjectPropertyRange); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.ObjectPropertyRange, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	var P meta.ObjectPropertyExpression
 	var C meta.ClassExpression
 	P, C, err = parsefuncs.ParsePC(p, s.Decls, s)
@@ -682,10 +691,11 @@ func (s *Ontology) parseReflexiveObjectProperty(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseSubAnnotationPropertyOf(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.SubAnnotationPropertyOf, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.SubAnnotationPropertyOf, p, s.Decls, s)
+	if err != nil {
 		return
 	}
+
 	pos := p.Pos()
 	var A1, A2 *tech.IRI
 
@@ -714,8 +724,8 @@ func (s *Ontology) parseSubAnnotationPropertyOf(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.SubClassOf, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.SubClassOf, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -738,8 +748,8 @@ func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.SubDataPropertyOf, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.SubDataPropertyOf, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -761,8 +771,8 @@ func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
 
 func (s *Ontology) parseSubObjectPropertyOf(p *parser.Parser) (err error) {
 	var anns []meta.Annotation
-
-	if err = p.ConsumeTokens(parser.SubObjectPropertyOf, parser.B1); err != nil {
+	anns, err = parsefuncs.ParseAxiomBegin(parser.SubObjectPropertyOf, p, s.Decls, s)
+	if err != nil {
 		return
 	}
 
@@ -814,7 +824,7 @@ func (s *Ontology) parseTransitiveObjectProperty(p *parser.Parser) (err error) {
 	return
 }
 
-//todo: parseP parses content plus closing brace, but not opening brace. Not intuitive.
+//todo: parseP consumes content plus closing brace, but not opening brace. Not intuitive. Same for some parse* funcs in generic.go.
 func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, err error) {
 	// if err = p.ConsumeTokens(parser.B1); err != nil {
 	// 	return

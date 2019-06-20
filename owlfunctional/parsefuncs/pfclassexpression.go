@@ -208,7 +208,7 @@ func parseDataSomeValuesFrom(p *parser.Parser, decls store.Decls, prefixes tech.
 }
 
 func parseObjectAllValuesFrom(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.ObjectAllValuesFrom); err != nil {
+	if err = p.ConsumeTokens(parser.ObjectAllValuesFrom, parser.B1); err != nil {
 		return
 	}
 	var P meta.ObjectPropertyExpression
@@ -222,7 +222,7 @@ func parseObjectAllValuesFrom(p *parser.Parser, decls store.Decls, prefixes tech
 }
 
 func parseObjectSomeValuesFrom(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.ObjectSomeValuesFrom); err != nil {
+	if err = p.ConsumeTokens(parser.ObjectSomeValuesFrom, parser.B1); err != nil {
 		return
 	}
 	var P meta.ObjectPropertyExpression

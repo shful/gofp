@@ -113,12 +113,8 @@ func ParseRD(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (R met
 	return
 }
 
-// ParsePC parses the pair (P,C) and consumes both braces.
+// ParsePC parses the pair (P,C) and consumes the closing brace.
 func ParsePC(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (P meta.ObjectPropertyExpression, C meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.B1); err != nil {
-		return
-	}
-
 	P, err = ParseObjectPropertyExpression(p, decls, prefixes)
 	if err != nil {
 		return
