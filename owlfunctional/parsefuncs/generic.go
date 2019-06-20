@@ -20,12 +20,9 @@ func ParseAxiomBegin(tok parser.Token, p *parser.Parser, decls store.Decls, pref
 	return
 }
 
-// parseNPC parses the triple (n,P,[C]) and consumes both braces.
+// parseNPC parses the triple (n,P,[C]) and consumes the closing brace.
 // C is optional. If found, isQualified is true.
 func parseNPC(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (n int, P meta.ObjectPropertyExpression, C meta.ClassExpression, isQualified bool, err error) {
-	if err = p.ConsumeTokens(parser.B1); err != nil {
-		return
-	}
 
 	n, err = parsehelper.ParseNonNegativeInteger(p)
 	if err != nil {
@@ -54,12 +51,9 @@ func parseNPC(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (n in
 	return
 }
 
-// ParseNRD parses the triple (n,R,[D]) and consumes both braces.
+// ParseNRD parses the triple (n,R,[D]) and consumes the closing brace.
 // D is optional. If found, isQualified is true.
 func parseNRD(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (n int, R meta.DataProperty, D meta.DataRange, isQualified bool, err error) {
-	if err = p.ConsumeTokens(parser.B1); err != nil {
-		return
-	}
 
 	n, err = parsehelper.ParseNonNegativeInteger(p)
 	if err != nil {
@@ -90,11 +84,8 @@ func parseNRD(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (n in
 	return
 }
 
-// ParseRD parses the pair (R,D) and consumes both braces.
+// ParseRD parses the pair (R,D) and consumes the closing brace.
 func ParseRD(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (R meta.DataProperty, D meta.DataRange, err error) {
-	if err = p.ConsumeTokens(parser.B1); err != nil {
-		return
-	}
 
 	R, err = ParseDataProperty(p, decls, prefixes)
 	if err != nil {
@@ -132,11 +123,8 @@ func ParsePC(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (P met
 	return
 }
 
-// ParsePa parses the pair (P,a) and consumes both braces.
+// ParsePa parses the pair (P,a) and consumes the closing brace.
 func ParsePa(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (P meta.ObjectPropertyExpression, A individual.Individual, err error) {
-	if err = p.ConsumeTokens(parser.B1); err != nil {
-		return
-	}
 
 	P, err = ParseObjectPropertyExpression(p, decls, prefixes)
 	if err != nil {

@@ -22,7 +22,7 @@ func TestParseNRD(t *testing.T) {
 	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().AddPrefixes("").AddDataPropertyDecl(*tech.MustNewFragmentedIRI("longname-for-#", "hasPercent")).Get()
 
 	// qualified - with D
-	p = mock.NewTestParser(`(13 :hasPercent xsd:integer)`)
+	p = mock.NewTestParser(`13 :hasPercent xsd:integer)`)
 	n, R, D, isQualified, err = parseNRD(p, decls, prefixes)
 	if err != nil {
 		t.Fatal(err)
@@ -42,7 +42,7 @@ func TestParseNRD(t *testing.T) {
 	}
 
 	// unqualified
-	p = mock.NewTestParser(`(13 :hasPercent)`)
+	p = mock.NewTestParser(`13 :hasPercent)`)
 	n, R, D, isQualified, err = parseNRD(p, decls, prefixes)
 	if err != nil {
 		t.Fatal(err)

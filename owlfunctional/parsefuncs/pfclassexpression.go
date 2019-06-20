@@ -91,6 +91,10 @@ func ParseClassExpression(p *parser.Parser, decls store.Decls, prefixes tech.Pre
 }
 
 func parseDataAllValuesFrom(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
+	if err = p.ConsumeTokens(parser.B1); err != nil {
+		return
+	}
+
 	var R meta.DataProperty
 	var D meta.DataRange
 	R, D, err = ParseRD(p, decls, prefixes)
@@ -102,7 +106,7 @@ func parseDataAllValuesFrom(p *parser.Parser, decls store.Decls, prefixes tech.P
 }
 
 func parseDataExactCardinality(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.DataExactCardinality); err != nil {
+	if err = p.ConsumeTokens(parser.DataExactCardinality, parser.B1); err != nil {
 		return
 	}
 	var R meta.DataProperty
@@ -123,7 +127,7 @@ func parseDataExactCardinality(p *parser.Parser, decls store.Decls, prefixes tec
 }
 
 func parseDataMaxCardinality(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.DataMaxCardinality); err != nil {
+	if err = p.ConsumeTokens(parser.DataMaxCardinality, parser.B1); err != nil {
 		return
 	}
 	var R meta.DataProperty
@@ -144,7 +148,7 @@ func parseDataMaxCardinality(p *parser.Parser, decls store.Decls, prefixes tech.
 }
 
 func parseDataMinCardinality(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.DataMinCardinality); err != nil {
+	if err = p.ConsumeTokens(parser.DataMinCardinality, parser.B1); err != nil {
 		return
 	}
 
@@ -193,7 +197,7 @@ func parseDataHasValue(p *parser.Parser, decls store.Decls, prefixes tech.Prefix
 }
 
 func parseDataSomeValuesFrom(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.DataSomeValuesFrom); err != nil {
+	if err = p.ConsumeTokens(parser.DataSomeValuesFrom, parser.B1); err != nil {
 		return
 	}
 
@@ -236,7 +240,7 @@ func parseObjectSomeValuesFrom(p *parser.Parser, decls store.Decls, prefixes tec
 }
 
 func parseObjectExactCardinality(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.ObjectExactCardinality); err != nil {
+	if err = p.ConsumeTokens(parser.ObjectExactCardinality, parser.B1); err != nil {
 		return
 	}
 	n, P, C, isQualified, err := parseNPC(p, decls, prefixes)
@@ -253,7 +257,7 @@ func parseObjectExactCardinality(p *parser.Parser, decls store.Decls, prefixes t
 }
 
 func parseObjectHasValue(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.ObjectHasValue); err != nil {
+	if err = p.ConsumeTokens(parser.ObjectHasValue, parser.B1); err != nil {
 		return
 	}
 
@@ -284,7 +288,7 @@ func parseObjectHasSelf(p *parser.Parser, decls store.Decls, prefixes tech.Prefi
 }
 
 func parseObjectMaxCardinality(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.ObjectMaxCardinality); err != nil {
+	if err = p.ConsumeTokens(parser.ObjectMaxCardinality, parser.B1); err != nil {
 		return
 	}
 	n, P, C, qualified, err := parseNPC(p, decls, prefixes)
@@ -300,7 +304,7 @@ func parseObjectMaxCardinality(p *parser.Parser, decls store.Decls, prefixes tec
 }
 
 func parseObjectMinCardinality(p *parser.Parser, decls store.Decls, prefixes tech.Prefixes) (expr meta.ClassExpression, err error) {
-	if err = p.ConsumeTokens(parser.ObjectMinCardinality); err != nil {
+	if err = p.ConsumeTokens(parser.ObjectMinCardinality, parser.B1); err != nil {
 		return
 	}
 

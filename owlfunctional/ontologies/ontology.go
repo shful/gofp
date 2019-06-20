@@ -824,11 +824,8 @@ func (s *Ontology) parseTransitiveObjectProperty(p *parser.Parser) (err error) {
 	return
 }
 
-//todo: parseP consumes content plus closing brace, but not opening brace. Not intuitive. Same for some parse* funcs in generic.go.
+// parseP parses the expression and consumes the closing brace.
 func (s *Ontology) parseP(p *parser.Parser) (P meta.ObjectPropertyExpression, err error) {
-	// if err = p.ConsumeTokens(parser.B1); err != nil {
-	// 	return
-	// }
 
 	if P, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s); err != nil {
 		return
