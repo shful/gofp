@@ -159,15 +159,15 @@ func (s *AxiomStore) StoreAsymmetricObjectProperty(P meta.ObjectPropertyExpressi
 	s.allAsymmetricObjectProperties = append(s.allAsymmetricObjectProperties, P)
 }
 
-func (s *AxiomStore) StoreClassAssertion(C meta.ClassExpression, a individual.Individual) {
+func (s *AxiomStore) StoreClassAssertion(C meta.ClassExpression, a individual.Individual, anns []meta.Annotation) {
 	s.allClassAssertions = append(s.allClassAssertions, axioms.ClassAssertion{C: C, A: a})
 }
 
-func (s *AxiomStore) StoreDataPropertyAssertion(R meta.DataProperty, a individual.Individual, v literal.OWLLiteral) {
+func (s *AxiomStore) StoreDataPropertyAssertion(R meta.DataProperty, a individual.Individual, v literal.OWLLiteral, anns []meta.Annotation) {
 	s.allDataPropertyAssertions = append(s.allDataPropertyAssertions, axioms.DataPropertyAssertion{R: R, A: a, V: v})
 }
 
-func (s *AxiomStore) StoreFunctionalDataProperty(a meta.DataProperty) {
+func (s *AxiomStore) StoreFunctionalDataProperty(a meta.DataProperty, anns []meta.Annotation) {
 	s.allFunctionalDataProperties = append(s.allFunctionalDataProperties, a)
 }
 
@@ -179,7 +179,7 @@ func (s *AxiomStore) StoreInverseFunctionalObjectProperty(P meta.ObjectPropertyE
 	s.allInverseFunctionalObjectProperties = append(s.allInverseFunctionalObjectProperties, P)
 }
 
-func (s *AxiomStore) StoreInverseObjectProperties(P1, P2 meta.ObjectPropertyExpression) {
+func (s *AxiomStore) StoreInverseObjectProperties(P1, P2 meta.ObjectPropertyExpression, anns []meta.Annotation) {
 	s.allInverseObjectProperties = append(s.allInverseObjectProperties, axioms.InverseObjectProperties{P1: P1, P2: P2})
 }
 
@@ -187,31 +187,31 @@ func (s *AxiomStore) StoreIrreflexiveObjectProperty(P meta.ObjectPropertyExpress
 	s.allIrreflexiveObjectProperties = append(s.allIrreflexiveObjectProperties, P)
 }
 
-func (s *AxiomStore) StoreDataPropertyDomain(R meta.DataProperty, C meta.ClassExpression) {
+func (s *AxiomStore) StoreDataPropertyDomain(R meta.DataProperty, C meta.ClassExpression, anns []meta.Annotation) {
 	s.allDataPropertyDomains = append(s.allDataPropertyDomains, axioms.DataPropertyDomain{R: R, C: C})
 }
 
-func (s *AxiomStore) StoreDataPropertyRange(R meta.DataProperty, D meta.DataRange) {
+func (s *AxiomStore) StoreDataPropertyRange(R meta.DataProperty, D meta.DataRange, anns []meta.Annotation) {
 	s.allDataPropertyRanges = append(s.allDataPropertyRanges, axioms.DataPropertyRange{R: R, D: D})
 }
 
-func (s *AxiomStore) StoreDisjointClasses(Cs []meta.ClassExpression) {
+func (s *AxiomStore) StoreDisjointClasses(Cs []meta.ClassExpression, anns []meta.Annotation) {
 	s.allDisjointClasses = append(s.allDisjointClasses, axioms.DisjointClasses{DisjointClasses: Cs})
 }
 
-func (s *AxiomStore) StoreDifferentIndividuals(as []individual.Individual) {
+func (s *AxiomStore) StoreDifferentIndividuals(as []individual.Individual, anns []meta.Annotation) {
 	s.allDifferentIndividuals = append(s.allDifferentIndividuals, axioms.DifferentIndividuals{As: as})
 }
 
-func (s *AxiomStore) StoreEquivalentClasses(Cs []meta.ClassExpression) {
+func (s *AxiomStore) StoreEquivalentClasses(Cs []meta.ClassExpression, anns []meta.Annotation) {
 	s.allEquivalentClasses = append(s.allEquivalentClasses, axioms.EquivalentClasses{EquivalentClasses: Cs})
 }
 
-func (s *AxiomStore) StoreObjectPropertyDomain(P meta.ObjectPropertyExpression, C meta.ClassExpression) {
+func (s *AxiomStore) StoreObjectPropertyDomain(P meta.ObjectPropertyExpression, C meta.ClassExpression, anns []meta.Annotation) {
 	s.allObjectPropertyDomains = append(s.allObjectPropertyDomains, axioms.ObjectPropertyDomain{P: P, C: C})
 }
 
-func (s *AxiomStore) StoreObjectPropertyRange(P meta.ObjectPropertyExpression, C meta.ClassExpression) {
+func (s *AxiomStore) StoreObjectPropertyRange(P meta.ObjectPropertyExpression, C meta.ClassExpression, anns []meta.Annotation) {
 	s.allObjectPropertyRanges = append(s.allObjectPropertyRanges, axioms.ObjectPropertyRange{P: P, C: C})
 }
 
@@ -219,19 +219,19 @@ func (s *AxiomStore) StoreReflexiveObjectProperty(P meta.ObjectPropertyExpressio
 	s.allReflexiveObjectProperties = append(s.allReflexiveObjectProperties, P)
 }
 
-func (s *AxiomStore) StoreSubAnnotationPropertyOf(A1, A2 string) {
+func (s *AxiomStore) StoreSubAnnotationPropertyOf(A1, A2 string, anns []meta.Annotation) {
 	s.allSubAnnotationPropertyOfs = append(s.allSubAnnotationPropertyOfs, annotations.SubAnnotationPropertyOf{A1: A1, A2: A2})
 }
 
-func (s *AxiomStore) StoreSubClassOf(Csub, Csuper meta.ClassExpression) {
+func (s *AxiomStore) StoreSubClassOf(Csub, Csuper meta.ClassExpression, anns []meta.Annotation) {
 	s.allSubClassOfs = append(s.allSubClassOfs, axioms.SubClassOf{C1: Csub, C2: Csuper})
 }
 
-func (s *AxiomStore) StoreSubDataPropertyOf(P1, P2 meta.DataProperty) {
+func (s *AxiomStore) StoreSubDataPropertyOf(P1, P2 meta.DataProperty, anns []meta.Annotation) {
 	s.allSubDataPropertyOfs = append(s.allSubDataPropertyOfs, axioms.SubDataPropertyOf{P1: P1, P2: P2})
 }
 
-func (s *AxiomStore) StoreSubObjectPropertyOf(P1, P2 meta.ObjectPropertyExpression) {
+func (s *AxiomStore) StoreSubObjectPropertyOf(P1, P2 meta.ObjectPropertyExpression, anns []meta.Annotation) {
 	s.allSubObjectPropertyOfs = append(s.allSubObjectPropertyOfs, axioms.SubObjectPropertyOf{P1: P1, P2: P2})
 }
 

@@ -312,6 +312,7 @@ func (s *Ontology) parseAsymmetricObjectProperty(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseClassAssertion(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
 
 	if err = p.ConsumeTokens(parser.ClassAssertion, parser.B1); err != nil {
 		return
@@ -329,11 +330,12 @@ func (s *Ontology) parseClassAssertion(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreClassAssertion(C, a)
+	s.AxiomStore.StoreClassAssertion(C, a, anns)
 	return
 }
 
 func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
 
 	if err = p.ConsumeTokens(parser.DataPropertyAssertion, parser.B1); err != nil {
 		return
@@ -360,7 +362,7 @@ func (s *Ontology) parseDataPropertyAssertion(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDataPropertyAssertion(R, a, v)
+	s.AxiomStore.StoreDataPropertyAssertion(R, a, v, anns)
 	return
 }
 
@@ -411,6 +413,8 @@ func (s *Ontology) parseDeclaration(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.DifferentIndividuals, parser.B1); err != nil {
 		return
 	}
@@ -425,7 +429,7 @@ func (s *Ontology) parseDifferentIndividuals(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.AxiomStore.StoreDifferentIndividuals(as)
+	s.AxiomStore.StoreDifferentIndividuals(as, anns)
 
 	return
 }
@@ -447,6 +451,7 @@ func (s *Ontology) parseBracedIRI(p *parser.Parser) (ident *tech.IRI, err error)
 }
 
 func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
 	if err = p.ConsumeTokens(parser.DataPropertyDomain, parser.B1); err != nil {
 		return
 	}
@@ -464,11 +469,13 @@ func (s *Ontology) parseDataPropertyDomain(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDataPropertyDomain(R, C)
+	s.AxiomStore.StoreDataPropertyDomain(R, C, anns)
 	return
 }
 
 func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.DataPropertyRange, parser.B1); err != nil {
 		return
 	}
@@ -486,11 +493,13 @@ func (s *Ontology) parseDataPropertyRange(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDataPropertyRange(R, D)
+	s.AxiomStore.StoreDataPropertyRange(R, D, anns)
 	return
 }
 
 func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.DisjointClasses, parser.B1); err != nil {
 		return
 	}
@@ -508,11 +517,13 @@ func (s *Ontology) parseDisjointClasses(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreDisjointClasses(Cs)
+	s.AxiomStore.StoreDisjointClasses(Cs, anns)
 	return
 }
 
 func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.EquivalentClasses, parser.B1); err != nil {
 		return
 	}
@@ -527,11 +538,12 @@ func (s *Ontology) parseEquivalentClasses(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.AxiomStore.StoreEquivalentClasses(Cs)
+	s.AxiomStore.StoreEquivalentClasses(Cs, anns)
 	return
 }
 
 func (s *Ontology) parseFunctionalDataProperty(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
 	var R meta.DataProperty
 
 	if err = p.ConsumeTokens(parser.FunctionalDataProperty, parser.B1); err != nil {
@@ -546,7 +558,7 @@ func (s *Ontology) parseFunctionalDataProperty(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.AxiomStore.StoreFunctionalDataProperty(R)
+	s.AxiomStore.StoreFunctionalDataProperty(R, anns)
 	return
 }
 
@@ -583,6 +595,8 @@ func (s *Ontology) parseInverseFunctionalObjectProperty(p *parser.Parser) (err e
 }
 
 func (s *Ontology) parseInverseObjectProperties(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.InverseObjectProperties, parser.B1); err != nil {
 		return
 	}
@@ -595,7 +609,7 @@ func (s *Ontology) parseInverseObjectProperties(p *parser.Parser) (err error) {
 		return
 	}
 
-	s.AxiomStore.StoreInverseObjectProperties(P1, P2)
+	s.AxiomStore.StoreInverseObjectProperties(P1, P2, anns)
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
@@ -619,6 +633,8 @@ func (s *Ontology) parseIrreflexiveObjectProperty(p *parser.Parser) (err error) 
 }
 
 func (s *Ontology) parseObjectPropertyDomain(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.ObjectPropertyDomain); err != nil {
 		return
 	}
@@ -628,11 +644,13 @@ func (s *Ontology) parseObjectPropertyDomain(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreObjectPropertyDomain(P, C)
+	s.AxiomStore.StoreObjectPropertyDomain(P, C, anns)
 	return
 }
 
 func (s *Ontology) parseObjectPropertyRange(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.ObjectPropertyRange); err != nil {
 		return
 	}
@@ -642,7 +660,7 @@ func (s *Ontology) parseObjectPropertyRange(p *parser.Parser) (err error) {
 	if err != nil {
 		return
 	}
-	s.AxiomStore.StoreObjectPropertyRange(P, C)
+	s.AxiomStore.StoreObjectPropertyRange(P, C, anns)
 	return
 }
 
@@ -663,6 +681,7 @@ func (s *Ontology) parseReflexiveObjectProperty(p *parser.Parser) (err error) {
 }
 
 func (s *Ontology) parseSubAnnotationPropertyOf(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
 
 	if err = p.ConsumeTokens(parser.SubAnnotationPropertyOf, parser.B1); err != nil {
 		return
@@ -688,11 +707,14 @@ func (s *Ontology) parseSubAnnotationPropertyOf(p *parser.Parser) (err error) {
 	s.AxiomStore.StoreSubAnnotationPropertyOf(
 		A1.String(),
 		A2.String(),
+		anns,
 	)
 	return
 }
 
 func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.SubClassOf, parser.B1); err != nil {
 		return
 	}
@@ -710,11 +732,13 @@ func (s *Ontology) parseSubClassOf(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreSubClassOf(Cs[0], Cs[1])
+	s.AxiomStore.StoreSubClassOf(Cs[0], Cs[1], anns)
 	return
 }
 
 func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.SubDataPropertyOf, parser.B1); err != nil {
 		return
 	}
@@ -730,12 +754,14 @@ func (s *Ontology) parseSubDataPropertyOf(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreSubDataPropertyOf(P1, P2)
+	s.AxiomStore.StoreSubDataPropertyOf(P1, P2, anns)
 
 	return
 }
 
 func (s *Ontology) parseSubObjectPropertyOf(p *parser.Parser) (err error) {
+	var anns []meta.Annotation
+
 	if err = p.ConsumeTokens(parser.SubObjectPropertyOf, parser.B1); err != nil {
 		return
 	}
@@ -751,7 +777,7 @@ func (s *Ontology) parseSubObjectPropertyOf(p *parser.Parser) (err error) {
 	if err = p.ConsumeTokens(parser.B2); err != nil {
 		return
 	}
-	s.AxiomStore.StoreSubObjectPropertyOf(P1, P2)
+	s.AxiomStore.StoreSubObjectPropertyOf(P1, P2, anns)
 
 	return
 }
