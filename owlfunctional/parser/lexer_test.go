@@ -135,21 +135,16 @@ func TestIntegerLiteral(t *testing.T) {
 		NewScanner(strings.NewReader(s)),
 	)
 
-	s = `-999 `
+	s = `999 `
 	assertTokLits(t,
-		[]tl{tl{INTLIT, "-999"}, tl{WS, " "}, tl{EOF, ""}},
+		[]tl{tl{INTLIT, "999"}, tl{WS, " "}, tl{EOF, ""}},
 		NewScanner(strings.NewReader(s)),
 	)
 
-	s = `+010`
+	s = `010`
 	assertTokLits(t,
-		[]tl{tl{INTLIT, "+010"}, tl{EOF, ""}},
+		[]tl{tl{INTLIT, "010"}, tl{EOF, ""}},
 		NewScanner(strings.NewReader(s)),
 	)
 
-	s = `--010`
-	assertTokLits(t,
-		[]tl{tl{ILLEGAL, "-"}, tl{INTLIT, "-010"}},
-		NewScanner(strings.NewReader(s)),
-	)
 }

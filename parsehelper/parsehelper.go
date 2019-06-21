@@ -57,6 +57,8 @@ func ParsePrefixedName(p *parser.Parser) (prefix, name string, err error) {
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	if tok == parser.IDENT {
 		// prefix:classname
+		lit += prolongIDENT(p)
+
 		prefix = lit
 		if err = p.ConsumeTokens(parser.COLON); err != nil {
 			return
@@ -73,7 +75,31 @@ func ParsePrefixedName(p *parser.Parser) (prefix, name string, err error) {
 	if tok != parser.IDENT {
 		err = pos.Errorf("unexpected \"%v\" - need identifier in prefixed name", lit)
 	}
+	name += prolongIDENT(p)
+
 	return
+}
+
+// prolongIDENT continues to parse a parser.IDENT which eventuall was parsed partially only,
+// and returns the remaining which needs to be added to the already parsed IDENT.
+// The parser must be directly behind the IDENT to eventually prolong.
+// That is needed when an IDENT contains a character which is a token for itself. For example, the hyphen "-"
+// is allowed inside an IDENT and must be added, along with eventually following IDENT or hyphen tokens.
+func prolongIDENT(p *parser.Parser) (suffix string) {
+	for {
+		tok, lit, _ := p.Scan()
+		switch tok {
+		case parser.MINUS:
+			suffix += lit
+		case parser.IDENT:
+			suffix += lit
+		case parser.INTLIT:
+			suffix += lit
+		default:
+			p.Unscan()
+			return
+		}
+	}
 }
 
 // ParseUnprefixedIRI parses an IRI which is not shortened with a prefix. Instead, it must look like "<.*>"
@@ -121,6 +147,7 @@ func ParseIRIWithFragment(p *parser.Parser) (head, fragment string, err error) {
 	return
 }
 
+//todo support number formats, especially int with sign
 func ParseNonNegativeInteger(p *parser.Parser) (res int, err error) {
 	tok, lit, pos := p.ScanIgnoreWSAndComment()
 	if tok != parser.INTLIT {

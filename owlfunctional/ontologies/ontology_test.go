@@ -125,7 +125,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 	k.ExplicitDecls=false
 	o := NewOntology(
-		map[string]string{"": "localprefix#", "hello": "hello.de#", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
+		map[string]string{"": "localprefix#", "hello": "hello.de#", "hällo2":"http://hällo.com", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
 		rc,
 	)
 
@@ -150,6 +150,9 @@ func TestParsePizzaOntology(t *testing.T) {
 		t.Fatal()
 	}
 	if !k.ClassDeclExists("hello.de#FishbonePizza", false) {
+		t.Fatal()
+	}
+	if !k.ClassDeclExists("http://hällo.com#SomePizzaWithFull-IRIAnd*SpeciälCharß", false) {
 		t.Fatal()
 	}
 	if k.ClassDeclExists("notexisting", false) {
@@ -502,7 +505,7 @@ const ontologyTestString = `
 Ontology(<urn:absolute:test.de><http://test.de/1.0.777>
 
 	Declaration(Class(hello:FishbonePizza))
-	Declaration(Class(<http://hello.com#SomePizzaWithFull-IRIAnd*SpeciälCharß>))
+	Declaration(Class(<http://hällo.com#SomePizzaWithFull-IRIAnd*SpeciälCharß>))
 	Declaration(Class(:AmericanHotPizza))
 	Declaration(Class(:AmericanaPizza))
 	Declaration(Class(:AnchovyTopping))
@@ -913,13 +916,13 @@ Ontology(
 
 	Declaration(Class(hello:FishbonePizza))
 	Declaration(Class(:AmericanHotPizza))
-	Declaration(ObjectProperty(:hasIngredient))
+	Declaration(ObjectProperty(:has-Ingredient))
 
 	# ObjectProperty shortened implicit:
-	SubObjectPropertyOf(:hasBase :hasIngredient)
+	SubObjectPropertyOf(:hasBase :has-Ingredient)
 
 	# ObjectProperty with full IRI implicit:
-	SubObjectPropertyOf(<https://example.com/hasAnything> :hasIngredient)
+	SubObjectPropertyOf(<https://example.com/hasAnything> :has-Ingredient)
 
 	# and a 3rd Class with full IRI implicit:
 	SubClassOf(:AmericanHotPizza <spdy://example.com/NewWorldPizza>)

@@ -228,9 +228,9 @@ func Tokenname(t Token) string {
 	return fmt.Sprintf("%d", t)
 }
 
-func isSign(ch rune) bool {
-	return ch == '+' || ch == '-'
-}
+// func isSign(ch rune) bool {
+// 	return ch == '+' || ch == '-'
+// }
 
 func isWhitespace(ch rune) bool {
 	return ch == ' ' || ch == '\t' //|| ch == '\n'
@@ -304,7 +304,8 @@ func (s *Scanner) scan() (tok Token, lit string) {
 	} else if ch == '<' {
 		s.unread()
 		return s.scanIRI()
-	} else if isSign(ch) || isDigit(ch) {
+		// } else if isSign(ch) || isDigit(ch) {
+	} else if isDigit(ch) {
 		s.unread()
 		return s.scanNumber()
 	}
@@ -523,12 +524,12 @@ func (s *Scanner) scanIdent() (tok Token, lit string) {
 	return IDENT, buf.String()
 }
 
-// scanNumber consumes the current rune and all contiguous number runes.
-// Numbers can be floating point, i.e. contain a single dot. Numbers can have one leading + or - sign.
+// scanNumber consumes the current number rune and all contiguous number runes.
+// Numbers can be floating point, i.e. contain a single dot.
+// Other formats, especially a leading + or - sign are not considered here.
 func (s *Scanner) scanNumber() (tok Token, lit string) {
 	// Create a buffer and read the current character into it.
 	var buf bytes.Buffer
-	buf.WriteRune(s.read()) // sign or first digit
 
 	// Read every subsequent ident character into the buffer.
 	// Non-number chars cause exit.

@@ -49,7 +49,7 @@ func (p *Parser) forwardPos(tok Token, lit string) {
 
 // scan returns the next token from the underlying scanner.
 // If a token has been unscanned then read that instead.
-func (p *Parser) scan() (tok Token, lit string, pos ParserPosition) {
+func (p *Parser) Scan() (tok Token, lit string, pos ParserPosition) {
 	// If we have a token on the buffer, then return it.
 	if p.buf.n != 0 {
 		p.buf.n = 0
@@ -116,9 +116,9 @@ func (p *Parser) LineNo() int {
 // ScanIgnoreWSAndComment scans the next token, and repeats until it finds neither whitespace (including EOL) nor comment.
 // litPos is where the returned literal starts.
 func (p *Parser) ScanIgnoreWSAndComment() (tok Token, lit string, litPos ParserPosition) {
-	tok, lit, litPos = p.scan()
+	tok, lit, litPos = p.Scan()
 	for tok == WS || tok == EOL || tok == LINECOMMENT {
-		tok, lit, litPos = p.scan()
+		tok, lit, litPos = p.Scan()
 	}
 	return
 }
