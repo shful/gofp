@@ -1,4 +1,4 @@
-package declarations
+package decl
 
 import (
 	"github.com/shful/gofp/owlfunctional/meta"

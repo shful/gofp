@@ -3,7 +3,7 @@ package storedefaults
 import (
 	"fmt"
 
-	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/decl"
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/store"
 )
@@ -11,20 +11,20 @@ import (
 type DeclStore struct {
 	// sets of declarations that were explicitly given:
 	// Although declarations are not always required, they can be used to catch obvious errors in ontologies.(https://www.w3.org/2007/OWL/wiki/Syntax#Declaration_Consistency)
-	annotationPropertyDecls map[string]*declarations.AnnotationPropertyDecl
-	classDecls              map[string]*declarations.ClassDecl
-	dataPropertyDecls       map[string]*declarations.DataPropertyDecl
-	datatypeDecls           map[string]*declarations.DatatypeDecl
-	namedIndividualDecls    map[string]*declarations.NamedIndividualDecl
-	objectPropertyDecls     map[string]*declarations.ObjectPropertyDecl
+	annotationPropertyDecls map[string]*decl.AnnotationPropertyDecl
+	classDecls              map[string]*decl.ClassDecl
+	dataPropertyDecls       map[string]*decl.DataPropertyDecl
+	datatypeDecls           map[string]*decl.DatatypeDecl
+	namedIndividualDecls    map[string]*decl.NamedIndividualDecl
+	objectPropertyDecls     map[string]*decl.ObjectPropertyDecl
 
 	// the imp* maps are sets of declarations that were implicitly given (by use)
-	impAnnotationPropertyDecls map[string]*declarations.AnnotationPropertyDecl
-	impClassDecls              map[string]*declarations.ClassDecl
-	impDataPropertyDecls       map[string]*declarations.DataPropertyDecl
-	impDatatypeDecls           map[string]*declarations.DatatypeDecl
-	impNamedIndividualDecls    map[string]*declarations.NamedIndividualDecl
-	impObjectPropertyDecls     map[string]*declarations.ObjectPropertyDecl
+	impAnnotationPropertyDecls map[string]*decl.AnnotationPropertyDecl
+	impClassDecls              map[string]*decl.ClassDecl
+	impDataPropertyDecls       map[string]*decl.DataPropertyDecl
+	impDatatypeDecls           map[string]*decl.DatatypeDecl
+	impNamedIndividualDecls    map[string]*decl.NamedIndividualDecl
+	impObjectPropertyDecls     map[string]*decl.ObjectPropertyDecl
 
 	// Note: any Declaration can only be in the explicit, or in the implicit sets above, not in both.
 	// If an explicit declaration is found by the parser after implicit use, the declaration must me moved
@@ -40,18 +40,18 @@ var _ store.DeclStore = (*DeclStore)(nil)
 
 func NewDeclStore() *DeclStore {
 	return &DeclStore{
-		annotationPropertyDecls:    map[string]*declarations.AnnotationPropertyDecl{},
-		classDecls:                 map[string]*declarations.ClassDecl{},
-		dataPropertyDecls:          map[string]*declarations.DataPropertyDecl{},
-		datatypeDecls:              map[string]*declarations.DatatypeDecl{},
-		namedIndividualDecls:       map[string]*declarations.NamedIndividualDecl{},
-		objectPropertyDecls:        map[string]*declarations.ObjectPropertyDecl{},
-		impAnnotationPropertyDecls: map[string]*declarations.AnnotationPropertyDecl{},
-		impClassDecls:              map[string]*declarations.ClassDecl{},
-		impDataPropertyDecls:       map[string]*declarations.DataPropertyDecl{},
-		impDatatypeDecls:           map[string]*declarations.DatatypeDecl{},
-		impNamedIndividualDecls:    map[string]*declarations.NamedIndividualDecl{},
-		impObjectPropertyDecls:     map[string]*declarations.ObjectPropertyDecl{},
+		annotationPropertyDecls:    map[string]*decl.AnnotationPropertyDecl{},
+		classDecls:                 map[string]*decl.ClassDecl{},
+		dataPropertyDecls:          map[string]*decl.DataPropertyDecl{},
+		datatypeDecls:              map[string]*decl.DatatypeDecl{},
+		namedIndividualDecls:       map[string]*decl.NamedIndividualDecl{},
+		objectPropertyDecls:        map[string]*decl.ObjectPropertyDecl{},
+		impAnnotationPropertyDecls: map[string]*decl.AnnotationPropertyDecl{},
+		impClassDecls:              map[string]*decl.ClassDecl{},
+		impDataPropertyDecls:       map[string]*decl.DataPropertyDecl{},
+		impDatatypeDecls:           map[string]*decl.DatatypeDecl{},
+		impNamedIndividualDecls:    map[string]*decl.NamedIndividualDecl{},
+		impObjectPropertyDecls:     map[string]*decl.ObjectPropertyDecl{},
 		ExplicitDecls:              true,
 	}
 }
@@ -138,8 +138,8 @@ func (s *DeclStore) ObjectPropertyDecl(iri string) (decl meta.ObjectPropertyExpr
 // === End Get - methods ========
 
 // === All* - methods that return slices ========
-func (s *DeclStore) AllAnnotationPropertyDecls() []*declarations.AnnotationPropertyDecl {
-	res := make([]*declarations.AnnotationPropertyDecl, 0, len(s.annotationPropertyDecls))
+func (s *DeclStore) AllAnnotationPropertyDecls() []*decl.AnnotationPropertyDecl {
+	res := make([]*decl.AnnotationPropertyDecl, 0, len(s.annotationPropertyDecls))
 	for _, v := range s.annotationPropertyDecls {
 		res = append(res, v)
 	}
@@ -148,8 +148,8 @@ func (s *DeclStore) AllAnnotationPropertyDecls() []*declarations.AnnotationPrope
 	}
 	return res
 }
-func (s *DeclStore) AllClassDecls() []*declarations.ClassDecl {
-	res := make([]*declarations.ClassDecl, 0, len(s.classDecls))
+func (s *DeclStore) AllClassDecls() []*decl.ClassDecl {
+	res := make([]*decl.ClassDecl, 0, len(s.classDecls))
 	for _, v := range s.classDecls {
 		res = append(res, v)
 	}
@@ -159,8 +159,8 @@ func (s *DeclStore) AllClassDecls() []*declarations.ClassDecl {
 	return res
 }
 
-func (s *DeclStore) AllDataPropertyDecls() []*declarations.DataPropertyDecl {
-	res := make([]*declarations.DataPropertyDecl, 0, len(s.dataPropertyDecls))
+func (s *DeclStore) AllDataPropertyDecls() []*decl.DataPropertyDecl {
+	res := make([]*decl.DataPropertyDecl, 0, len(s.dataPropertyDecls))
 	for _, v := range s.dataPropertyDecls {
 		res = append(res, v)
 	}
@@ -170,8 +170,8 @@ func (s *DeclStore) AllDataPropertyDecls() []*declarations.DataPropertyDecl {
 	return res
 }
 
-func (s *DeclStore) AllDatatypeDecls() []*declarations.DatatypeDecl {
-	res := make([]*declarations.DatatypeDecl, 0, len(s.datatypeDecls))
+func (s *DeclStore) AllDatatypeDecls() []*decl.DatatypeDecl {
+	res := make([]*decl.DatatypeDecl, 0, len(s.datatypeDecls))
 	for _, v := range s.datatypeDecls {
 		res = append(res, v)
 	}
@@ -181,8 +181,8 @@ func (s *DeclStore) AllDatatypeDecls() []*declarations.DatatypeDecl {
 	return res
 }
 
-func (s *DeclStore) AllNamedIndividualDecls() []*declarations.NamedIndividualDecl {
-	res := make([]*declarations.NamedIndividualDecl, 0, len(s.namedIndividualDecls))
+func (s *DeclStore) AllNamedIndividualDecls() []*decl.NamedIndividualDecl {
+	res := make([]*decl.NamedIndividualDecl, 0, len(s.namedIndividualDecls))
 	for _, v := range s.namedIndividualDecls {
 		res = append(res, v)
 	}
@@ -192,8 +192,8 @@ func (s *DeclStore) AllNamedIndividualDecls() []*declarations.NamedIndividualDec
 	return res
 }
 
-func (s *DeclStore) AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl {
-	res := make([]*declarations.ObjectPropertyDecl, 0, len(s.objectPropertyDecls))
+func (s *DeclStore) AllObjectPropertyDecls() []*decl.ObjectPropertyDecl {
+	res := make([]*decl.ObjectPropertyDecl, 0, len(s.objectPropertyDecls))
 	for _, v := range s.objectPropertyDecls {
 		res = append(res, v)
 	}
@@ -267,28 +267,28 @@ func (s *DeclStore) StoreObjectPropertyDecl(iri string) (err error) {
 
 // === end Store - methods =======
 
-func newAnnotationPropertyDecl(iri string) *declarations.AnnotationPropertyDecl {
-	return &declarations.AnnotationPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
+func newAnnotationPropertyDecl(iri string) *decl.AnnotationPropertyDecl {
+	return &decl.AnnotationPropertyDecl{Declaration: decl.Declaration{IRI: iri}}
 }
 
-func newClassDecl(iri string) *declarations.ClassDecl {
-	return &declarations.ClassDecl{Declaration: declarations.Declaration{IRI: iri}}
+func newClassDecl(iri string) *decl.ClassDecl {
+	return &decl.ClassDecl{Declaration: decl.Declaration{IRI: iri}}
 }
 
-func newDataPropertyDecl(iri string) *declarations.DataPropertyDecl {
-	return &declarations.DataPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
+func newDataPropertyDecl(iri string) *decl.DataPropertyDecl {
+	return &decl.DataPropertyDecl{Declaration: decl.Declaration{IRI: iri}}
 }
 
-func newDatatypeDecl(iri string) *declarations.DatatypeDecl {
-	return &declarations.DatatypeDecl{Declaration: declarations.Declaration{IRI: iri}}
+func newDatatypeDecl(iri string) *decl.DatatypeDecl {
+	return &decl.DatatypeDecl{Declaration: decl.Declaration{IRI: iri}}
 }
 
-func newNamedIndividualDecl(iri string) *declarations.NamedIndividualDecl {
-	return &declarations.NamedIndividualDecl{Declaration: declarations.Declaration{IRI: iri}}
+func newNamedIndividualDecl(iri string) *decl.NamedIndividualDecl {
+	return &decl.NamedIndividualDecl{Declaration: decl.Declaration{IRI: iri}}
 }
 
-func newObjectPropertyDecl(iri string) *declarations.ObjectPropertyDecl {
-	return &declarations.ObjectPropertyDecl{Declaration: declarations.Declaration{IRI: iri}}
+func newObjectPropertyDecl(iri string) *decl.ObjectPropertyDecl {
+	return &decl.ObjectPropertyDecl{Declaration: decl.Declaration{IRI: iri}}
 }
 
 // === Exists - methods, intended for tests only =======

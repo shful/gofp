@@ -8,7 +8,7 @@ import (
 	"github.com/shful/gofp/owlfunctional/annotations"
 	"github.com/shful/gofp/owlfunctional/axioms"
 	"github.com/shful/gofp/owlfunctional/builtindatatypes"
-	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/decl"
 	"github.com/shful/gofp/owlfunctional/facets"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/owlfunctional/properties"
@@ -195,7 +195,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	{
 		s := o.K.AllSubDataPropertyOfs()[0]
 		// we assume an order of the list here - which we know is given, but not guaranteed
-		if s.P1.(*declarations.DataPropertyDecl).IRI != "localprefix#hasCaloricContentValue" {
+		if s.P1.(*decl.DataPropertyDecl).IRI != "localprefix#hasCaloricContentValue" {
 			t.Fatal(s.P1)
 		}
 		switch s.P2.(type) {
@@ -205,7 +205,7 @@ func TestParsePizzaOntology(t *testing.T) {
 		}
 		s = o.K.AllSubDataPropertyOfs()[1]
 		// we assume an order of the list here - which we know is given, but not guaranteed
-		if s.P1.(*declarations.DataPropertyDecl).IRI != "localprefix#hasSuperhighCaloricContentValue" {
+		if s.P1.(*decl.DataPropertyDecl).IRI != "localprefix#hasSuperhighCaloricContentValue" {
 			t.Fatal(s.P1)
 		}
 	}
@@ -217,7 +217,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	{
 		s := o.K.AllSubObjectPropertyOfs()[0]
 		switch x := s.P1.(type) {
-		case *declarations.ObjectPropertyDecl:
+		case *decl.ObjectPropertyDecl:
 			if x.IRI != "localprefix#hasBase" {
 				t.Fatal(x)
 			}
@@ -232,7 +232,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 	{
 		s := o.K.AllInverseObjectProperties()[0] // the slice preserves the statement order
-		x := s.P1.(*declarations.ObjectPropertyDecl)
+		x := s.P1.(*decl.ObjectPropertyDecl)
 		if x.IRI != "localprefix#hasBase" {
 			t.Fatal(x)
 		}
@@ -244,11 +244,11 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 	{
 		s := o.K.AllObjectPropertyDomains()[0]
-		x := s.C.(*declarations.ClassDecl)
+		x := s.C.(*decl.ClassDecl)
 		if x.IRI != "localprefix#Pizza" {
 			t.Fatal(x)
 		}
-		y := s.P.(*declarations.ObjectPropertyDecl)
+		y := s.P.(*decl.ObjectPropertyDecl)
 		if y.IRI != "localprefix#hasBase" {
 			t.Fatal(y)
 		}
@@ -260,11 +260,11 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 	{
 		s := o.K.AllObjectPropertyRanges()[0]
-		x := s.C.(*declarations.ClassDecl)
+		x := s.C.(*decl.ClassDecl)
 		if x.IRI != "localprefix#PizzaBase" {
 			t.Fatal(x)
 		}
-		y := s.P.(*declarations.ObjectPropertyDecl)
+		y := s.P.(*decl.ObjectPropertyDecl)
 		if y.IRI != "localprefix#hasBase" {
 			t.Fatal(y)
 		}
@@ -276,7 +276,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 	{
 		s := o.K.AllDataPropertyRanges()[0]
-		x := s.R.(*declarations.DataPropertyDecl)
+		x := s.R.(*decl.DataPropertyDecl)
 		if x.IRI != "localprefix#hasCaloricContentValue" {
 			t.Fatal(x)
 		}
@@ -292,7 +292,7 @@ func TestParsePizzaOntology(t *testing.T) {
 	}
 	{
 		s := o.K.AllSubClassOfs()[0]
-		x := s.C1.(*declarations.ClassDecl)
+		x := s.C1.(*decl.ClassDecl)
 		if x.IRI != "hello.de#FishbonePizza" {
 			t.Fatal(x)
 		}
@@ -369,8 +369,8 @@ func TestParseAnnotationPropertyDomain(t *testing.T) {
 	if len(parseds) != 1 {
 		t.Fatal(parseds)
 	}
-	if parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
-		t.Fatal(parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI)
+	if parseds[0].A.(*decl.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
+		t.Fatal(parseds[0].A.(*decl.AnnotationPropertyDecl).IRI)
 	}
 	if parseds[0].U != "my-comment-domain" {
 		t.Fatal(parseds[0])
@@ -397,8 +397,8 @@ func TestParseAnnotationPropertyRange1(t *testing.T) {
 	if len(parseds) != 1 {
 		t.Fatal(parseds)
 	}
-	if parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
-		t.Fatal(parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI)
+	if parseds[0].A.(*decl.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
+		t.Fatal(parseds[0].A.(*decl.AnnotationPropertyDecl).IRI)
 	}
 	if parseds[0].U != "my-comment-range" {
 		t.Fatal(parseds[0])
@@ -428,8 +428,8 @@ func TestParseAnnotationPropertyRange2(t *testing.T) {
 	if len(parseds) != 1 {
 		t.Fatal(parseds)
 	}
-	if parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
-		t.Fatal(parseds[0].A.(*declarations.AnnotationPropertyDecl).IRI)
+	if parseds[0].A.(*decl.AnnotationPropertyDecl).IRI != "The rdfs-ns#comment" {
+		t.Fatal(parseds[0].A.(*decl.AnnotationPropertyDecl).IRI)
 	}
 	if parseds[0].U != "The abc-ns#def" {
 		t.Fatal(parseds[0].U)

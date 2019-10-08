@@ -6,7 +6,7 @@ import (
 	"github.com/shful/gofp/tech"
 
 	"github.com/shful/gofp/mock"
-	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/decl"
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/owlfunctional/parser"
 )
@@ -30,7 +30,7 @@ func TestParseNRD(t *testing.T) {
 	if n != 13 {
 		t.Fatal(n)
 	}
-	x := R.(*declarations.DataPropertyDecl)
+	x := R.(*decl.DataPropertyDecl)
 	if x.IRI != "longname-for-#hasPercent" {
 		t.Fatal(x.IRI)
 	}

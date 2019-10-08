@@ -7,7 +7,7 @@ import (
 
 	"github.com/shful/gofp/mock"
 	"github.com/shful/gofp/owlfunctional/classexpression"
-	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/decl"
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/owlfunctional/parser"
 )
@@ -57,9 +57,9 @@ func TestParseClassDeclWithNonemptyPrefix(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var x *declarations.ClassDecl
+	var x *decl.ClassDecl
 	var ok bool
-	if x, ok = expr.(*declarations.ClassDecl); !ok {
+	if x, ok = expr.(*decl.ClassDecl); !ok {
 		t.Fatal(x)
 	}
 	if x.IRI != `longname-for-abc#CheeseTopping` {
@@ -85,9 +85,9 @@ func TestParseClassDeclWithFullIRI(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var x *declarations.ClassDecl
+	var x *decl.ClassDecl
 	var ok bool
-	if x, ok = expr.(*declarations.ClassDecl); !ok {
+	if x, ok = expr.(*decl.ClassDecl); !ok {
 		t.Fatal(x)
 	}
 	if x.IRI != `longname-for-abc#CheeseTopping` {
@@ -108,7 +108,7 @@ func TestParseClassDeclWithFullIRI(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, ok := expr.(*declarations.ClassDecl); !ok {
+	if _, ok := expr.(*decl.ClassDecl); !ok {
 		t.Fatal(expr)
 	}
 }
@@ -129,7 +129,7 @@ func TestParseClassDeclWithEmptyPrefix(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	x := expr.(*declarations.ClassDecl)
+	x := expr.(*decl.ClassDecl)
 	if x.IRI != "longname-for-#CheeseTopping" {
 		t.Fatal(x.IRI)
 	}

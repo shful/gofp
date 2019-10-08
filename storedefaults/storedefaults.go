@@ -6,7 +6,7 @@ package storedefaults
 import (
 	"github.com/shful/gofp/owlfunctional/annotations"
 	"github.com/shful/gofp/owlfunctional/axioms"
-	"github.com/shful/gofp/owlfunctional/declarations"
+	"github.com/shful/gofp/owlfunctional/decl"
 	"github.com/shful/gofp/owlfunctional/meta"
 	"github.com/shful/gofp/store"
 )
@@ -42,12 +42,12 @@ type AllAxioms interface {
 // AllDecls are the methods to get slices of all parsed Declarations.
 type AllDecls interface {
 	// All (as-slice) - methods:
-	AllAnnotationPropertyDecls() []*declarations.AnnotationPropertyDecl
-	AllClassDecls() []*declarations.ClassDecl
-	AllDataPropertyDecls() []*declarations.DataPropertyDecl
-	AllDatatypeDecls() []*declarations.DatatypeDecl
-	AllNamedIndividualDecls() []*declarations.NamedIndividualDecl
-	AllObjectPropertyDecls() []*declarations.ObjectPropertyDecl
+	AllAnnotationPropertyDecls() []*decl.AnnotationPropertyDecl
+	AllClassDecls() []*decl.ClassDecl
+	AllDataPropertyDecls() []*decl.DataPropertyDecl
+	AllDatatypeDecls() []*decl.DatatypeDecl
+	AllNamedIndividualDecls() []*decl.NamedIndividualDecl
+	AllObjectPropertyDecls() []*decl.ObjectPropertyDecl
 }
 
 // K are all Knowledge Get methods assembled in one interface.
