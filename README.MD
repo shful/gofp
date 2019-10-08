@@ -37,8 +37,8 @@ All parsed elements are accessible by the "All"-prefixed methods here, like `All
 
 ```
 // Example: print all parsed class declaration IRIs:
-for _, decl := range o.K.AllClassDecls() {
-	fmt.Println(decl.IRI)
+for _, declaration := range o.K.AllClassDecls() {
+	fmt.Println(declaration.IRI)
 }
 ```
 
@@ -53,9 +53,9 @@ Further, all input must be UTF-8.
 
 
 #### Recent API changes
-Note that the API may continue to change, and Gofp does not use a semantic version yet. 
-With commit 6e35dd from Oct 08 2019, the import path of "owlfunctional/declarations" was changed to "owlfunctional/decl", and "owlfunctional/ontologies" was shortened to "owlfunctional".
-Since commit 018e1d from Apr 23 2019, the parsed elements are not found in Ontology.All* - slices and maps anymore. See above, "How to access the parsed data" for details. That API change was made to (optionally) parse directly into custom types.
+Note that the API may continue to change. Gofp, by intention, has a v0.* version (see https://blog.golang.org/publishing-go-modules for golang versioning).
+* With commit 6e35dd from Oct 08 2019, the import path of "owlfunctional/declarations" was changed to "owlfunctional/decl", and "owlfunctional/ontologies" was shortened to "owlfunctional".
+* Since commit 018e1d from Apr 23 2019, the parsed elements are not found in Ontology.All* - slices and maps anymore. See above, "How to access the parsed data" for details. That API change was made to (optionally) parse directly into custom types.
 
 
 #### Prerequisites
