@@ -4,9 +4,9 @@
 Gofp reads OWL2 files with functional syntax.
 
 The resulting structures strictly resemble the OWL-Functional structures. For example, a SubClassOf axiom
-ends up in a struct instance of type "axioms.SubClassOf". Everything is read into memory at once.
+is parsed into an `axioms.SubClassOf` instance. Everything is read into memory at once.
 
-The package structure, as well as package and type names in Gofp depict the OWL documentation from here: https://www.w3.org/2007/OWL/refcard
+The project structure and the package and type names depict the OWL documentation from here: https://www.w3.org/2007/OWL/refcard
 
 The implementation idea comes from https://blog.gopheracademy.com/advent-2014/parsers-lexers/. 
 
@@ -32,8 +32,8 @@ To run that example, cd into the gofp/example/pizza/ directory and type
 
 
 #### How to access the parsed data ?
-We get an ontology.Ontology instance from the parser, and, by default, this has an Ontology.K attribute with exactly all parsed knowledge (OWL axioms and declarations).
-All elements are returned by the "All"-prefixed methods therein, like "AllSubClassOfs()." Additionally, declarations can be taken by their IRI - for example, ClassDecl("example.com/Pizza").
+We get an `owlfunctional.Ontology` instance from the parser. By default, this has an `Ontology.K` attribute with all parsed knowledge, which is made up of OWL axioms and declarations.
+All parsed elements are accessible by the "All"-prefixed methods here, like `AllSubClassOfs()`. Additionally, all declarations are accessible by their IRI, for example `ClassDecl("example.com/Pizza")`.
 
 ```
 // Example: print all parsed class declaration IRIs:
@@ -42,21 +42,20 @@ for _, decl := range o.K.AllClassDecls() {
 }
 ```
 
-While this is the default, Gofp can parse directly into custom types, alternatively. See also the parameter documentation of the ontologies.NewOntology function.
+While this is the default, Gofp can parse directly into custom types, alternatively. See also the parameter documentation of the `owlfunctional.NewOntology` function.
 
 
 #### Caveats
 The implementation is not complete. The "import" statement is unknown and breaks parsing.
 Annotations and free text inside an Ontology element are unknown and break parsing.
-Some more statements and datatypes are unknown; most of these come from the "Individual" and "Annotation" categories.
+Some more statements and datatypes are unknown; most of these come from the "Individual" and "Annotation" categories. A  management for IRI prefixes is missing.
 Further, all input must be UTF-8.
 
 
 #### Recent API changes
 Note that the API may continue to change, and Gofp does not use a semantic version yet. 
-Since commit 018e1d from Apr 23 2019, the parsed elements are not found in Ontology.All* - slices and maps anymore. See above, "How to access the parsed data" for details.
-That API change was made to (optionally) parse directly into custom types.
-Starting with commit 320bdd from Jun 18 2019, the "anns" parameter for annotations is added successively into the Store* functions, which affects who made a custom Store implementation.
+With commit 6e35dd from Oct 08 2019, the import path of "owlfunctional/declarations" was changed to "owlfunctional/decl", and "owlfunctional/ontologies" was shortened to "owlfunctional".
+Since commit 018e1d from Apr 23 2019, the parsed elements are not found in Ontology.All* - slices and maps anymore. See above, "How to access the parsed data" for details. That API change was made to (optionally) parse directly into custom types.
 
 
 #### Prerequisites
