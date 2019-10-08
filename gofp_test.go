@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/shful/gofp/mock"
-	"github.com/shful/gofp/owlfunctional/ontologies"
+	"github.com/shful/gofp/owlfunctional"
 	"github.com/shful/gofp/owlfunctional/parser"
 )
 
@@ -47,7 +47,7 @@ func TestParsePosition1(t *testing.T) {
 
 func TestParsePosition2(t *testing.T) {
 	var err error
-	var o *ontologies.Ontology
+	var o *owlfunctional.Ontology
 
 	parser.TokenLog = true
 	o, err = OntologyFromReader(strings.NewReader(`
@@ -70,7 +70,7 @@ Prefix(:=<urn:absolute:similix.de/similixadmin#>)X
 }
 func TestParsePosition3(t *testing.T) {
 	var err error
-	var o *ontologies.Ontology
+	var o *owlfunctional.Ontology
 
 	// parser.TokenLog = true
 

@@ -1,4 +1,4 @@
-package ontologies
+package owlfunctional
 
 import (
 	"fmt"

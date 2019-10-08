@@ -30,7 +30,7 @@ package gofp
 import (
 	"io"
 
-	"github.com/shful/gofp/owlfunctional/ontologies"
+	"github.com/shful/gofp/owlfunctional"
 	"github.com/shful/gofp/owlfunctional/parser"
 	"github.com/shful/gofp/parsehelper"
 	"github.com/shful/gofp/storedefaults"
@@ -40,7 +40,7 @@ import (
 // r is the OWL-Functional file contents.
 // sourceName: see parser.NewParser()
 // For less convenience but more control, see the OntologyFromParser function.
-func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.Ontology, err error) {
+func OntologyFromReader(r io.Reader, sourceName string) (ontology *owlfunctional.Ontology, err error) {
 
 	p := parser.NewParser(r, sourceName)
 	k := storedefaults.NewDefaultK()
@@ -49,7 +49,7 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 	// When true, any declaration needs to be explicit written before usage, or the parser stops with a error.
 	k.ExplicitDecls = false
 
-	rc := ontologies.StoreConfig{
+	rc := owlfunctional.StoreConfig{
 		AxiomStore: k,
 		Decls:      k,
 		DeclStore:  k,
@@ -70,7 +70,7 @@ func OntologyFromReader(r io.Reader, sourceName string) (ontology *ontologies.On
 // The configuration rc allows custom storage of Declarations and Axioms.
 // As a usage example of OntologyFromParser, see the code of the OntologyFromReader function.
 // Note that the API may change and Gofp, in its early state, does not use a semantic version number.
-func OntologyFromParser(p *parser.Parser, rc ontologies.StoreConfig) (ontology *ontologies.Ontology, err error) {
+func OntologyFromParser(p *parser.Parser, rc owlfunctional.StoreConfig) (ontology *owlfunctional.Ontology, err error) {
 	prefixes := map[string]string{}
 
 	for {
@@ -84,7 +84,7 @@ func OntologyFromParser(p *parser.Parser, rc ontologies.StoreConfig) (ontology *
 			}
 		case parser.Ontology:
 			p.Unscan()
-			ontology = ontologies.NewOntology(prefixes, rc)
+			ontology = owlfunctional.NewOntology(prefixes, rc)
 			if err = ontology.Parse(p); err != nil {
 				return
 			}

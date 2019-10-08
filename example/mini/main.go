@@ -6,14 +6,14 @@ import (
 	"strings"
 
 	"github.com/shful/gofp"
-	"github.com/shful/gofp/owlfunctional/ontologies"
+	"github.com/shful/gofp/owlfunctional"
 )
 
 // main parses an example string and prints what classes and properties were parsed.
 // This is the example from the README.TXT.
 func main() {
 	var err error
-	var o *ontologies.Ontology
+	var o *owlfunctional.Ontology
 
 	// parse an OWL string into an ontology struct:
 	o, err = gofp.OntologyFromReader(strings.NewReader(`
