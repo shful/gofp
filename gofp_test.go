@@ -25,7 +25,7 @@ func TestParsePrefixTo(t *testing.T) {
 
 func TestParsePosition1(t *testing.T) {
 	var err error
-	var o *ontologies.Ontology
+	var o *owlfunctional.Ontology
 	parser.TokenLog = true
 
 	o, err = OntologyFromReader(strings.NewReader(`X`), "Testsource")

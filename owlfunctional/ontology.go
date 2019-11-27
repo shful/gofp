@@ -143,6 +143,10 @@ func (s *Ontology) Parse(p *parser.Parser) (err error) {
 			err = s.parseInverseObjectProperties(p)
 		case parser.IrreflexiveObjectProperty:
 			err = s.parseIrreflexiveObjectProperty(p)
+		case parser.NegativeObjectPropertyAssertion:
+			err = s.parseNegativeObjectPropertyAssertion(p)
+		case parser.ObjectPropertyAssertion:
+			err = s.parseObjectPropertyAssertion(p)
 		case parser.ObjectPropertyDomain:
 			err = s.parseObjectPropertyDomain(p)
 		case parser.ObjectPropertyRange:
@@ -292,6 +296,76 @@ func (s *Ontology) parseAnnotationPropertyRange(p *parser.Parser) (err error) {
 		U.String(),
 		anns,
 	)
+	return
+}
+
+// parseNegativeObjectPropertyAssertion parses a single NegativeObjectPropertyAssertion(...) expression, including braces.
+func (s *Ontology) parseNegativeObjectPropertyAssertion(p *parser.Parser) (err error) {
+
+	if err = p.ConsumeTokens(parser.NegativeObjectPropertyAssertion, parser.B1); err != nil {
+		return
+	}
+	pos := p.Pos()
+
+	var oe meta.ObjectPropertyExpression
+	oe, err = parsefuncs.ParseObjectPropertyExpression(p, s.Decls, s)
+	if err != nil {
+		err = pos.Errorf("parsing first param in NegativeObjectPropertyAssertion: %v", err)
+		return
+	}
+	var a1 individual.Individual
+	a1, err = parsefuncs.ParseIndividual(p, s.Decls, s)
+	if err != nil {
+		err = pos.Errorf("parsing first individual in NegativeObjectPropertyAssertion: %v", err)
+		return
+	}
+	var a2 individual.Individual
+	a2, err = parsefuncs.ParseIndividual(p, s.Decls, s)
+	if err != nil {
+		err = pos.Errorf("parsing second individual in NegativeObjectPropertyAssertion: %v", err)
+		return
+	}
+
+	if err = p.ConsumeTokens(parser.B2); err != nil {
+		return
+	}
+
+	s.AxiomStore.StoreNegativeObjectPropertyAssertion(oe, a1, a2)
+	return
+}
+
+// parseObjectPropertyAssertion parses a single ObjectPropertyAssertion(...) expression, including braces.
+func (s *Ontology) parseObjectPropertyAssertion(p *parser.Parser) (err error) {
+
+	if err = p.ConsumeTokens(parser.ObjectPropertyAssertion, parser.B1); err != nil {
+		return
+	}
+	pos := p.Pos()
+
+	var ident *tech.IRI
+	ident, err = parsehelper.ParseAndResolveIRI(p, s)
+	if err != nil {
+		err = pos.Errorf("parsing IRI in ObjectPropertyAssertion: %v", err)
+		return
+	}
+	var a1 individual.Individual
+	a1, err = parsefuncs.ParseIndividual(p, s.Decls, s)
+	if err != nil {
+		err = pos.Errorf("parsing first individual in ObjectPropertyAssertion: %v", err)
+		return
+	}
+	var a2 individual.Individual
+	a2, err = parsefuncs.ParseIndividual(p, s.Decls, s)
+	if err != nil {
+		err = pos.Errorf("parsing second individual in ObjectPropertyAssertion: %v", err)
+		return
+	}
+
+	if err = p.ConsumeTokens(parser.B2); err != nil {
+		return
+	}
+
+	s.AxiomStore.StoreObjectPropertyAssertion(ident.String(), a1, a2)
 	return
 }
 

@@ -2,6 +2,7 @@ package storedefaults
 
 import (
 	"github.com/shful/gofp/owlfunctional/annotations"
+	"github.com/shful/gofp/owlfunctional/assertions"
 	"github.com/shful/gofp/owlfunctional/axioms"
 	"github.com/shful/gofp/owlfunctional/individual"
 	"github.com/shful/gofp/owlfunctional/literal"
@@ -19,16 +20,18 @@ type AxiomStore struct {
 	allAsymmetricObjectProperties        []meta.ObjectPropertyExpression
 	allClassAssertions                   []axioms.ClassAssertion
 	allDataPropertyAssertions            []axioms.DataPropertyAssertion
-	allFunctionalDataProperties          []meta.DataProperty
-	allFunctionalObjectProperties        []meta.ObjectPropertyExpression
-	allInverseFunctionalObjectProperties []meta.ObjectPropertyExpression
-	allInverseObjectProperties           []axioms.InverseObjectProperties
-	allIrreflexiveObjectProperties       []meta.ObjectPropertyExpression
 	allDataPropertyDomains               []axioms.DataPropertyDomain
 	allDataPropertyRanges                []axioms.DataPropertyRange
 	allDisjointClasses                   []axioms.DisjointClasses
 	allDifferentIndividuals              []axioms.DifferentIndividuals
 	allEquivalentClasses                 []axioms.EquivalentClasses
+	allFunctionalDataProperties          []meta.DataProperty
+	allFunctionalObjectProperties        []meta.ObjectPropertyExpression
+	allInverseFunctionalObjectProperties []meta.ObjectPropertyExpression
+	allInverseObjectProperties           []axioms.InverseObjectProperties
+	allIrreflexiveObjectProperties       []meta.ObjectPropertyExpression
+	allNegativeObjectPropertyAssertions  []assertions.NegativeObjectPropertyAssertion
+	allObjectPropertyAssertions          []assertions.ObjectPropertyAssertion
 	allObjectPropertyDomains             []axioms.ObjectPropertyDomain
 	allObjectPropertyRanges              []axioms.ObjectPropertyRange
 	allReflexiveObjectProperties         []meta.ObjectPropertyExpression
@@ -109,6 +112,14 @@ func (s *AxiomStore) AllDifferentIndividuals() []axioms.DifferentIndividuals {
 
 func (s *AxiomStore) AllEquivalentClasses() []axioms.EquivalentClasses {
 	return s.allEquivalentClasses
+}
+
+func (s *AxiomStore) AllNegativeObjectPropertyAssertions() []assertions.NegativeObjectPropertyAssertion {
+	return s.allNegativeObjectPropertyAssertions
+}
+
+func (s *AxiomStore) AllObjectPropertyAssertions() []assertions.ObjectPropertyAssertion {
+	return s.allObjectPropertyAssertions
 }
 
 func (s *AxiomStore) AllObjectPropertyDomains() []axioms.ObjectPropertyDomain {
@@ -205,6 +216,14 @@ func (s *AxiomStore) StoreDifferentIndividuals(as []individual.Individual, anns 
 
 func (s *AxiomStore) StoreEquivalentClasses(Cs []meta.ClassExpression, anns []meta.Annotation) {
 	s.allEquivalentClasses = append(s.allEquivalentClasses, axioms.EquivalentClasses{EquivalentClasses: Cs})
+}
+
+func (s *AxiomStore) StoreNegativeObjectPropertyAssertion(P meta.ObjectPropertyExpression, a1 individual.Individual, a2 individual.Individual) {
+	s.allNegativeObjectPropertyAssertions = append(s.allNegativeObjectPropertyAssertions, assertions.NegativeObjectPropertyAssertion{P, a1, a2})
+}
+
+func (s *AxiomStore) StoreObjectPropertyAssertion(PN string, a1 individual.Individual, a2 individual.Individual) {
+	s.allObjectPropertyAssertions = append(s.allObjectPropertyAssertions, assertions.ObjectPropertyAssertion{PN, a1, a2})
 }
 
 func (s *AxiomStore) StoreObjectPropertyDomain(P meta.ObjectPropertyExpression, C meta.ClassExpression, anns []meta.Annotation) {

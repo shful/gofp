@@ -80,6 +80,7 @@ const (
 	InverseObjectProperties
 	IrreflexiveObjectProperty
 	NamedIndividual
+	NegativeObjectPropertyAssertion
 	ObjectComplementOf
 	ObjectAllValuesFrom
 	ObjectExactCardinality
@@ -91,6 +92,7 @@ const (
 	ObjectMinCardinality
 	ObjectOneOf
 	ObjectProperty
+	ObjectPropertyAssertion
 	ObjectPropertyDomain
 	ObjectPropertyRange
 	ObjectSomeValuesFrom
@@ -148,6 +150,7 @@ var keywords map[string]Token = map[string]Token{
 	"IrreflexiveObjectProperty":       IrreflexiveObjectProperty,
 	"InverseObjectProperties":         InverseObjectProperties,
 	"NamedIndividual":                 NamedIndividual,
+	"NegativeObjectPropertyAssertion": NegativeObjectPropertyAssertion,
 	"ObjectAllValuesFrom":             ObjectAllValuesFrom,
 	"ObjectComplementOf":              ObjectComplementOf,
 	"ObjectExactCardinality":          ObjectExactCardinality,
@@ -159,6 +162,7 @@ var keywords map[string]Token = map[string]Token{
 	"ObjectMinCardinality":            ObjectMinCardinality,
 	"ObjectOneOf":                     ObjectOneOf,
 	"ObjectProperty":                  ObjectProperty,
+	"ObjectPropertyAssertion":         ObjectPropertyAssertion,
 	"ObjectPropertyDomain":            ObjectPropertyDomain,
 	"ObjectPropertyRange":             ObjectPropertyRange,
 	"ObjectSomeValuesFrom":            ObjectSomeValuesFrom,

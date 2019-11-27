@@ -51,6 +51,8 @@ type AxiomStore interface {
 	StoreDisjointClasses(Cs []meta.ClassExpression, anns []meta.Annotation)
 	StoreDifferentIndividuals(as []individual.Individual, anns []meta.Annotation)
 	StoreEquivalentClasses(Cs []meta.ClassExpression, anns []meta.Annotation)
+	StoreNegativeObjectPropertyAssertion(P meta.ObjectPropertyExpression, a1 individual.Individual, a2 individual.Individual)
+	StoreObjectPropertyAssertion(PN string, a1 individual.Individual, a2 individual.Individual)
 	StoreObjectPropertyDomain(P meta.ObjectPropertyExpression, C meta.ClassExpression, anns []meta.Annotation)
 	StoreObjectPropertyRange(P meta.ObjectPropertyExpression, C meta.ClassExpression, anns []meta.Annotation)
 	StoreReflexiveObjectProperty(P meta.ObjectPropertyExpression, anns []meta.Annotation)

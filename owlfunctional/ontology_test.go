@@ -6,6 +6,7 @@ import (
 
 	"github.com/shful/gofp/mock"
 	"github.com/shful/gofp/owlfunctional/annotations"
+	"github.com/shful/gofp/owlfunctional/assertions"
 	"github.com/shful/gofp/owlfunctional/axioms"
 	"github.com/shful/gofp/owlfunctional/builtindatatypes"
 	"github.com/shful/gofp/owlfunctional/decl"
@@ -15,7 +16,7 @@ import (
 	"github.com/shful/gofp/storedefaults"
 )
 
-func helperTestExplicitDecl(ontologyTestString string, explicitDecls bool) (*Ontology,*parser.Parser,*storedefaults.DefaultK) {
+func helperTestExplicitDecl(ontologyTestString string, explicitDecls bool) (*Ontology, *parser.Parser, *storedefaults.DefaultK) {
 	var p *parser.Parser
 
 	k := storedefaults.NewDefaultK()
@@ -35,18 +36,17 @@ func helperTestExplicitDecl(ontologyTestString string, explicitDecls bool) (*Ont
 	p = mock.NewTestParser(ontologyTestString)
 	parser.TokenLog = false
 
-	return o,p,k
+	return o, p, k
 }
 
 func TestParseExplicitDeclMode(t *testing.T) {
 	var err error
-var o *Ontology
-var p *parser.Parser
-var k *storedefaults.DefaultK
-
+	var o *Ontology
+	var p *parser.Parser
+	var k *storedefaults.DefaultK
 
 	// Explicit mode and ontology has no implicit Decls
-	o,p,k = helperTestExplicitDecl(ontologyMiniTestString1_ExplicitDecl, true)
+	o, p, k = helperTestExplicitDecl(ontologyMiniTestString1_ExplicitDecl, true)
 
 	err = o.Parse(p)
 	if err != nil {
@@ -66,9 +66,8 @@ var k *storedefaults.DefaultK
 		t.Fatal(o.K.AllObjectPropertyDecls())
 	}
 
-
 	// Explicit mode and ontology has implicit Decls
-	o,p,k = helperTestExplicitDecl(ontologyMiniTestString2_ImplicitDecl, true)
+	o, p, k = helperTestExplicitDecl(ontologyMiniTestString2_ImplicitDecl, true)
 
 	err = o.Parse(p) //todo add machine readable error types, instead human-readable messages only
 	if err == nil {
@@ -76,7 +75,7 @@ var k *storedefaults.DefaultK
 	}
 
 	// Implicit mode and ontology has implicit Decls
-	o,p,k = helperTestExplicitDecl(ontologyMiniTestString2_ImplicitDecl, false)
+	o, p, k = helperTestExplicitDecl(ontologyMiniTestString2_ImplicitDecl, false)
 
 	err = o.Parse(p)
 	if err != nil {
@@ -101,7 +100,7 @@ var k *storedefaults.DefaultK
 	if k.ClassDeclExists("hello.de#NotExistingPizza", false) {
 		t.Fatal()
 	}
-	
+
 	// this Class was declared implicitly. Check that declaration was implicit only:
 	if k.ClassDeclExists("spdy://example.com/NewWorldPizza", false) {
 		t.Fatal()
@@ -123,9 +122,9 @@ func TestParsePizzaOntology(t *testing.T) {
 		Decls:      k,
 		DeclStore:  k,
 	}
-	k.ExplicitDecls=false
+	k.ExplicitDecls = false
 	o := NewOntology(
-		map[string]string{"": "localprefix#", "hello": "hello.de#", "hällo2":"http://hällo.com", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
+		map[string]string{"": "localprefix#", "hello": "hello.de#", "hällo2": "http://hällo.com", "xsd": builtindatatypes.PRE_XSD, "rdfs": builtindatatypes.PRE_RDFS, "owl": builtindatatypes.PRE_OWL},
 		rc,
 	)
 
@@ -312,8 +311,57 @@ func testOntology() *Ontology {
 		rc,
 	)
 	o.K = k
-	o.Prefixes[""] = "localprefix#"	
+	o.Prefixes[""] = "localprefix#"
 	return o
+}
+
+func TestParseNegativeObjectPropertyAssertion(t *testing.T) {
+	var p *parser.Parser
+	var err error
+	o := testOntology()
+	o.Prefixes[""] = "ä-ò#"
+	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
+
+	p = mock.NewTestParser(`NegativeObjectPropertyAssertion(:genügt-wèm :Mälzers-Kôchkunst :Mälzers-Gästen)`) // spot check umlauts and grave
+	err = o.parseNegativeObjectPropertyAssertion(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(o.K.AllNegativeObjectPropertyAssertions()) != 1 {
+		t.Fatal(o.K.AllNegativeObjectPropertyAssertions())
+	}
+
+	var expr assertions.NegativeObjectPropertyAssertion
+	expr = o.K.AllNegativeObjectPropertyAssertions()[0]
+	if expr.P.(*decl.ObjectPropertyDecl).IRI != "ä-ò#genügt-wèm" {
+		t.Fatal(expr.P)
+	}
+	fmt.Println(expr)
+}
+
+func TestParseObjectPropertyAssertion(t *testing.T) {
+	var p *parser.Parser
+	var err error
+	o := testOntology()
+	o.Prefixes[""] = "abc#"
+
+	// decls := o.DeclStore
+	p = mock.NewTestParser(`EquivalentClasses(:InterestingPizza ObjectIntersectionOf(:Pizza ObjectMinCardinality(3 :hasTopping)))	`)
+
+	p = mock.NewTestParser(`ObjectPropertyAssertion(:genügt-wem :Mälzers-Kochkunst :Mälzers-Gästen)`)
+	err = o.parseObjectPropertyAssertion(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(o.K.AllObjectPropertyAssertions()) != 1 {
+		t.Fatal(o.K.AllObjectPropertyAssertions())
+	}
+
+	var expr assertions.ObjectPropertyAssertion
+	expr = o.K.AllObjectPropertyAssertions()[0]
+	if expr.PN != "abc#genügt-wem" {
+		t.Fatal(expr.PN)
+	}
 }
 
 func TestParseEquivalentClasses(t *testing.T) {
@@ -359,8 +407,8 @@ func TestParseAnnotationPropertyDomain(t *testing.T) {
 	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
 
 	p = mock.NewTestParser(
-`AnnotationPropertyDomain(rdfs:comment <my-comment-domain>)	`,
-)
+		`AnnotationPropertyDomain(rdfs:comment <my-comment-domain>)	`,
+	)
 	err = o.parseAnnotationPropertyDomain(p)
 	if err != nil {
 		t.Fatal(err)
@@ -377,7 +425,6 @@ func TestParseAnnotationPropertyDomain(t *testing.T) {
 	}
 }
 
-
 func TestParseAnnotationPropertyRange1(t *testing.T) {
 	var p *parser.Parser
 	var err error
@@ -387,8 +434,8 @@ func TestParseAnnotationPropertyRange1(t *testing.T) {
 	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
 
 	p = mock.NewTestParser(
-`AnnotationPropertyRange(rdfs:comment <my-comment-range>)	`,
-)
+		`AnnotationPropertyRange(rdfs:comment <my-comment-range>)	`,
+	)
 	err = o.parseAnnotationPropertyRange(p)
 	if err != nil {
 		t.Fatal(err)
@@ -418,7 +465,7 @@ func TestParseAnnotationPropertyRange2(t *testing.T) {
 
 	o.K.(*storedefaults.DefaultK).ExplicitDecls = false
 	p = mock.NewTestParser(
-	`AnnotationPropertyRange( Annotation(dc:license <http://creativecommons.org/licenses/by/4.0/>) <The rdfs-ns#comment> abc:def)	`,
+		`AnnotationPropertyRange( Annotation(dc:license <http://creativecommons.org/licenses/by/4.0/>) <The rdfs-ns#comment> abc:def)	`,
 	)
 	err = o.parseAnnotationPropertyRange(p)
 	if err != nil {
@@ -934,4 +981,3 @@ Ontology(
 	Declaration(Class(:BritishPizza))
 )
 `
-

@@ -9,14 +9,13 @@ import (
 )
 
 func TestParseAnnotations(t *testing.T) {
-	// parse a predeclared named class
 
 	var p *parser.Parser
 	var err error
 	var exprs []meta.Annotation
 
 	decls, prefixes := mock.NewBuilder().AddOWLStandardPrefixes().AddPrefixes("oboInOwl").Get()
-	decls.ExplicitDecls=false
+	decls.ExplicitDecls = false
 
 	p = mock.NewTestParser(``)
 	exprs, err = ParseAnnotations(p, decls, prefixes)

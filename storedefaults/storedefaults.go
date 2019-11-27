@@ -5,6 +5,7 @@ package storedefaults
 
 import (
 	"github.com/shful/gofp/owlfunctional/annotations"
+	"github.com/shful/gofp/owlfunctional/assertions"
 	"github.com/shful/gofp/owlfunctional/axioms"
 	"github.com/shful/gofp/owlfunctional/decl"
 	"github.com/shful/gofp/owlfunctional/meta"
@@ -24,11 +25,13 @@ type AllAxioms interface {
 	AllInverseFunctionalObjectProperties() []meta.ObjectPropertyExpression
 	AllInverseObjectProperties() []axioms.InverseObjectProperties
 	AllIrreflexiveObjectProperties() []meta.ObjectPropertyExpression
+	AllNegativeObjectPropertyAssertions() []assertions.NegativeObjectPropertyAssertion
 	AllDataPropertyDomains() []axioms.DataPropertyDomain
 	AllDataPropertyRanges() []axioms.DataPropertyRange
 	AllDisjointClasses() []axioms.DisjointClasses
 	AllDifferentIndividuals() []axioms.DifferentIndividuals
 	AllEquivalentClasses() []axioms.EquivalentClasses
+	AllObjectPropertyAssertions() []assertions.ObjectPropertyAssertion
 	AllObjectPropertyDomains() []axioms.ObjectPropertyDomain
 	AllObjectPropertyRanges() []axioms.ObjectPropertyRange
 	AllReflexiveObjectProperties() []meta.ObjectPropertyExpression
