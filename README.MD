@@ -14,7 +14,7 @@ The implementation idea comes from https://blog.gopheracademy.com/advent-2014/pa
 
 #### Example for parsing a file:
 ```	go
-f, _ := os.Open("pizza-functional.owl")
+f, err := os.Open("pizza-functional.owl")
 if err != nil {
 	panic(err)
 }
